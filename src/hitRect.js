@@ -1,5 +1,4 @@
-let Instruction = require('./Instruction'),
-    hitRegion = require('./hitRegion');
+let hitRegion = require('./hitRegion');
 
 let hitRect = (id, ...args) => {
   let [x, y, width, height] = args;

@@ -1,8 +1,4 @@
-let createRegularPolygon = (radius, position, sides) => {
-  radius = +radius || 1;
-  position[0] = +position[0] || 0;
-  position[1] = +position[1] || 0;
-  sides = +sides || 3;
+let createRegularPolygon = (radius = 0, position = [0, 0], sides = 3) => {
   let polygon = [];
   for(let i = 0; i < sides; i++) {
     polygon.push([

@@ -35,9 +35,10 @@ module.exports = (ctx) => {
     //get left and top coordinates
     let { left, top } = canvas.getBoundingClientRect();
 
-    let point = [clientX - left, clientY - top];
-
     let mouseData = canvas[Symbol.for('mouseData')];
+
+    let point = [clientX - left, clientY - top, mouseData.state];
+
     mouseData.x = point[0];
     mouseData.y = point[1];
 

@@ -35,20 +35,19 @@ transformStack.set(identity);
 
 const PI2 = Math.PI * 2;
 
+let empty = (target) => target && target.splice(0, target.length);
+
 module.exports = (...args) => {
-  let children = args.slice(0, -1);
-  let ctx = args[args.length - 1];
-  let regions = ctx.canvas[Symbol.for('regions')];
-  let mousePoints = ctx.canvas[Symbol.for('mousePoints')];
+  let children = args.slice(0, -1),
+   ctx = args[args.length - 1];
+
+  let regions = ctx.canvas[Symbol.for('regions')],
+    mousePoints = ctx.canvas[Symbol.for('mousePoints')];
 
   cycleMouseData(ctx);
 
-  if (regions) {
-    regions.splice(0, regions.length);
-    mousePoints.splice(0, mousePoints.length);
-  }
-  //wrap children in case
-  children = [children];
+  empty(regions);
+  empty(mousePoints);
 
   let len = children.length;
 
@@ -247,18 +246,15 @@ module.exports = (...args) => {
         increaseTransformStackSize();
       }
 
-      transformStack[transformStackIndex - 6] = //d
-        matrix[0];
-      transformStack[transformStackIndex - 5] = //b
-        matrix[1];
+      transformStack[transformStackIndex - 6] = matrix[0]; //a
+      transformStack[transformStackIndex - 5] = matrix[1]; //b
       transformStack[transformStackIndex - 4] = //c
         matrix[0] * props.x + matrix[2];
       transformStack[transformStackIndex - 3] = //d
         matrix[1] * props.x + matrix[3];
-      transformStack[transformStackIndex - 2] = //e
-        matrix[4];
-      transformStack[transformStackIndex - 1] = //f
-        matrix[5];
+      transformStack[transformStackIndex - 2] = matrix[4]; //e
+      transformStack[transformStackIndex - 1] = matrix[5]; //f
+
 
       ctx.setTransform(
         transformStack[transformStackIndex - 6],
@@ -284,18 +280,15 @@ module.exports = (...args) => {
         increaseTransformStackSize();
       }
 
-      transformStack[transformStackIndex - 6] = //d
-        matrix[0] * 1 + matrix[2] * props.y;
-      transformStack[transformStackIndex - 5] = //b
-        matrix[1] * 1 + matrix[3] * props.y;
-      transformStack[transformStackIndex - 4] = //c
-        matrix[2];
-      transformStack[transformStackIndex - 3] = //d
-        matrix[3];
-      transformStack[transformStackIndex - 2] = //e
-        matrix[4];
-      transformStack[transformStackIndex - 1] = //f
-        matrix[5];
+      transformStack[transformStackIndex - 6] =
+        matrix[0] * 1 + matrix[2] * props.y; //a
+      transformStack[transformStackIndex - 5] =
+        matrix[1] * 1 + matrix[3] * props.y; //b
+      transformStack[transformStackIndex - 4] = matrix[2]; //c
+      transformStack[transformStackIndex - 3] = matrix[3]; //d
+
+      transformStack[transformStackIndex - 2] = matrix[4]; //e
+      transformStack[transformStackIndex - 1] = matrix[5]; //f
 
       ctx.setTransform(
         transformStack[transformStackIndex - 6],
@@ -629,16 +622,19 @@ module.exports = (...args) => {
     }
 
     if (type === 'hitRegion' && regions) {
-      matrix[0] = transformStack[transformStackIndex - 6];
-      matrix[1] = transformStack[transformStackIndex - 5];
-      matrix[2] = transformStack[transformStackIndex - 4];
-      matrix[3] = transformStack[transformStackIndex - 3];
-      matrix[4] = transformStack[transformStackIndex - 2];
-      matrix[5] = transformStack[transformStackIndex - 1];
+      cache = [
+        transformStack[transformStackIndex - 6],
+        transformStack[transformStackIndex - 5],
+        transformStack[transformStackIndex - 4],
+        transformStack[transformStackIndex - 3],
+        transformStack[transformStackIndex - 2],
+        transformStack[transformStackIndex - 1]
+      ];
 
       regions.push({
         id: props.id,
-        points: transformPoints(props.points, matrix),
+        points: props.points,
+        matrix: cache,
         hover: false,
         touched: false,
         clicked: false

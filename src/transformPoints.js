@@ -1,13 +1,12 @@
 let transformPoints = (points, matrix) => {
-  var result = [],
-      len = points.length,
-      point;
+  let result = [],
+      x, y;
 
-  for(var i = 0; i < len; i++) {
-    point = points[i];
+  for(let i = 0; i < points.length; i++) {
+    [x, y] = points[i];
     result.push([
-      matrix[0] * point[0] + matrix[2] * point[1] + matrix[4],
-      matrix[1] * point[0] + matrix[3] * point[1] + matrix[5]
+      matrix[0] * x + matrix[2] * y + matrix[4],
+      matrix[1] * x + matrix[3] * y + matrix[5]
     ]);
   }
   return result;
