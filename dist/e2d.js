@@ -1301,7 +1301,7 @@ module.exports = fillText;
 let Instruction = __webpack_require__(0);
 let end = new Instruction('endGlobalAlpha');
 
-let globalAlpha = (value, children) => [
+let globalAlpha = (value, ...children) => [
   new Instruction('globalAlpha', { value }),
   children,
   end
@@ -2485,13 +2485,13 @@ module.exports = strokeRect;
 let Instruction = __webpack_require__(0);
 let end = new Instruction('endStrokeStyle');
 
-let fillStyle = (value, ...children) => [
+let strokeStyle = (value, ...children) => [
   new Instruction('strokeStyle', { value }),
   children,
   end
 ];
 
-module.exports = fillStyle;
+module.exports = strokeStyle;
 
 
 /***/ },
@@ -2527,7 +2527,7 @@ module.exports = strokeText;
 let Instruction = __webpack_require__(0);
 let end = new Instruction('endTextStyle');
 
-let textStyle = (value, children) => {
+let textStyle = (value, ...children) => {
   value = value || {};
   var result = {
     font: null,

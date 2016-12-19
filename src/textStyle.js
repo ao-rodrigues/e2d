@@ -1,7 +1,7 @@
 let Instruction = require('./Instruction');
 let end = new Instruction('endTextStyle');
 
-let textStyle = (value, children) => {
+let textStyle = (value, ...children) => {
   value = value || {};
   var result = {
     font: null,

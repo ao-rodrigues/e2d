@@ -1491,7 +1491,11 @@ module.exports = fillText;
 var Instruction = __webpack_require__(0);
 var end = new Instruction('endGlobalAlpha');
 
-var globalAlpha = function globalAlpha(value, children) {
+var globalAlpha = function globalAlpha(value) {
+  for (var _len = arguments.length, children = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    children[_key - 1] = arguments[_key];
+  }
+
   return [new Instruction('globalAlpha', { value: value }), children, end];
 };
 module.exports = globalAlpha;
@@ -2714,7 +2718,7 @@ module.exports = strokeRect;
 var Instruction = __webpack_require__(0);
 var end = new Instruction('endStrokeStyle');
 
-var fillStyle = function fillStyle(value) {
+var strokeStyle = function strokeStyle(value) {
   for (var _len = arguments.length, children = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     children[_key - 1] = arguments[_key];
   }
@@ -2722,7 +2726,7 @@ var fillStyle = function fillStyle(value) {
   return [new Instruction('strokeStyle', { value: value }), children, end];
 };
 
-module.exports = fillStyle;
+module.exports = strokeStyle;
 
 /***/ },
 /* 57 */
@@ -2771,7 +2775,11 @@ module.exports = strokeText;
 var Instruction = __webpack_require__(0);
 var end = new Instruction('endTextStyle');
 
-var textStyle = function textStyle(value, children) {
+var textStyle = function textStyle(value) {
+  for (var _len = arguments.length, children = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    children[_key - 1] = arguments[_key];
+  }
+
   value = value || {};
   var result = {
     font: null,
