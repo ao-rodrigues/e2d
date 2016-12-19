@@ -8,7 +8,7 @@ Most canvas libraries abstract away different aspect of canvas to make you faste
 
 ## Getting Started
 
-With react.js, the developer calls React.render once to start up the application.  Since e2d does not work with the DOM, there are no bindings internally to have a meaningful event lifecycle.  This means that `e2d.render` must be called every frame. Take the following example:
+With react.js, the developer calls React.render once to start up the application.  Since e2d does not work with the DOM, there are no bindings internally to have a meaningful event lifecycle.  This means that `e2d.render` must be called every frame. Take the following "Hello World" example:
 
 ```javascript
 let canvas = document.createElement('canvas');
@@ -30,12 +30,11 @@ e2d.initialize(ctx);
 //requestAnimationFrame loop will call this function once per frame
 //it is not necessary to use this convenience function provided by e2d
 e2d.raf(() => {
-  let instructions = [];
-  //application logic
 
   //e2d.render accepts an unlimited number of arguments and the last one must be the canvas context
   return e2d.render(
-    [...instructions],
+    e2d.clearRect(canvas.width, canvas.height),
+    e2d.fillText("Hello World!", 100, 100),
     ctx
   );
 });
@@ -52,11 +51,11 @@ e2d.raf(() => {
   //get the mouse position
   let { x, y } = e2d.mouseData(ctx);
 
+  //use the translate element to move the point of origin
   return <render ctx={ctx}>
     <clearRect width={canvas.width} height={canvas.height} />
-    {/*translate elements move the canvas ctx to [x, y]*/}
     <translate x={x} y={y}>
-      <fillArc r={10} />
+      <fillText text="Hello World!" />
     </translate>
   </render>;
   );
