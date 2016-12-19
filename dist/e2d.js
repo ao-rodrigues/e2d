@@ -1663,6 +1663,8 @@ module.exports = (...args) => {
   let regions = ctx.canvas[Symbol.for('regions')],
     mousePoints = ctx.canvas[Symbol.for('mousePoints')];
 
+  let cache;
+
   cycleMouseData(ctx);
 
   empty(regions);
@@ -2254,7 +2256,6 @@ module.exports = (...args) => {
         id: props.id,
         points: props.points,
         matrix: cache,
-        
         //rectangle!
         polygon: false,
         hover: false,
