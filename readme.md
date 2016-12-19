@@ -177,7 +177,7 @@ Please see [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-serve
 
 # API
 
-__e2d.render__
+### __e2d.render__
 
 This is the command that actually draws to the canvas.  Create some drawing instructions and pass them to this function.
 
@@ -211,7 +211,7 @@ e2d.raf(
 
 The following render commands are provided to you in this library.
 
-__arc.js__
+### __arc.js__
 
 Arcs have 5 forms, and correspond to the documentation here at [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arc):
 
@@ -229,7 +229,7 @@ let radiusWithXYandAngles = e2d.arc(x, y, radius, startAngle, endAngle);
 let arcAntiClockwise = e2d.arc(x, y, radius, startAngle, endAngle, anticlockwise);
 ```
 
-__arcTo.js__
+### __arcTo.js__
 
 For information on how the `arcTo` function works, see [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/arcTo).
 
@@ -242,7 +242,7 @@ let pathInstruction = e2d.path(
 );
 ```
 
-__beginPath.js__
+### __beginPath.js__
 
 It's possible to control when a path begins manually by using the `beginPath` function.
 
@@ -250,7 +250,7 @@ It's possible to control when a path begins manually by using the `beginPath` fu
 let beginPathOperation = e2d.beginPath();
 ```
 
-__bezierCurveTo.js__
+### __bezierCurveTo.js__
 
 See [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/bezierCurveTo) for information on how to use Bezier curves.
 
@@ -259,7 +259,7 @@ See [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContex
 let myCurve = e2d.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
 ```
 
-__clearRect.js__
+### __clearRect.js__
 
 To see how clearRect works, see [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clearRect).  The `clearRect` function has two forms.
 
@@ -273,7 +273,7 @@ let sizeAndPosition = e2d.clearRect(x, y, width, height);
 
 ```
 
-__clip.js__
+### __clip.js__
 
 This provides a clipping region for child instructions.
 
@@ -298,7 +298,7 @@ let clippedImage = e2d.clip(
 
 ```
 
-__imageSmoothingEnabled.js__
+### __imageSmoothingEnabled.js__
 
 This function is wrapper function that sets imageSmoothingEnabled for it's children. _(default is true)_
 
@@ -310,7 +310,7 @@ let noSmooth = e2d.imageSmoothingEnabled(false,
 );
 ```
 
-__drawImage.js__
+### __drawImage.js__
 
 This function draws an image to the canvas when rendered.
 
@@ -332,7 +332,7 @@ let imgSourceSize = e2d.drawImage(img, sx, sy, sWidth, sHeight, x, y, width, hei
 ```
 
 
-__ellipse.js__
+### __ellipse.js__
 
 This will add an ellipse to the current path.  This method is "pseudo-polyfilled" and supported for all browsers.  For more information on this method please visit [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/ellipse). There are three forms for the ellipse function.
 
@@ -345,7 +345,7 @@ let example2 = e2d.ellipse(x, y, radiusX, radiusY); // from x, y
 let example3 = e2d.ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise);
 ```
 
-__fillArc.js__
+### __fillArc.js__
 
 This method was added for convenience. It makes the API a bit more consistent and takes the same parameters as the `arc` function and works exactly like `fillRect`.
 
@@ -363,7 +363,7 @@ let radiusWithXYandAngles = e2d.fillArc(x, y, radius, startAngle, endAngle);
 let arcAntiClockwise = e2d.fillArc(x, y, radius, startAngle, endAngle, anticlockwise);
 ```
 
-__fillRect.js__
+### __fillRect.js__
 
 To see how fillRect works, see [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillRect).  The `fillRect` function has two forms.
 
@@ -377,7 +377,7 @@ let sizeAndPosition = e2d.fillRect(x, y, width, height);
 
 ```
 
-__fillStyle.js__
+### __fillStyle.js__
 
 This function will "set" the `fillStyle` property using the first argument as the value for the property.  To see how `fillStyle` works visit [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillStyle).
 
@@ -401,7 +401,7 @@ let example = e2d.fillStyle('red',
 );
 ```
 
-__strokeStyle.js__
+### __strokeStyle.js__
 
 This function will "set" the `strokeStyle` property using the first argument as the value for the property.  To see how `strokeStyle` works visit [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeStyle).
 
@@ -425,7 +425,7 @@ let example = e2d.strokeStyle('red',
 );
 ```
 
-__globalCompositeOperation.js__
+### __globalCompositeOperation.js__
 
 For change global composite operations, use `globalCompositeOperation()`.
 
@@ -437,7 +437,7 @@ let operation = e2d.globalCompositeOperation('multiply',
 );
 ```
 
-__globalAlpha.js__
+### __globalAlpha.js__
 
 The `globalAlpha` function will apply and set the `globalAlpha` relative to the parent `globalAlpha` value.
 
@@ -453,7 +453,7 @@ let alphaCommands = e2d.globalAlpha(0.5,
 
 ```
 
-__hitRegion.js__ and __hitRect.js__
+### __hitRegion.js__ and __hitRect.js__
 
 The `hitRect` and `hitRegion` functions will apply a `hitRegion` to the canvas.
 
@@ -491,7 +491,17 @@ e2d.raf(() => {
 
 To make a square use `hitRect(id, x, y, width, height)` or `hitRect(id, width, height)`.
 
-__lineStyle.js__
+### __invertMatrix.js__
+
+This function will return an inverse matrix relative to the canvas matrix provided by calculating a determinant and returning a new `Array`.
+
+This function is used internally to transform mouse points inversely to determine point in polygon detection relative to the provided shape.
+
+```javascript
+let [a, b, c, d, e, f] = e2d.invertMatrix([a, b, c, d, e, f]);
+```
+
+### __lineStyle.js__
 
 This is a composite property abstraction that contains `lineWidth` and other useful properties. See [mdn: lineCap](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap), [mdn: lineWidth](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth), [mdn: lineJoin](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin), [mdn: miterLimit](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/miterLimit), and [mdn: setLineDash](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setLineDash)
 
@@ -513,7 +523,7 @@ let example = e2d.lineStyle(style,
 );
 ```
 
-__path.js__, __lineTo.js__ and __moveTo.js__
+### __path.js__, __lineTo.js__ and __moveTo.js__
 
 The `path(pathInstructions)` call wraps `pathInstructions` in `beginPath()` and `endPath()` operations.
 
@@ -529,7 +539,7 @@ let example = e2d.path(
 
 ```
 
-__quadraticCurveTo.js__
+### __quadraticCurveTo.js__
 
 Use this to make a quadratic curve to another point.  All 4 parameters are required. To see how this function works, please visit [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/quadraticCurveTo). 
 
@@ -538,7 +548,7 @@ Use this to make a quadratic curve to another point.  All 4 parameters are requi
 let curveCommand = e2d.quadraticCurveTo(cpx, cpy, x, y);
 ```
 
-__rotate.js__, __translate.js__, and __scale.js__
+### __rotate.js__, __translate.js__, and __scale.js__
 
 Use these functions to translate/rotate/and scale the provided context.
 
@@ -597,7 +607,7 @@ e2d.render(
 
 ```
 
-__transform.js__
+### __transform.js__
 
 `transform([a,b,c,d,e,f], children...)` is a convenience function for advanced developers to add a transform to the current stack.  For more information on how the `transform` operation works, please visit [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform).
 
@@ -608,7 +618,7 @@ let transformOperation = e2d.transform(
 );
 ```
 
-__resetTransform.js__ and __setTransform__
+### __resetTransform.js__ and __setTransform__
 
 These functions give direct access to the `transformStack` values.  To see how these functions work, please see [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform).
 
@@ -622,7 +632,7 @@ let changeCurrentTransform = e2d.setTransform(
 let returnToIdentity = e2d.resetTransform(...children);
 ```
 
-__shadowStyle.js__
+### __shadowStyle.js__
 
 Much like __lineStyle.js__ this is a compound property that can be nested.
 
@@ -645,7 +655,7 @@ let shadowCommand = e2d.shadowStyle(shadowStyleDefinition,
 );
 ```
 
-__stokeArc.js__
+### __stokeArc.js__
 
 This function doesn't exist on the Canvas prototype, but was added for completeness.  It draws a circular arc.
 
@@ -659,7 +669,7 @@ let strokePortion = e2d.strokeArc(x, y, radius, startAngle, endAngle); //specify
 let strokeCounterClockwise = e2d.strokeArc(x, y, radius, startAngle, endAngle, true); //counterclockwise
 ```
 
-__strokeRect.js__
+### __strokeRect.js__
 
 This will outline a rectangle.  Please visit [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeRect) to see how strokeRect works. It has two forms.
 
@@ -668,7 +678,7 @@ let rect = e2d.strokeRect(width, height); //at 0, 0
 let rect2 = e2d.strokeRect(x, y, width, height);
 ```
 
-__textStyle.js__, __fillText.js__, and __strokeText__
+### __textStyle.js__, __fillText.js__, and __strokeText__
 
 These functions help you draw text to the screen using Canvas's really poorly implemented text API.  Please see mdn for more information about the font properties.
 
@@ -694,7 +704,7 @@ let textCommand = e2d.textStyle(style,
 );
 ```
 
-__transformPoints.js__
+### __transformPoints.js__
 
 This utility function transforms a set of points relative to the specified transform matrix. It is used internally by `e2d` to calculate and apply mouse regions to the canvas.
 
@@ -720,7 +730,7 @@ let newPoints = transformPoints(points, matrix);
 
 It returns a new array of `[x, y]` points with the coordinates transformed.
 
-__createRegularPolygon.js__
+### __createRegularPolygon.js__
 
 Creates a regular polygon shape: an array of arrays.
 
@@ -741,7 +751,7 @@ console.log(hexagon);
 ]
 ```
 
-__moveToLineTo.js__
+### __moveToLineTo.js__
 
 This is a convenience function used with the `Array.prototype.map` function that maps shapes to drawable polygons.
 

@@ -1,5 +1,5 @@
 let raf = (func) => {
-  requestAnimationFrame(func);
+  requestAnimationFrame(() => raf(func));
   return func();
 };
 

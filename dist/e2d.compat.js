@@ -1837,7 +1837,9 @@ module.exports = quadraticCurveTo;
 "use strict";
 
 var raf = function raf(func) {
-  requestAnimationFrame(func);
+  requestAnimationFrame(function () {
+    return raf(func);
+  });
   return func();
 };
 
