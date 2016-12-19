@@ -25,7 +25,7 @@ document.body.appendChild(canvas);
 let e2d = require('e2d');
 
 //use this if the application requires user input on the canvas
-e2d.use(ctx);
+e2d.initialize(ctx);
 
 //requestAnimationFrame loop will call this function once per frame
 //it is not necessary to use this convenience function provided by e2d
@@ -467,7 +467,7 @@ let hexagonPath = e2d.path(
   hexagon.map(e2d.moveToLineTo)
 );
 
-e2d.use(ctx);
+e2d.initialize(ctx);
 e2d.raf(() => {
   let regions = e2d.regions(ctx);
 

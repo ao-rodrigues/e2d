@@ -621,6 +621,29 @@ module.exports = (...args) => {
       continue;
     }
 
+    if (type === 'hitRect' && regions) {
+      cache = [
+        transformStack[transformStackIndex - 6],
+        transformStack[transformStackIndex - 5],
+        transformStack[transformStackIndex - 4],
+        transformStack[transformStackIndex - 3],
+        transformStack[transformStackIndex - 2],
+        transformStack[transformStackIndex - 1]
+      ];
+
+      regions.push({
+        id: props.id,
+        points: props.points,
+        matrix: cache,
+        
+        //rectangle!
+        polygon: false,
+        hover: false,
+        touched: false,
+        clicked: false
+      });
+    }
+
     if (type === 'hitRegion' && regions) {
       cache = [
         transformStack[transformStackIndex - 6],
@@ -635,6 +658,7 @@ module.exports = (...args) => {
         id: props.id,
         points: props.points,
         matrix: cache,
+        polygon: true,
         hover: false,
         touched: false,
         clicked: false

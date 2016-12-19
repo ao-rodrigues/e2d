@@ -1,4 +1,4 @@
-let hitRegion = require('./hitRegion');
+let Instruction = require('./Instruction');
 
 let hitRect = (id, ...args) => {
   let [x, y, width, height] = args;
@@ -8,12 +8,13 @@ let hitRect = (id, ...args) => {
     x = 0;
     y = 0;
   }
-  return hitRegion(id, [
-    [x, y],
-    [x, y + height],
-    [x + width, y + height],
-    [x + width, y]
-  ]);
+  return new Instruction('hitRect', {
+    id,
+    points: [
+      [x, y],
+      [x + width, y + height]
+    ]
+  });
 };
 
 module.exports = hitRect;

@@ -71,7 +71,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 60);
+/******/ 	return __webpack_require__(__webpack_require__.s = 61);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -94,18 +94,38 @@ module.exports = Instruction;
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+let transformPoints = (points, matrix) => {
+  let result = [],
+      x, y;
+
+  for(let i = 0; i < points.length; i++) {
+    [x, y] = points[i];
+    result.push([
+      matrix[0] * x + matrix[2] * y + matrix[4],
+      matrix[1] * x + matrix[3] * y + matrix[5]
+    ]);
+  }
+  return result;
+};
+
+module.exports = transformPoints;
+
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-//jshint node: true
+let Instruction = __webpack_require__(0),
+  cache = new Instruction('beginPath');
 
-let Instruction = __webpack_require__(0);
-let cache = new Instruction('beginPath');
 let beginPath = () => cache;
 
 module.exports = beginPath;
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -117,7 +137,7 @@ module.exports = closePath;
 
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 
@@ -137,18 +157,25 @@ let cycleMouseData = (ctx) => {
 module.exports = cycleMouseData;
 
 /***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/* 5 */
+/***/ function(module, exports) {
 
-let Instruction = __webpack_require__(0);
-
-let hitRegion = (id, points) => new Instruction('hitRegion', { id, points });
-
-module.exports = hitRegion;
-
+let det = 0;
+let invertMatrix = ([a, b, c, d, e, f]) => (
+  det = 1 / (a * d - c * b),
+  [
+    d * det,
+    -c * det,
+    -b * det,
+    a * det,
+    (b * f - e * d) * det,
+    (e * b - a * f) * det
+  ]
+);
+ module.exports = invertMatrix;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -159,7 +186,7 @@ module.exports = lineTo;
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -170,7 +197,15 @@ module.exports = moveTo;
 
 
 /***/ },
-/* 7 */
+/* 8 */
+/***/ function(module, exports) {
+
+let pointInRect = ([px, py], [[x, y], [width, height]]) => px > x && py > y && px < width && py < height;
+
+module.exports = pointInRect;
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -192,29 +227,7 @@ let setTransform = (matrix, ...children) => [
 module.exports = setTransform;
 
 /***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-let transformPoints = (points, matrix) => {
-  var result = [],
-      len = points.length,
-      point;
-
-  for(var i = 0; i < len; i++) {
-    point = points[i];
-    result.push([
-      matrix[0] * point[0] + matrix[2] * point[1] + matrix[4],
-      matrix[1] * point[0] + matrix[3] * point[1] + matrix[5]
-    ]);
-  }
-  return result;
-};
-
-module.exports = transformPoints;
-
-
-/***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -442,27 +455,26 @@ var substr = 'ab'.substr(-1) === 'b'
     }
 ;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14)))
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 var map = {
 	"./Instruction.js": 0,
-	"./activeRegions.js": 14,
-	"./addColorStop.js": 15,
+	"./activeRegions.js": 15,
 	"./arc.js": 16,
 	"./arcTo.js": 17,
-	"./beginPath.js": 1,
+	"./beginPath.js": 2,
 	"./bezierCurveTo.js": 18,
 	"./clearRect.js": 19,
 	"./clip.js": 20,
 	"./clipPath.js": 21,
-	"./closePath.js": 2,
+	"./closePath.js": 3,
 	"./createRegularPolygon.js": 22,
 	"./createWrapper.js": 23,
-	"./cycleMouseData.js": 3,
+	"./cycleMouseData.js": 4,
 	"./drawImage.js": 24,
 	"./ellipse.js": 25,
 	"./fill.js": 26,
@@ -473,37 +485,39 @@ var map = {
 	"./globalAlpha.js": 31,
 	"./globalCompositeOperation.js": 32,
 	"./hitRect.js": 33,
-	"./hitRegion.js": 4,
-	"./imageSmoothingEnabled.js": 34,
-	"./keyData.js": 35,
-	"./lineStyle.js": 36,
-	"./lineTo.js": 5,
-	"./mouseData.js": 37,
-	"./moveTo.js": 6,
-	"./moveToLineTo.js": 38,
-	"./path.js": 39,
-	"./placeHolder.js": 40,
-	"./quadraticCurveTo.js": 41,
-	"./raf.js": 42,
-	"./rect.js": 43,
-	"./render.js": 44,
-	"./resetTransform.js": 45,
-	"./rotate.js": 46,
-	"./scale.js": 47,
-	"./setTransform.js": 7,
-	"./shadowStyle.js": 48,
-	"./skewX.js": 49,
-	"./skewY.js": 50,
-	"./stroke.js": 51,
-	"./strokeArc.js": 52,
-	"./strokeRect.js": 53,
-	"./strokeStyle.js": 54,
-	"./strokeText.js": 55,
-	"./textStyle.js": 56,
-	"./transform.js": 57,
-	"./transformPoints.js": 8,
-	"./translate.js": 58,
-	"./use.js": 59
+	"./hitRegion.js": 34,
+	"./imageSmoothingEnabled.js": 35,
+	"./initialize.js": 36,
+	"./invertMatrix.js": 5,
+	"./keyData.js": 37,
+	"./lineStyle.js": 38,
+	"./lineTo.js": 6,
+	"./mouseData.js": 39,
+	"./moveTo.js": 7,
+	"./moveToLineTo.js": 40,
+	"./path.js": 41,
+	"./placeHolder.js": 42,
+	"./pointInRect.js": 8,
+	"./quadraticCurveTo.js": 43,
+	"./raf.js": 44,
+	"./rect.js": 45,
+	"./render.js": 46,
+	"./resetTransform.js": 47,
+	"./rotate.js": 48,
+	"./scale.js": 49,
+	"./setTransform.js": 9,
+	"./shadowStyle.js": 50,
+	"./skewX.js": 51,
+	"./skewY.js": 52,
+	"./stroke.js": 53,
+	"./strokeArc.js": 54,
+	"./strokeRect.js": 55,
+	"./strokeStyle.js": 56,
+	"./strokeText.js": 57,
+	"./textStyle.js": 58,
+	"./transform.js": 59,
+	"./transformPoints.js": 1,
+	"./translate.js": 60
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -519,11 +533,11 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 10;
+webpackContext.id = 11;
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 // Source: http://jsfiddle.net/vWx8V/
@@ -675,7 +689,7 @@ for (var alias in aliases) {
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 module.exports = function (point, vs) {
@@ -699,7 +713,7 @@ module.exports = function (point, vs) {
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 // shim for using process in browser
@@ -885,49 +899,57 @@ process.umask = function() { return 0; };
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-let pointInPolygon = __webpack_require__(12);
+let pointInPolygon = __webpack_require__(13);
+let transformPoints = __webpack_require__(1);
+let invertMatrix = __webpack_require__(5);
+let pointInRect = __webpack_require__(8);
+
+let matrix = new Float64Array(6);
 
 module.exports = (ctx) => {
-  let regions = ctx.canvas[Symbol.for('regions')];
-  let mousePoints = ctx.canvas[Symbol.for('mousePoints')];
-  let mouseData = ctx.canvas[Symbol.for('mouseData')];
-  let results = [];
-  let found = false;
+  let regions = ctx.canvas[Symbol.for('regions')],
+    mousePoints = ctx.canvas[Symbol.for('mousePoints')],
+    mouseData = ctx.canvas[Symbol.for('mouseData')],
+    results = {};
 
   //the mouse might have held still, add the current mouse position
-  regions.push([mouseData.x, mouseData.y]);
+  if (mousePoints.length === 0) {
+    mousePoints.push([mouseData.x, mouseData.y, mouseData.state]);
+  }
 
   for(let region of regions) {
-    for(let mousePoint of mousePoints) {
 
+    //invert the region matrix and transform the mouse points
+    let transformedMousePoints = transformPoints(mousePoints, invertMatrix(region.matrix));
+    //the mouse points are now relative to the mouse region
+
+    if (!region.polygon) {
+      for (let mousePoint of transformedMousePoints) {
+        if (pointInRect(mousePoint, region.points)) {
+          region.hover = true;
+          region.clicked = !!mouseData.clicked;
+          results[region.id] = region;
+          break;
+        }
+      }
+      continue;
+    }
+
+    //loop over each point until one is matched
+    for(let mousePoint of transformedMousePoints) {
       if (pointInPolygon(mousePoint, region.points)) {
         region.hover = true;
         region.clicked = !!mouseData.clicked;
-        results.push(region);
-        found = true;
-      }
-
-      if (found) {
+        results[region.id] = region;
         break;
       }
     }
   }
   return results;
 };
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-
-let addColorStop = (offset, color) => new Instruction('addColorStop', { offset, color });  
-
-module.exports = addColorStop;
-
 
 /***/ },
 /* 16 */
@@ -1042,11 +1064,7 @@ module.exports = clipPath;
 /* 22 */
 /***/ function(module, exports) {
 
-let createRegularPolygon = (radius, position, sides) => {
-  radius = +radius || 1;
-  position[0] = +position[0] || 0;
-  position[1] = +position[1] || 0;
-  sides = +sides || 3;
+let createRegularPolygon = (radius = 0, position = [0, 0], sides = 3) => {
   let polygon = [];
   for(let i = 0; i < sides; i++) {
     polygon.push([
@@ -1067,23 +1085,31 @@ module.exports = createRegularPolygon;
 let concat = [].concat;
 
 let createWrapper = (...args) => {
-  let found = false;
   for(let i = 0; i < args.length; i++) {
     //parse and flatten the arguments
     while (args[i] && args[i].constructor === Array) {
       args = concat.apply([], args).filter(Boolean);
     }
+
+    if (!args[i]) {
+      continue;
+    }
+
     let { type } = args[i];
     if (type === 'placeholder') {
-      found = true;
-
       // i is set to the placeholder index now
-      break;
+
+      //now grab all the elements to the left of the placeHolder
+      let left = args.splice(0, i);
+
+      //remove the placeHolder from the array
+      args.shift();
+
+      return (...children) => [left, children, args];
     }
   }
 
-  if (!found) throw new Error('Could not find placeholder, did you forget the e2d.placeHolder() call?');
-  return (...children) =>  args.splice(i, 1, children);
+  throw new Error('Could not find placeholder, did you forget the e2d.placeHolder() call?');
 };
 
 module.exports = concat;
@@ -1306,8 +1332,7 @@ module.exports = globalCompositeOperation;
 /* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-let Instruction = __webpack_require__(0),
-    hitRegion = __webpack_require__(4);
+let Instruction = __webpack_require__(0);
 
 let hitRect = (id, ...args) => {
   let [x, y, width, height] = args;
@@ -1317,18 +1342,30 @@ let hitRect = (id, ...args) => {
     x = 0;
     y = 0;
   }
-  return hitRegion(id, [
-    [x, y],
-    [x, y + height],
-    [x + width, y + height],
-    [x + width, y]
-  ]);
+  return new Instruction('hitRect', {
+    id,
+    points: [
+      [x, y],
+      [x + width, y + height]
+    ]
+  });
 };
 
 module.exports = hitRect;
 
 /***/ },
 /* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+let Instruction = __webpack_require__(0);
+
+let hitRegion = (id, points) => new Instruction('hitRegion', { id, points });
+
+module.exports = hitRegion;
+
+
+/***/ },
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1343,13 +1380,105 @@ module.exports = imageSmoothingEnabled;
 
 
 /***/ },
-/* 35 */
+/* 36 */
+/***/ function(module, exports, __webpack_require__) {
+
+let keycode = __webpack_require__(12);
+
+module.exports = (ctx) => {
+  let { canvas } = ctx;
+
+  //mouseData
+  canvas[Symbol.for('mouseData')] = {
+    x: 0,
+    y: 0,
+    dx: 0,
+    dy: 0,
+    previousX: 0,
+    previousY: 0,
+    state: false,
+    clicked: 0
+  };
+
+  let keys = canvas[Symbol.for('keyData')] = {};
+
+  for (let name in keycode.code) {
+    if (keycode.code.hasOwnProperty(name)) {
+      keys[name] = false;
+    }
+  }
+
+  //mouse regions
+  canvas[Symbol.for('regions')] = [];
+  canvas[Symbol.for('mousePoints')] = [];
+
+  //make the canvas receive touch and mouse events
+  canvas.tabIndex = 1;
+
+  let mouseMove = (evt) => {
+    let { clientX, clientY } = evt;
+    //get left and top coordinates
+    let { left, top } = canvas.getBoundingClientRect();
+
+    let mouseData = canvas[Symbol.for('mouseData')];
+
+    let point = [clientX - left, clientY - top, mouseData.state];
+
+    mouseData.x = point[0];
+    mouseData.y = point[1];
+
+    let points = canvas[Symbol.for('mousePoints')];
+
+    points.push(point);
+
+    //store the last 100 stored positions for hover detection
+    if (points.length > 100) {
+      points.splice(0, points.length - 100);
+    }
+
+    evt.preventDefault();
+    return false;
+  };
+
+  canvas.addEventListener('mousemove', (evt) => mouseMove(evt));
+  canvas.addEventListener('mousedown', (evt) => {
+    let { target } = evt;
+    if (target === canvas) {
+      let mouseData = canvas[Symbol.for('mouseData')];
+
+      if (!mouseData.state) {
+        mouseData.clicked += 1;
+      }
+
+      mouseData.state = true;
+      return mouseMove(evt);
+    }
+  });
+  canvas.addEventListener('mouseup', (evt) => {
+    let mouseData = canvas[Symbol.for('mouseData')];
+    mouseData.state = false;
+    return mouseMove(evt);
+  });
+  canvas.addEventListener('keydown', (evt) => {
+    canvas[Symbol.for('keyData')][keycode(evt.keyCode)] = true;
+    evt.preventDefault();
+    return false;
+  });
+  canvas.addEventListener('keyup', (evt) => {
+    canvas[Symbol.for('keyData')][keycode(evt.keyCode)] = false;
+    evt.preventDefault();
+    return false;
+  });
+};
+
+/***/ },
+/* 37 */
 /***/ function(module, exports) {
 
 module.exports = (ctx) => ctx.canvas[Symbol.for('keyData')];
 
 /***/ },
-/* 36 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1396,16 +1525,16 @@ module.exports = lineStyle;
 
 
 /***/ },
-/* 37 */
+/* 39 */
 /***/ function(module, exports) {
 
 module.exports = (ctx) => ctx.canvas[Symbol.for('mouseData')];
 
 /***/ },
-/* 38 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-let moveTo = __webpack_require__(6), lineTo = __webpack_require__(5);
+let moveTo = __webpack_require__(7), lineTo = __webpack_require__(6);
 
 let moveToLineTo = (point, index) => index === 0 ?
   moveTo(point[0], point[1]) :
@@ -1415,11 +1544,11 @@ module.exports = moveToLineTo;
 
 
 /***/ },
-/* 39 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
-let beginPath = __webpack_require__(1)(),
-    closePath = __webpack_require__(2)();
+let beginPath = __webpack_require__(2)(),
+    closePath = __webpack_require__(3)();
 
 let path = (...children) => [
   beginPath,
@@ -1431,7 +1560,7 @@ module.exports = path;
 
 
 /***/ },
-/* 40 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1443,7 +1572,7 @@ module.exports = placeHolder;
 
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1459,7 +1588,7 @@ module.exports = quadraticCurveTo;
 
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports) {
 
 let raf = (func) => {
@@ -1470,7 +1599,7 @@ let raf = (func) => {
 module.exports = raf;
 
 /***/ },
-/* 43 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1485,7 +1614,7 @@ module.exports = rect;
 
 
 /***/ },
-/* 44 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 
@@ -1511,8 +1640,8 @@ if (typeof CanvasRenderingContext2D !== 'undefined') {
 }
 
 //transform points function
-const transformPoints = __webpack_require__(8);
-const cycleMouseData = __webpack_require__(3);
+const transformPoints = __webpack_require__(1);
+const cycleMouseData = __webpack_require__(4);
 
 const increaseTransformStackSize = () => {
   let cache = transformStack;
@@ -1525,20 +1654,19 @@ transformStack.set(identity);
 
 const PI2 = Math.PI * 2;
 
+let empty = (target) => target && target.splice(0, target.length);
+
 module.exports = (...args) => {
-  let children = args.slice(0, -1);
-  let ctx = args[args.length - 1];
-  let regions = ctx.canvas[Symbol.for('regions')];
-  let mousePoints = ctx.canvas[Symbol.for('mousePoints')];
+  let children = args.slice(0, -1),
+   ctx = args[args.length - 1];
+
+  let regions = ctx.canvas[Symbol.for('regions')],
+    mousePoints = ctx.canvas[Symbol.for('mousePoints')];
 
   cycleMouseData(ctx);
 
-  if (regions) {
-    regions.splice(0, regions.length);
-    mousePoints.splice(0, mousePoints.length);
-  }
-  //wrap children in case
-  children = [children];
+  empty(regions);
+  empty(mousePoints);
 
   let len = children.length;
 
@@ -1737,18 +1865,15 @@ module.exports = (...args) => {
         increaseTransformStackSize();
       }
 
-      transformStack[transformStackIndex - 6] = //d
-        matrix[0];
-      transformStack[transformStackIndex - 5] = //b
-        matrix[1];
+      transformStack[transformStackIndex - 6] = matrix[0]; //a
+      transformStack[transformStackIndex - 5] = matrix[1]; //b
       transformStack[transformStackIndex - 4] = //c
         matrix[0] * props.x + matrix[2];
       transformStack[transformStackIndex - 3] = //d
         matrix[1] * props.x + matrix[3];
-      transformStack[transformStackIndex - 2] = //e
-        matrix[4];
-      transformStack[transformStackIndex - 1] = //f
-        matrix[5];
+      transformStack[transformStackIndex - 2] = matrix[4]; //e
+      transformStack[transformStackIndex - 1] = matrix[5]; //f
+
 
       ctx.setTransform(
         transformStack[transformStackIndex - 6],
@@ -1774,18 +1899,15 @@ module.exports = (...args) => {
         increaseTransformStackSize();
       }
 
-      transformStack[transformStackIndex - 6] = //d
-        matrix[0] * 1 + matrix[2] * props.y;
-      transformStack[transformStackIndex - 5] = //b
-        matrix[1] * 1 + matrix[3] * props.y;
-      transformStack[transformStackIndex - 4] = //c
-        matrix[2];
-      transformStack[transformStackIndex - 3] = //d
-        matrix[3];
-      transformStack[transformStackIndex - 2] = //e
-        matrix[4];
-      transformStack[transformStackIndex - 1] = //f
-        matrix[5];
+      transformStack[transformStackIndex - 6] =
+        matrix[0] * 1 + matrix[2] * props.y; //a
+      transformStack[transformStackIndex - 5] =
+        matrix[1] * 1 + matrix[3] * props.y; //b
+      transformStack[transformStackIndex - 4] = matrix[2]; //c
+      transformStack[transformStackIndex - 3] = matrix[3]; //d
+
+      transformStack[transformStackIndex - 2] = matrix[4]; //e
+      transformStack[transformStackIndex - 1] = matrix[5]; //f
 
       ctx.setTransform(
         transformStack[transformStackIndex - 6],
@@ -2118,17 +2240,44 @@ module.exports = (...args) => {
       continue;
     }
 
-    if (type === 'hitRegion' && regions) {
-      matrix[0] = transformStack[transformStackIndex - 6];
-      matrix[1] = transformStack[transformStackIndex - 5];
-      matrix[2] = transformStack[transformStackIndex - 4];
-      matrix[3] = transformStack[transformStackIndex - 3];
-      matrix[4] = transformStack[transformStackIndex - 2];
-      matrix[5] = transformStack[transformStackIndex - 1];
+    if (type === 'hitRect' && regions) {
+      cache = [
+        transformStack[transformStackIndex - 6],
+        transformStack[transformStackIndex - 5],
+        transformStack[transformStackIndex - 4],
+        transformStack[transformStackIndex - 3],
+        transformStack[transformStackIndex - 2],
+        transformStack[transformStackIndex - 1]
+      ];
 
       regions.push({
         id: props.id,
-        points: transformPoints(props.points, matrix),
+        points: props.points,
+        matrix: cache,
+        
+        //rectangle!
+        polygon: false,
+        hover: false,
+        touched: false,
+        clicked: false
+      });
+    }
+
+    if (type === 'hitRegion' && regions) {
+      cache = [
+        transformStack[transformStackIndex - 6],
+        transformStack[transformStackIndex - 5],
+        transformStack[transformStackIndex - 4],
+        transformStack[transformStackIndex - 3],
+        transformStack[transformStackIndex - 2],
+        transformStack[transformStackIndex - 1]
+      ];
+
+      regions.push({
+        id: props.id,
+        points: props.points,
+        matrix: cache,
+        polygon: true,
         hover: false,
         touched: false,
         clicked: false
@@ -2153,17 +2302,17 @@ module.exports = (...args) => {
 };
 
 /***/ },
-/* 45 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
-let setTransform = __webpack_require__(7);
+let setTransform = __webpack_require__(9);
 
-let resetTransform = (...children) => setTransform([1, 0, 0, 1, 0, 0], children); 
+let resetTransform = (...children) => setTransform([1, 0, 0, 1, 0, 0], children);
 
 module.exports = resetTransform;
 
 /***/ },
-/* 46 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2179,7 +2328,7 @@ module.exports = rotate;
 
 
 /***/ },
-/* 47 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2202,7 +2351,7 @@ module.exports = scale;
 
 
 /***/ },
-/* 48 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2241,7 +2390,7 @@ module.exports = shadowStyle;
 
 
 /***/ },
-/* 49 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2257,7 +2406,7 @@ module.exports = skewX;
 
 
 /***/ },
-/* 50 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2273,7 +2422,7 @@ module.exports = skewY;
 
 
 /***/ },
-/* 51 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2284,7 +2433,7 @@ module.exports = stroke;
 
 
 /***/ },
-/* 52 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0),
@@ -2314,7 +2463,7 @@ module.exports = strokeArc;
 
 
 /***/ },
-/* 53 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2329,7 +2478,7 @@ module.exports = strokeRect;
 
 
 /***/ },
-/* 54 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2345,7 +2494,7 @@ module.exports = fillStyle;
 
 
 /***/ },
-/* 55 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2371,7 +2520,7 @@ let strokeText = (...args) => {
 module.exports = strokeText;
 
 /***/ },
-/* 56 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2410,7 +2559,7 @@ module.exports = textStyle;
 
 
 /***/ },
-/* 57 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2436,7 +2585,7 @@ module.exports = transform;
 
 
 /***/ },
-/* 58 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2452,105 +2601,14 @@ module.exports = translate;
 
 
 /***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-let keycode = __webpack_require__(11);
-
-module.exports = (ctx) => {
-  let { canvas } = ctx;
-
-  //mouseData
-  canvas[Symbol.for('mouseData')] = {
-    x: 0,
-    y: 0,
-    dx: 0,
-    dy: 0,
-    previousX: 0,
-    previousY: 0,
-    state: false,
-    clicked: 0
-  };
-
-  let keys = canvas[Symbol.for('keyData')] = {};
-
-  for (let name in keycode.code) {
-    if (keycode.code.hasOwnProperty(name)) {
-      keys[name] = false;
-    }
-  }
-
-  //mouse regions
-  canvas[Symbol.for('regions')] = [];
-  canvas[Symbol.for('mousePoints')] = [];
-
-  //make the canvas receive touch and mouse events
-  canvas.tabIndex = 1;
-
-  let mouseMove = (evt) => {
-    let { clientX, clientY } = evt;
-    //get left and top coordinates
-    let { left, top } = canvas.getBoundingClientRect();
-
-    let point = [clientX - left, clientY - top];
-
-    let mouseData = canvas[Symbol.for('mouseData')];
-    mouseData.x = point[0];
-    mouseData.y = point[1];
-
-    let points = canvas[Symbol.for('mousePoints')];
-
-    points.push(point);
-
-    //store the last 100 stored positions for hover detection
-    if (points.length > 100) {
-      points.splice(0, points.length - 100);
-    }
-
-    evt.preventDefault();
-    return false;
-  };
-
-  canvas.addEventListener('mousemove', (evt) => mouseMove(evt));
-  canvas.addEventListener('mousedown', (evt) => {
-    let { target } = evt;
-    if (target === canvas) {
-      let mouseData = canvas[Symbol.for('mouseData')];
-
-      if (!mouseData.state) {
-        mouseData.clicked += 1;
-      }
-
-      mouseData.state = true;
-      return mouseMove(evt);
-    }
-  });
-  canvas.addEventListener('mouseup', (evt) => {
-    let mouseData = canvas[Symbol.for('mouseData')];
-    mouseData.state = false;
-    return mouseMove(evt);
-  });
-  canvas.addEventListener('keydown', (evt) => {
-    canvas[Symbol.for('keyData')][keycode(evt.keyCode)] = true;
-    evt.preventDefault();
-    return false;
-  });
-  canvas.addEventListener('keyup', (evt) => {
-    canvas[Symbol.for('keyData')][keycode(evt.keyCode)] = false;
-    evt.preventDefault();
-    return false;
-  });
-};
-
-/***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
-var src = __webpack_require__(10),
-  path = __webpack_require__(9);
+var src = __webpack_require__(11),
+  path = __webpack_require__(10);
 
 module.exports = src.keys().reduce(function(index, key) {
   index[path.basename(key, path.extname(key))] = src(key);

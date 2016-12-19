@@ -1,54 +1,76 @@
-let benchmark = require('benchmark');
-let suite = new benchmark.Suite({ minSamples: 1000 });
+let createRegularPolygon = require('./src/createRegularPolygon');
+let activeRegions = require('./src/activeRegions');
+let activeRegionsTest = require('./src/activeRegionsTest');
 
-let data = new Float64Array(606);
-for(let i = 0; i < 600; i++) {
-  data[i] = i;
+let chance = require('chance')();
+let id = 0;
+let createRegion = (sides) => ({
+  id: ++id,
+  points: createRegularPolygon(1, [0, 0], sides),
+  matrix: [2, 0, 0, 2, 50, 50],
+  hover: false,
+  touched: false,
+  clicked: false
+});
+
+let realPoint =[50.5, 51];
+let blankPoint = [0, 0];
+
+let ctx = {
+  canvas: {
+    [Symbol.for('regions')]: [],
+    [Symbol.for('mousePoints')]: [
+      //blankPoint,
+      //blankPoint,
+      realPoint
+    ],
+    [Symbol.for('mouseData')]: { x: 50, y: 50, state: false }
+  }
+};
+let testID = 0;
+let runTest = (sideCount, threshold) => {
+  let results = {
+    testID: ++testID,
+    sideCount,
+    threshold,
+    activeRegions: 0,
+    activeRegionsTest: 0
+  };
+  let regions = ctx.canvas[Symbol.for('regions')] = [];
+
+  let chanceProps = { min: 3, max: sideCount };
+  for(let i = 0; i < 200; i++)
+    regions.push(createRegion(chance.integer(chanceProps)));
+
+  let start = process.hrtime(), end;
+  for (let i = 1; i < 10000; i++) {
+    activeRegions(ctx);
+  }
+  end = process.hrtime(start);
+  results.activeRegions = (end[0] * 1000 + end[1] / 1000000) / 10000;
+
+  start = process.hrtime();
+  for (let i = 1; i < 10000; i++) {
+    activeRegionsTest(ctx);
+  }
+  end = process.hrtime(start);
+  results.activeRegionsTest = (end[0] * 1000 + end[1] / 1000000) / 10000;
+
+  return results;
+};
+
+let series = [
+  { name: 'activeRegionsTransformPolygon', data: [] },
+  { name: 'activeRegionsTransformMouse', data: [] },
+];
+let data = [];
+for(let i = 5; i <= 20; i++) {
+  data.push(runTest(i));
 }
-
-let matrix = new Float64Array(6);
-let a = 0, b = 0, c = 0, d = 0, e = 0, f = 0;
-
-suite
-.add('Matrix#individual-manual',
-  () => {
-    for (let i = 6; i <= 600; i+=6) {
-      a = data[i - 6];
-      b = data[i - 5];
-      c = data[i - 4];
-      d = data[i - 3];
-      e = data[i - 2];
-      f = data[i - 1];
-    }
+data.forEach(
+  (result) => {
+    series[0].data.push([result.sideCount, result.activeRegions, 1]);
+    series[1].data.push([result.sideCount, result.activeRegionsTest, 1]);
   }
-)
-.add('Matrix#manual',
-  () => {
-    for (let i = 6; i <= 600; i+=6) {
-      matrix[0] = data[i - 6];
-      matrix[1] = data[i - 5];
-      matrix[2] = data[i - 4];
-      matrix[3] = data[i - 3];
-      matrix[4] = data[i - 2];
-      matrix[5] = data[i - 1];
-    }
-  }
-)
-.add('Matrix#destructure',
-  () => {
-    for (let i = 6; i <= 600; i+=6) {
-      [a, b, c, d, e, f] = data.subarray(i - 6, i);
-    }
-  }
-)
-.add('Matrix#copyWithin',
-  () => {
-    for (let i = 6; i <= 600; i+=6) {
-      data.copyWithin(0, i, i+6);
-    }
-  }
-)
-.on('complete', function() {
-  console.log(this.filter('fastest'));
-})
-.run({ async: true });
+);
+require('fs').writeFileSync('./results.json', JSON.stringify(series));
