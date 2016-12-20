@@ -1,76 +1,39 @@
-let createRegularPolygon = require('./src/createRegularPolygon');
-let activeRegions = require('./src/activeRegions');
-let activeRegionsTest = require('./src/activeRegionsTest');
+let deserialize = require('./src/deserialize');
+let serialize = require('./src/serialize');
+let prettyHrtime = require('pretty-hrtime');
 
-let chance = require('chance')();
-let id = 0;
-let createRegion = (sides) => ({
-  id: ++id,
-  points: createRegularPolygon(1, [0, 0], sides),
-  matrix: [2, 0, 0, 2, 50, 50],
-  hover: false,
-  touched: false,
-  clicked: false
-});
 
-let realPoint =[50.5, 51];
-let blankPoint = [0, 0];
+let hitRect = require('./src/hitRect');
+let hitRegion = require('./src/hitRegion');
 
-let ctx = {
-  canvas: {
-    [Symbol.for('regions')]: [],
-    [Symbol.for('mousePoints')]: [
-      //blankPoint,
-      //blankPoint,
-      realPoint
-    ],
-    [Symbol.for('mouseData')]: { x: 50, y: 50, state: false }
-  }
-};
-let testID = 0;
-let runTest = (sideCount, threshold) => {
-  let results = {
-    testID: ++testID,
-    sideCount,
-    threshold,
-    activeRegions: 0,
-    activeRegionsTest: 0
-  };
-  let regions = ctx.canvas[Symbol.for('regions')] = [];
+let start = process.hrtime(), data;
+for (let i = 0; i < 10000; i++) {
+  data = serialize(
 
-  let chanceProps = { min: 3, max: sideCount };
-  for(let i = 0; i < 200; i++)
-    regions.push(createRegion(chance.integer(chanceProps)));
-
-  let start = process.hrtime(), end;
-  for (let i = 1; i < 10000; i++) {
-    activeRegions(ctx);
-  }
-  end = process.hrtime(start);
-  results.activeRegions = (end[0] * 1000 + end[1] / 1000000) / 10000;
-
-  start = process.hrtime();
-  for (let i = 1; i < 10000; i++) {
-    activeRegionsTest(ctx);
-  }
-  end = process.hrtime(start);
-  results.activeRegionsTest = (end[0] * 1000 + end[1] / 1000000) / 10000;
-
-  return results;
-};
-
-let series = [
-  { name: 'activeRegionsTransformPolygon', data: [] },
-  { name: 'activeRegionsTransformMouse', data: [] },
-];
-let data = [];
-for(let i = 5; i <= 20; i++) {
-  data.push(runTest(i));
+    hitRegion('test3', [
+      [0,0],
+      [1,1],
+      [2,2]
+    ]),
+    hitRegion('test4', [
+      [3,3],
+      [4,4],
+      [5,5]
+    ])
+  );
 }
-data.forEach(
-  (result) => {
-    series[0].data.push([result.sideCount, result.activeRegions, 1]);
-    series[1].data.push([result.sideCount, result.activeRegionsTest, 1]);
-  }
-);
-require('fs').writeFileSync('./results.json', JSON.stringify(series));
+let end = process.hrtime(start);
+let stime = prettyHrtime(end, {precise:true});
+setTimeout(() => console.log('data is', data));
+
+setTimeout(() => console.log(`serialization 10000x took ${stime}`));
+
+let result;
+start = process.hrtime();
+for(let i = 0; i < 10000; i++) {
+ result = deserialize(data);
+}
+end = process.hrtime(start);
+let dtime = prettyHrtime(end, {precise:true});
+setTimeout(() => console.log('result is', result));
+setTimeout(() => console.log(`deserialization 10000x took ${dtime}`));

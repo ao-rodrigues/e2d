@@ -9,7 +9,7 @@ let lineStyle = (value, ...children) => {
     lineCap: null,
     lineJoin: null,
     miterLimit: null,
-    lineDash: [],
+    lineDash: null,
     lineDashOffset: null
   };
 
@@ -26,7 +26,7 @@ let lineStyle = (value, ...children) => {
     result.miterLimit = value.miterLimit;
   }
   if (typeof value.lineDash !== 'undefined') {
-    result.lineDash = value.lineDash;
+    result.lineDash = value.lineDash || [];
   }
   if (typeof value.lineDashOffset !== 'undefined') {
     result.lineDashOffset = value.lineDashOffset;

@@ -380,9 +380,10 @@ module.exports = (...args) => {
       if (props.miterLimit !== null) {
         ctx.miterLimit = props.miterLimit;
       }
-      if (props.lineDash.length > 0) {
+      if (props.lineDash !== null) {
         ctx.setLineDash(props.lineDash);
       }
+
       if (props.lineDashOffset !== null) {
         ctx.lineDashOffset = props.lineDashOffset;
       }
@@ -416,7 +417,7 @@ module.exports = (...args) => {
       if (props.textBaseline !== null) {
         ctx.textBaseline = props.textBaseline;
       }
-      if (props.lineJoin !== null) {
+      if (props.direction !== null) {
         ctx.direction = props.direction;
       }
       continue;
@@ -532,7 +533,7 @@ module.exports = (...args) => {
     }
 
     if (type === 'arc') {
-      ctx.arc(props.x, props.y, props.r, props.startAngle, props.endAngle, props.anticlockwise);
+      ctx.arc(props.x, props.y, props.r, props.startAngle, props.endAngle, props.counterclockwise);
       continue;
     }
 

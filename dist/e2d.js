@@ -71,7 +71,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 61);
+/******/ 	return __webpack_require__(__webpack_require__.s = 64);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -96,6 +96,62 @@ module.exports = Instruction;
 /* 1 */
 /***/ function(module, exports) {
 
+module.exports = {
+  transform: 0,
+  setTransform: 1,
+  scale: 2,
+  translate: 3,
+  rotate: 4,
+  skewX: 5,
+  skewY: 6,
+  restore: 7,
+  fillRect: 8,
+  strokeRect: 9,
+  clearRect: 10,
+  rect: 11,
+  fillStyle: 12,
+  strokeStyle: 13,
+  endFillStyle: 14,
+  endStrokeStyle: 15,
+  lineStyle: 16,
+  endLineStyle: 17,
+  textStyle: 18,
+  endTextStyle: 19,
+  shadowStyle: 20,
+  endShadowStyle: 21,
+  fillText: 22,
+  strokeText: 23,
+  fillArc: 24,
+  strokeArc: 25,
+  arc: 26,
+  ellipse: 27,
+  globalCompositeOperation: 28,
+  endGlobalCompositeOperation: 29,
+  fill: 30,
+  stroke: 31,
+  beginClip: 32,
+  clip: 33,
+  endClip: 34,
+  beginPath: 35,
+  closePath: 36,
+  globalAlpha: 37,
+  endGlobalAlpha: 38,
+  hitRect: 39,
+  hitRegion: 40,
+  moveTo: 41,
+  lineTo: 42,
+  bezierCurveTo: 43,
+  quadraticCurveTo: 44,
+  imageSmoothingEnabled: 45,
+  endImageSmoothingEnabled: 46,
+  custom: 47,
+  arcTo: 48
+};
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
 let transformPoints = (points, matrix) => {
   let result = [],
       x, y;
@@ -114,7 +170,7 @@ module.exports = transformPoints;
 
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0),
@@ -125,7 +181,7 @@ let beginPath = () => cache;
 module.exports = beginPath;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -137,7 +193,7 @@ module.exports = closePath;
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 
@@ -157,7 +213,7 @@ let cycleMouseData = (ctx) => {
 module.exports = cycleMouseData;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 let det = 0;
@@ -175,7 +231,7 @@ let invertMatrix = ([a, b, c, d, e, f]) => (
  module.exports = invertMatrix;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -186,7 +242,7 @@ module.exports = lineTo;
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -197,7 +253,7 @@ module.exports = moveTo;
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 let pointInRect = ([px, py], [[x, y], [width, height]]) => px > x && py > y && px < width && py < height;
@@ -205,7 +261,7 @@ let pointInRect = ([px, py], [[x, y], [width, height]]) => px > x && py > y && p
 module.exports = pointInRect;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -227,7 +283,7 @@ let setTransform = (matrix, ...children) => [
 module.exports = setTransform;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -455,69 +511,72 @@ var substr = 'ab'.substr(-1) === 'b'
     }
 ;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(14)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(15)))
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 var map = {
 	"./Instruction.js": 0,
-	"./activeRegions.js": 15,
-	"./arc.js": 16,
-	"./arcTo.js": 17,
-	"./beginPath.js": 2,
-	"./bezierCurveTo.js": 18,
-	"./clearRect.js": 19,
-	"./clip.js": 20,
-	"./clipPath.js": 21,
-	"./closePath.js": 3,
-	"./createRegularPolygon.js": 22,
-	"./createWrapper.js": 23,
-	"./cycleMouseData.js": 4,
-	"./drawImage.js": 24,
-	"./ellipse.js": 25,
-	"./fill.js": 26,
-	"./fillArc.js": 27,
-	"./fillRect.js": 28,
-	"./fillStyle.js": 29,
-	"./fillText.js": 30,
-	"./globalAlpha.js": 31,
-	"./globalCompositeOperation.js": 32,
-	"./hitRect.js": 33,
-	"./hitRegion.js": 34,
-	"./imageSmoothingEnabled.js": 35,
-	"./initialize.js": 36,
-	"./invertMatrix.js": 5,
-	"./keyData.js": 37,
-	"./lineStyle.js": 38,
-	"./lineTo.js": 6,
-	"./mouseData.js": 39,
-	"./moveTo.js": 7,
-	"./moveToLineTo.js": 40,
-	"./path.js": 41,
-	"./placeHolder.js": 42,
-	"./pointInRect.js": 8,
-	"./quadraticCurveTo.js": 43,
-	"./raf.js": 44,
-	"./rect.js": 45,
-	"./render.js": 46,
-	"./resetTransform.js": 47,
-	"./rotate.js": 48,
-	"./scale.js": 49,
-	"./setTransform.js": 9,
-	"./shadowStyle.js": 50,
-	"./skewX.js": 51,
-	"./skewY.js": 52,
-	"./stroke.js": 53,
-	"./strokeArc.js": 54,
-	"./strokeRect.js": 55,
-	"./strokeStyle.js": 56,
-	"./strokeText.js": 57,
-	"./textStyle.js": 58,
-	"./transform.js": 59,
-	"./transformPoints.js": 1,
-	"./translate.js": 60
+	"./activeRegions.js": 16,
+	"./arc.js": 17,
+	"./arcTo.js": 18,
+	"./beginPath.js": 3,
+	"./bezierCurveTo.js": 19,
+	"./clearRect.js": 20,
+	"./clip.js": 21,
+	"./clipPath.js": 22,
+	"./closePath.js": 4,
+	"./consts.js": 1,
+	"./createRegularPolygon.js": 23,
+	"./createWrapper.js": 24,
+	"./cycleMouseData.js": 5,
+	"./deserialize.js": 25,
+	"./drawImage.js": 26,
+	"./ellipse.js": 27,
+	"./fill.js": 28,
+	"./fillArc.js": 29,
+	"./fillRect.js": 30,
+	"./fillStyle.js": 31,
+	"./fillText.js": 32,
+	"./globalAlpha.js": 33,
+	"./globalCompositeOperation.js": 34,
+	"./hitRect.js": 35,
+	"./hitRegion.js": 36,
+	"./imageSmoothingEnabled.js": 37,
+	"./initialize.js": 38,
+	"./invertMatrix.js": 6,
+	"./keyData.js": 39,
+	"./lineStyle.js": 40,
+	"./lineTo.js": 7,
+	"./mouseData.js": 41,
+	"./moveTo.js": 8,
+	"./moveToLineTo.js": 42,
+	"./path.js": 43,
+	"./placeHolder.js": 44,
+	"./pointInRect.js": 9,
+	"./quadraticCurveTo.js": 45,
+	"./raf.js": 46,
+	"./rect.js": 47,
+	"./render.js": 48,
+	"./resetTransform.js": 49,
+	"./rotate.js": 50,
+	"./scale.js": 51,
+	"./serialize.js": 52,
+	"./setTransform.js": 10,
+	"./shadowStyle.js": 53,
+	"./skewX.js": 54,
+	"./skewY.js": 55,
+	"./stroke.js": 56,
+	"./strokeArc.js": 57,
+	"./strokeRect.js": 58,
+	"./strokeStyle.js": 59,
+	"./strokeText.js": 60,
+	"./textStyle.js": 61,
+	"./transform.js": 62,
+	"./transformPoints.js": 2,
+	"./translate.js": 63
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -533,11 +592,11 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 11;
+webpackContext.id = 12;
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 // Source: http://jsfiddle.net/vWx8V/
@@ -689,7 +748,7 @@ for (var alias in aliases) {
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 module.exports = function (point, vs) {
@@ -713,7 +772,7 @@ module.exports = function (point, vs) {
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 // shim for using process in browser
@@ -899,13 +958,13 @@ process.umask = function() { return 0; };
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-let pointInPolygon = __webpack_require__(13);
-let transformPoints = __webpack_require__(1);
-let invertMatrix = __webpack_require__(5);
-let pointInRect = __webpack_require__(8);
+let pointInPolygon = __webpack_require__(14);
+let transformPoints = __webpack_require__(2);
+let invertMatrix = __webpack_require__(6);
+let pointInRect = __webpack_require__(9);
 
 let matrix = new Float64Array(6);
 
@@ -952,7 +1011,7 @@ module.exports = (ctx) => {
 };
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0),
@@ -982,7 +1041,7 @@ module.exports = arc;
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -993,7 +1052,7 @@ module.exports = arcTo;
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1012,7 +1071,7 @@ module.exports = bezierCurveTo;
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1028,7 +1087,7 @@ module.exports = clearRect;
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1049,7 +1108,7 @@ module.exports = clip;
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1061,7 +1120,7 @@ module.exports = clipPath;
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 let createRegularPolygon = (radius = 0, position = [0, 0], sides = 3) => {
@@ -1079,7 +1138,7 @@ module.exports = createRegularPolygon;
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 let concat = [].concat;
@@ -1116,7 +1175,394 @@ module.exports = concat;
 
 
 /***/ },
-/* 24 */
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+let consts = __webpack_require__(1);
+let Instruction = __webpack_require__(0);
+
+//property indexes
+let lineCapProps = ['butt', 'round', 'square'];
+let lineJoinProps = ['bevel', 'round', 'miter'];
+let textBaselineProps = ["top", "hanging", "middle", "alphabetic", "ideographic", "bottom"];
+let textAlignProps = ["left", "right", "center", "start", "end"];
+let directionProps = ["ltr", "rtl", "inherit"];
+let globalCompositeOperationProps = [
+  "source-over","source-in", "source-out",
+  "source-atop", "destination-over", "destination-in",
+  "destination-out", "destination-atop", "lighter",
+  "copy", "xor", "multiply",
+  "screen", "overlay", "darken",
+  "lighten", "color-dodge", "color-burn",
+  "hard-light", "soft-light", "difference",
+  "exclusion", "hue", "saturation",
+  "color", "luminosity"
+];
+
+let rects = {
+  [consts.fillRect]: 'fillRect',
+  [consts.strokeRect]: 'strokeRect',
+  [consts.clearRect]: 'clearRect',
+  [consts.rect]: 'rect'
+};
+
+let texts = {
+  [consts.fillText]: 'fillText',
+  [consts.strokeText]: 'strokeText',
+};
+
+let arcs = {
+  [consts.fillArc]: 'fillArc',
+  [consts.strokeArc]: 'strokeArc',
+  [consts.arc]: 'arc'
+};
+
+let emptyInstructions = {
+  [consts.endFillStyle]: 'endFillStyle',
+  [consts.endLineStyle]: 'endLineStyle',
+  [consts.endStrokeStyle]: 'endStrokeStyle',
+  [consts.endLineStyle]: 'endLineStyle',
+  [consts.restore]: 'restore',
+  [consts.endGlobalCompositeOperation]: 'endGlobalCompositeOperation',
+  [consts.fill]: 'fill',
+  [consts.stroke]: 'stroke',
+  [consts.beginClip]: 'beginClip',
+  [consts.clip]: 'clip',
+  [consts.endClip]: 'endClip',
+  [consts.beginPath]: 'beginPath',
+  [consts.closePath]: 'closePath',
+  [consts.endGlobalAlpha]: 'endGlobalAlpha',
+  [consts.endImageSmoothingEnabled]: 'endImageSmoothingEnabled'
+};
+
+let points = {
+  [consts.moveTo]: 'moveTo',
+  [consts.lineTo]: 'lineTo'
+};
+
+let getString = (data, index, length) => {
+  let value = '';
+  for (let i = 0; i < length; i++) {
+    value += String.fromCharCode(data[index + i]);
+  }
+  return value;
+};
+
+let getArray = (data, index, length) => {
+  let value = [];
+  for(let i = 0; i < length; i++) {
+    value.push(data[i]);
+  }
+  return value;
+}
+
+let deserialize = (data, custom) => {
+  let tree = [];
+  for(let i = 0; i < data.length;) {
+    let command = data[i];
+
+    if (command === consts.transform) {
+      tree.push(
+        new Instruction('transform', [
+          data[i + 1],
+          data[i + 2],
+          data[i + 3],
+          data[i + 4],
+          data[i + 5],
+          data[i + 6]
+        ])
+      );
+      i += 7;
+      continue;
+    }
+
+    if (command === consts.setTransform) {
+      tree.push(
+        new Instruction('setTransform', [
+          data[i + 1],
+          data[i + 2],
+          data[i + 3],
+          data[i + 4],
+          data[i + 5],
+          data[i + 6]
+        ])
+      );
+      i += 7;
+      continue;
+    }
+
+    if (command === consts.scale) {
+      tree.push(
+        new Instruction('scale', { x: data[i + 1], y: data[i + 2] })
+      );
+      i += 3;
+      continue;
+    }
+
+    if (command === consts.translate) {
+      tree.push(
+        new Instruction('translate', { x: data[i + 1], y: data[i + 2] })
+      );
+      i += 3;
+      continue;
+    }
+
+    if (command === consts.rotate) {
+      tree.push(
+        new Instruction('rotate', { cos: data[i + 1], sin: data[i + 2] })
+      );
+      i += 3;
+      continue;
+    }
+
+    if (command === consts.skewX) {
+      tree.push(
+        new Instruction('skewX', { x: data[i + 1] })
+      );
+      i += 2;
+      continue;
+    }
+
+    if (command === consts.skewY) {
+      tree.push(
+        new Instruction('skewY', { y: data[i + 1] })
+      );
+      i += 2;
+      continue;
+    }
+
+    if (rects[command]) {
+      tree.push(
+        new Instruction(rects[command], {
+          x: data[i + 1],
+          y: data[i + 2],
+          width: data[i + 3],
+          height: data[i + 4]
+        })
+      );
+      i += 5;
+      continue;
+    }
+
+    if (command === consts.fillStyle || command === consts.strokeStyle) {
+      let length = data[i + 1];
+
+      let value = getString(data, i + 2, length);
+
+      tree.push(
+        new Instruction(command === consts.fillStyle ? 'fillStyle' : 'strokeStyle', { value })
+      );
+      //advance the parser to the next instruction
+      i += 2 + length;
+      continue;
+    }
+
+
+
+    if (command === consts.lineStyle) {
+      tree.push(
+        new Instruction('lineStyle', {
+          lineWidth: !isNaN(data[i + 1]) ? data[i + 1] : null,
+          lineCap: !isNaN(data[i + 2]) ? lineCapProps[data[i + 2]] || null : null,
+          lineJoin: !isNaN(data[i + 3]) ? lineCapProps[data[i + 3]] || null : null,
+          miterLimit: !isNaN(data[i + 4]) ? data[i + 4] : null,
+          lineDash: !isNaN(data[i + 6]) ? getArray(data, i + 7, data[i + 6]) : null,
+          lineDashOffset: !isNaN(data[i + 5]) ? data[i + 5] : null
+        })
+      );
+      i += 7 + (!isNaN(data[i + 6]) ? data[i + 6]: 0);
+      continue;
+    }
+
+    if (command === consts.textStyle) {
+      tree.push(
+        new Instruction('textStyle', {
+          font: !isNaN(data[i + 4]) ? getString(data, i + 5, data[i + 4]) : null,
+          textAlign: !isNaN(data[i + 1]) ? textAlignProps[data[i + 1]] || null : null,
+          textBaseline: !isNaN(data[i + 2]) ? textBaselineProps[data[i + 2]] || null : null,
+          direction: !isNaN(data[i + 3]) ? directionProps[data[i + 3]] || null : null,
+        })
+      );
+      i += 4 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
+      continue;
+    }
+
+    if (command === consts.textStyle) {
+      tree.push(
+        new Instruction('shadowStyle', {
+          shadowBlur: !isNaN(data[i + 1]) ? data[i + 1] : null,
+          shadowColor: !isNaN(data[i + 4]) ? getString(data, i + 5, data[i + 4]) : null,
+          shadowOffsetX : !isNaN(data[i + 2]) ? data[i + 2] : null,
+          shadowOffsetY: !isNaN(data[i + 3]) ? data[i + 3] : null,
+        })
+      );
+      i += 4 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
+      continue;
+    }
+
+    if (texts[command]) {
+      tree.push(
+        new Instruction(texts[command], {
+          text: !isNaN(data[i + 4]) ? getString(data, i + 5, data[i + 4]) : '',
+          x: data[i + 1],
+          y: data[i + 2],
+          maxWidth: !isNaN(data[i + 3]) ? data[i + 3] : null
+        })
+      );
+      i += 4 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
+      continue;
+    }
+
+    if (command === consts.arcTo) {
+      tree.push(
+        new Instruction('arcTo', {
+          x1: data[i + 1],
+          y1: data[i + 2],
+          x2: data[i + 3],
+          y2: data[i + 4],
+          r: data[i + 5]
+        })
+      );
+      i += 6;
+      continue;
+    }
+
+    if (arcs[command]) {
+      tree.push(
+        new Instruction(arcs[command], {
+          x: data[i + 1],
+          y: data[i + 2],
+          r: data[i + 3],
+          startAngle: data[i + 4],
+          endAngle: data[i + 5],
+          counterclockwise: !!data[i + 6]
+        })
+      );
+      i += 7;
+      continue;
+    }
+
+    if (command === consts.ellipse) {
+      tree.push(
+        new Instruction('ellipse', {
+          x: data[i + 1],
+          y: data[i + 2],
+          radiusX: data[i + 3],
+          radiusY: data[i + 4],
+          rotation: data[i + 5],
+          startAngle: data[i + 6],
+          endAngle: data[i + 7],
+          anticlockwise: !!data[i + 8]
+        })
+      );
+      i += 9;
+      continue;
+    }
+
+    if (command === consts.globalCompositeOperation) {
+      tree.push(
+        new Instruction('globalCompositeOperation', {
+          value: globalCompositeOperationProps[data[i + 1]]
+        })
+      );
+      i += 2;
+      continue;
+    }
+
+    if (command === consts.hitRect) {
+      tree.push(
+        new Instruction('hitRect', {
+          id: getString(data, i + 6, data[i + 5]),
+          points: [
+            [data[i + 1], data[i + 2]],
+            [data[i + 3], data[i + 4]],
+          ]
+        })
+      );
+      i += 6 + data[i + 5];
+      continue;
+    }
+
+    if (command === consts.hitRegion) {
+      let points = [], len = data[i + 1];
+      for(let j = 0; j < len; j++) {
+        i += 2;
+        points.push(
+          [data[i], data[i + 1]]
+        );
+      }
+      i += 2;
+      tree.push(
+        new Instruction('hitRegion', {
+          id: getString(data, i + 1, data[i]),
+          points
+        })
+      );
+      i += 1 + data[i];
+      continue;
+    }
+
+    if (points[command]) {
+      tree.push(
+        new Instruction(points[command], { x: data[i + 1], y: data[i + 2] })
+      );
+      i += 3;
+      continue;
+    }
+
+    if (command === consts.bezierCurveTo) {
+      tree.push(
+        new Instruction('bezierCurveTo', {
+          cp1x: data[i + 1],
+          cp1y: data[i + 2],
+          cp2x: data[i + 3],
+          cp2y: data[i + 4],
+          x: data[i + 5],
+          y: data[i + 6]
+        })
+      );
+      i += 7;
+      continue;
+    }
+
+    if (command === consts.quadraticCurveTo) {
+      tree.push(
+        new Instruction('quadraticCurveTo', {
+          cpx: data[i + 1],
+          cpy: data[i + 2],
+          x: data[i + 3],
+          y: data[i + 4]
+        })
+      );
+      i += 5;
+      continue;
+    }
+
+    if (command === consts.imageSmoothingEnabled) {
+      tree.push(
+        new Instruction('imageSmoothingEnabled', {
+          value: !!data[i + 1]
+        })
+      );
+      i += 2;
+      continue;
+    }
+
+    if (emptyInstructions[command]) {
+      tree.push(
+        new Instruction(emptyInstructions[command])
+      );
+      i += 1;
+      continue;
+    }
+  }
+  return tree;
+};
+
+module.exports = deserialize;
+
+/***/ },
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1167,7 +1613,7 @@ module.exports = drawImage;
 
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0),
@@ -1176,12 +1622,16 @@ let Instruction = __webpack_require__(0),
 let ellipse = (...args) => {
   let [x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise] = args;
 
-  let props = { x: 0, y: 0, radiusX: x, radiusY: y, startAngle: 0, endAngle: pi2, anticlockwise: false };
+  let props = { x: 0, y: 0, radiusX: x, radiusY: y, rotation: 0, startAngle: 0, endAngle: pi2, anticlockwise: false };
 
-  if (args.length > 4) {
+  if (args.length > 5) {
     props.startAngle = startAngle;
     props.endAngle = endAngle;
     props.anticlockwise = !!anticlockwise;
+  }
+
+  if (args.length > 4) {
+    props.rotation = rotation;
   }
 
   if (args.length > 2){
@@ -1198,7 +1648,7 @@ module.exports = ellipse;
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1210,7 +1660,7 @@ module.exports = fill;
 
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 
@@ -1242,7 +1692,7 @@ module.exports = fillArc;
 
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1257,7 +1707,7 @@ module.exports = fillRect;
 
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1273,7 +1723,7 @@ module.exports = fillStyle;
 
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1293,7 +1743,7 @@ let fillText = (...args) => {
 module.exports = fillText;
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 
@@ -1310,7 +1760,7 @@ module.exports = globalAlpha;
 
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 
@@ -1329,7 +1779,7 @@ module.exports = globalCompositeOperation;
 
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1354,7 +1804,7 @@ let hitRect = (id, ...args) => {
 module.exports = hitRect;
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1365,7 +1815,7 @@ module.exports = hitRegion;
 
 
 /***/ },
-/* 35 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1380,10 +1830,10 @@ module.exports = imageSmoothingEnabled;
 
 
 /***/ },
-/* 36 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
-let keycode = __webpack_require__(12);
+let keycode = __webpack_require__(13);
 
 module.exports = (ctx) => {
   let { canvas } = ctx;
@@ -1472,13 +1922,13 @@ module.exports = (ctx) => {
 };
 
 /***/ },
-/* 37 */
+/* 39 */
 /***/ function(module, exports) {
 
 module.exports = (ctx) => ctx.canvas[Symbol.for('keyData')];
 
 /***/ },
-/* 38 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1492,7 +1942,7 @@ let lineStyle = (value, ...children) => {
     lineCap: null,
     lineJoin: null,
     miterLimit: null,
-    lineDash: [],
+    lineDash: null,
     lineDashOffset: null
   };
 
@@ -1509,7 +1959,7 @@ let lineStyle = (value, ...children) => {
     result.miterLimit = value.miterLimit;
   }
   if (typeof value.lineDash !== 'undefined') {
-    result.lineDash = value.lineDash;
+    result.lineDash = value.lineDash || [];
   }
   if (typeof value.lineDashOffset !== 'undefined') {
     result.lineDashOffset = value.lineDashOffset;
@@ -1525,16 +1975,16 @@ module.exports = lineStyle;
 
 
 /***/ },
-/* 39 */
+/* 41 */
 /***/ function(module, exports) {
 
 module.exports = (ctx) => ctx.canvas[Symbol.for('mouseData')];
 
 /***/ },
-/* 40 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
-let moveTo = __webpack_require__(7), lineTo = __webpack_require__(6);
+let moveTo = __webpack_require__(8), lineTo = __webpack_require__(7);
 
 let moveToLineTo = (point, index) => index === 0 ?
   moveTo(point[0], point[1]) :
@@ -1544,11 +1994,11 @@ module.exports = moveToLineTo;
 
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
-let beginPath = __webpack_require__(2)(),
-    closePath = __webpack_require__(3)();
+let beginPath = __webpack_require__(3)(),
+    closePath = __webpack_require__(4)();
 
 let path = (...children) => [
   beginPath,
@@ -1560,7 +2010,7 @@ module.exports = path;
 
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1572,7 +2022,7 @@ module.exports = placeHolder;
 
 
 /***/ },
-/* 43 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1588,7 +2038,7 @@ module.exports = quadraticCurveTo;
 
 
 /***/ },
-/* 44 */
+/* 46 */
 /***/ function(module, exports) {
 
 let raf = (func) => {
@@ -1599,7 +2049,7 @@ let raf = (func) => {
 module.exports = raf;
 
 /***/ },
-/* 45 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1614,7 +2064,7 @@ module.exports = rect;
 
 
 /***/ },
-/* 46 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 
@@ -1640,8 +2090,8 @@ if (typeof CanvasRenderingContext2D !== 'undefined') {
 }
 
 //transform points function
-const transformPoints = __webpack_require__(1);
-const cycleMouseData = __webpack_require__(4);
+const transformPoints = __webpack_require__(2);
+const cycleMouseData = __webpack_require__(5);
 
 const increaseTransformStackSize = () => {
   let cache = transformStack;
@@ -1999,9 +2449,10 @@ module.exports = (...args) => {
       if (props.miterLimit !== null) {
         ctx.miterLimit = props.miterLimit;
       }
-      if (props.lineDash.length > 0) {
+      if (props.lineDash !== null) {
         ctx.setLineDash(props.lineDash);
       }
+
       if (props.lineDashOffset !== null) {
         ctx.lineDashOffset = props.lineDashOffset;
       }
@@ -2035,7 +2486,7 @@ module.exports = (...args) => {
       if (props.textBaseline !== null) {
         ctx.textBaseline = props.textBaseline;
       }
-      if (props.lineJoin !== null) {
+      if (props.direction !== null) {
         ctx.direction = props.direction;
       }
       continue;
@@ -2151,7 +2602,7 @@ module.exports = (...args) => {
     }
 
     if (type === 'arc') {
-      ctx.arc(props.x, props.y, props.r, props.startAngle, props.endAngle, props.anticlockwise);
+      ctx.arc(props.x, props.y, props.r, props.startAngle, props.endAngle, props.counterclockwise);
       continue;
     }
 
@@ -2303,17 +2754,17 @@ module.exports = (...args) => {
 };
 
 /***/ },
-/* 47 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
-let setTransform = __webpack_require__(9);
+let setTransform = __webpack_require__(10);
 
 let resetTransform = (...children) => setTransform([1, 0, 0, 1, 0, 0], children);
 
 module.exports = resetTransform;
 
 /***/ },
-/* 48 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2329,7 +2780,7 @@ module.exports = rotate;
 
 
 /***/ },
-/* 49 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2352,7 +2803,383 @@ module.exports = scale;
 
 
 /***/ },
-/* 50 */
+/* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+let concat = [].concat;
+let Instruction = __webpack_require__(0);
+let consts = __webpack_require__(1);
+
+//property indexes
+let lineCapProps = ['butt', 'round', 'square'];
+let lineJoinProps = ['bevel', 'round', 'miter'];
+let textBaselineProps = ["top", "hanging", "middle", "alphabetic", "ideographic", "bottom"];
+let textAlignProps = ["left", "right", "center", "start", "end"];
+let directionProps = ["ltr", "rtl", "inherit"];
+let globalCompositeOperationProps = [
+  "source-over","source-in", "source-out",
+  "source-atop", "destination-over", "destination-in",
+  "destination-out", "destination-atop", "lighter",
+  "copy", "xor", "multiply",
+  "screen", "overlay", "darken",
+  "lighten", "color-dodge", "color-burn",
+  "hard-light", "soft-light", "difference",
+  "exclusion", "hue", "saturation",
+  "color", "luminosity"
+];
+
+let emptyInstructions = {
+  'endLineStyle': true,
+  'endTextStyle': true,
+  'endStrokeStyle': true,
+  'endFillStyle': true,
+  'endShadowStyle': true,
+  'restore': true,
+  'endGlobalCompositeOperation': true,
+  'fill': true,
+  'stroke': true,
+  'beginClip': true,
+  'clip': true,
+  'endClip': true,
+  'beginPath': true,
+  'closePath': true,
+  'endGlobalAlpha': true,
+  'endImageSmoothingEnabled': true
+};
+
+let arcs = {
+  'fillArc': true,
+  'strokeArc': true,
+  'arc': true
+};
+
+let points = {
+  'moveTo': true,
+  'lineTo': true
+};
+
+
+let pushString = (data, value) => {
+  for (let i = 0; i < value.length; i++) {
+    data.push(
+      value.charCodeAt(i)
+    );
+  }
+};
+
+let serialize = (...args) => {
+  let custom = {};
+
+  //flatten the tree
+  for (let i = 0; i < args.length; i++) {
+    while (args[i] && args[i].constructor === Array) {
+      args = concat.apply([], args);
+    }
+  }
+
+  //detect custom serializer
+  if (args[args.length - 1].constructor !== Instruction) {
+    custom = args[args.length - 1];
+    args.splice(-1, 1);
+  }
+
+  let result = [];
+
+  for (let i = 0; i < args.length; i++) {
+    let { type, props } = args[i];
+
+    if (type === 'transform') {
+      result.push(consts.transform, props[0], props[1], props[2], props[3], props[4], props[5]);
+      continue;
+    }
+
+    if (type === 'setTransform') {
+      result.push(consts.setTransform, props[0], props[1], props[2], props[3], props[4], props[5]);
+      continue;
+    }
+
+    if (type === 'scale') {
+      result.push(consts.scale, props.x, props.y);
+      continue;
+    }
+
+    if (type === 'translate') {
+      result.push(consts.translate, props.x, props.y);
+      continue;
+    }
+
+    if (type === 'rotate') {
+      result.push(consts.rotate, props.cos, props.sin);
+      continue;
+    }
+
+    if (type === 'skewX') {
+      result.push(consts.skewX, props.x);
+      continue;
+    }
+
+    if (type === 'skewY') {
+      result.push(consts.skewY, props.y);
+      continue;
+    }
+
+    if (type === 'fillRect' || type === 'strokeRect' || type === 'clearRect' || type === 'rect') {
+      result.push(consts[type], props.x, props.y, props.width, props.height);
+      continue;
+    }
+
+    if (type === 'fillStyle' || type === 'strokeStyle') {
+      result.push(
+        type === 'fillStyle' ? consts.fillStyle : consts.strokeStyle,
+        props.value.length
+      );
+
+      pushString(result, props.value);
+      continue;
+    }
+
+
+
+    if (type === 'lineStyle') {
+      result.push(
+        consts.lineStyle,
+        props.lineWidth !== null ? props.lineWidth : NaN,
+        props.lineCap ? lineCapProps.indexOf(props.lineCap) : -1,
+        props.lineJoin ? lineJoinProps.indexOf(props.lineJoin) : -1,
+        props.miterLimit !== null ? props.miterLimit : NaN,
+        props.lineDashOffset !== null ? props.lineDashOffset : NaN,
+        props.lineDash !== null ? props.lineDash.length : NaN
+      );
+
+      if (props.lineDash !== null) {
+        for (let j = 0; j < props.lineDash.length; j++) {
+          result.push(props.lineDash);
+        }
+      }
+      continue;
+    }
+
+    if (type === 'lineStyle') {
+      result.push(
+        consts.lineStyle,
+        props.lineWidth !== null ? props.lineWidth : NaN,
+        props.lineCap ? lineCapProps.indexOf(props.lineCap) : NaN,
+        props.lineJoin ? lineJoinProps.indexOf(props.lineJoin) : NaN,
+        props.miterLimit !== null ? props.miterLimit : NaN,
+        props.lineDashOffset !== null ? props.lineDashOffset : NaN,
+        props.lineDash !== null ? props.lineDash.length : NaN
+      );
+
+      if (props.lineDash !== null) {
+        for (let j = 0; j < props.lineDash.length; j++) {
+          result.push(props.lineDash);
+        }
+      }
+      continue;
+    }
+
+    if (type === 'textStyle') {
+      result.push(
+        consts.textStyle,
+        props.textAlign ? textAlignProps.indexOf(props.textAlign) : NaN,
+        props.textBaseline ? textBaselineProps.indexOf(props.textBaseline) : NaN,
+        props.direction ? directionProps.indexOf(props.direction) : NaN,
+        props.font ? props.font.length : NaN
+      );
+
+      if (props.font !== null) {
+        pushString(result, props.font);
+      }
+      continue;
+    }
+
+    if (type === 'shadowStyle') {
+      result.push(
+        consts.shadowStyle,
+        props.shadowBlur !== null ? props.shadowBlur : NaN,
+        props.shadowOffsetX !== null ? props.shadowOffsetX : NaN,
+        props.shadowOffsetY !== null ? props.shadowOffsetY : NaN,
+        props.shadowColor !== null ? props.shadowColor.length : NaN
+      );
+
+      if (props.shadowColor !== null) {
+        pushString(result, props.shadowColor);
+      }
+      continue;
+    }
+
+    if (type === 'fillText' || type === 'strokeText') {
+      result.push(
+        consts[type],
+        props.x,
+        props.y,
+        props.maxWidth !== null ? props.maxWidth : NaN,
+        props.text.length
+      );
+
+      pushString(result, props.text);
+      continue;
+    }
+
+    if (type === 'arcTo') {
+      result.push(
+        consts.arcTo,
+        props.x1,
+        props.y1,
+        props.x2,
+        props.y2,
+        props.r
+      );
+    }
+
+    if (arcs[type]) {
+      result.push(
+        consts[type],
+        props.x,
+        props.y,
+        props.r,
+        props.startAngle,
+        props.endAngle,
+        props.counterclockwise ? 1 : 0
+      );
+      continue;
+    }
+
+    if (type === 'ellipse') {
+      result.push(
+        consts.ellipse,
+        props.x,
+        props.y,
+        props.radiusX,
+        props.radiusY,
+        props.rotation,
+        props.startAngle,
+        props.endAngle,
+        props.anticlockwise ? 1 : 0
+      );
+      continue;
+    }
+
+    if (type === 'globalCompositeOperation') {
+      result.push(
+        consts.globalCombpositeOperation,
+        globalCompositeOperationProps.indexOf(props.value)
+      );
+      continue;
+    }
+
+    if (type === 'globalAlpha') {
+      result.push(
+        consts.globalAlpha,
+        props.value
+      );
+      continue;
+    }
+
+    if (points[type]) {
+      result.push(
+        consts[type],
+        props.x,
+        props.y
+      );
+      continue;
+    }
+
+    if (type === 'hitRect') {
+      result.push(
+        consts.hitRect,
+        //x
+        props.points[0][0],
+        //y
+        props.points[0][1],
+        //width
+        props.points[1][0],
+        //height
+        props.points[1][1],
+        props.id.length
+      );
+      pushString(result, props.id);
+
+      continue;
+    }
+
+    if (type === 'hitRegion') {
+      result.push(
+        consts.hitRegion,
+        props.points.length
+      );
+      for(let j = 0; j < props.points.length; j++) {
+        result.push(props.points[j][0], props.points[j][1]);
+      }
+      result.push(props.id.length);
+      pushString(result, props.id);
+
+      continue;
+    }
+
+    if (type === 'bezierCurveTo') {
+      result.push(
+        consts.bezierCurveTo,
+        props.cp1x,
+        props.cp1y,
+        props.cp2x,
+        props.cp2y,
+        props.x,
+        props.y
+      );
+
+      continue;
+    }
+
+    if (type === 'quadraticCurveTo') {
+      result.push(
+        consts.quadraticCurveTo,
+        props.cpx,
+        props.cpy,
+        props.x,
+        props.y
+      );
+
+      continue;
+    }
+
+    if (type === 'imageSmoothingEnabled') {
+      result.push(
+        consts.imageSmoothingEnabled,
+        props.value ? 1 : 0
+      );
+      continue;
+    }
+
+    if (emptyInstructions.hasOwnProperty(type)) {
+      result.push(consts[type]);
+      continue;
+    }
+
+    if (custom.hasOwnProperty(type)) {
+      result.push(
+        consts.custom,
+        type.length
+      );
+      pushString(result, type);
+
+      let data = custom[type](props);
+
+      result.push(data.length);
+      for(let j = 0; j < data.length; j++) {
+        result.push(data[j]);
+      }
+      continue;
+    }
+  }
+
+  return new Float64Array(result);
+};
+
+module.exports = serialize;
+
+/***/ },
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2391,7 +3218,7 @@ module.exports = shadowStyle;
 
 
 /***/ },
-/* 51 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2407,7 +3234,7 @@ module.exports = skewX;
 
 
 /***/ },
-/* 52 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2423,7 +3250,7 @@ module.exports = skewY;
 
 
 /***/ },
-/* 53 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2434,7 +3261,7 @@ module.exports = stroke;
 
 
 /***/ },
-/* 54 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0),
@@ -2464,7 +3291,7 @@ module.exports = strokeArc;
 
 
 /***/ },
-/* 55 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2479,7 +3306,7 @@ module.exports = strokeRect;
 
 
 /***/ },
-/* 56 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2495,7 +3322,7 @@ module.exports = strokeStyle;
 
 
 /***/ },
-/* 57 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2521,7 +3348,7 @@ let strokeText = (...args) => {
 module.exports = strokeText;
 
 /***/ },
-/* 58 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2560,7 +3387,7 @@ module.exports = textStyle;
 
 
 /***/ },
-/* 59 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2586,7 +3413,7 @@ module.exports = transform;
 
 
 /***/ },
-/* 60 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -2602,14 +3429,14 @@ module.exports = translate;
 
 
 /***/ },
-/* 61 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
-var src = __webpack_require__(11),
-  path = __webpack_require__(10);
+var src = __webpack_require__(12),
+  path = __webpack_require__(11);
 
 module.exports = src.keys().reduce(function(index, key) {
   index[path.basename(key, path.extname(key))] = src(key);

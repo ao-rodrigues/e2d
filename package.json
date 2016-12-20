@@ -4,7 +4,10 @@
   "main": "dist/e2d.js",
   "version": "4.0.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "node --inspect --debug-brk test.js",
+    "build": "webpack",
+    "dev-server": "webpack-dev-server"
   },
   "author": "",
   "license": "MIT",
@@ -17,6 +20,7 @@
     "babili-webpack-plugin": "^0.0.7",
     "benchmark": "^2.1.2",
     "chance": "^1.0.4",
+    "pretty-hrtime": "^1.0.3",
     "webpack": "2.1.0-beta.27"
   },
   "dependencies": {
