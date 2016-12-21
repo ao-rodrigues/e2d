@@ -390,6 +390,11 @@ var splitPath = function splitPath(filename) {
 
 // path.resolve([from ...], to)
 // posix version
+
+function _ref(p) {
+  return !!p;
+}
+
 exports.resolve = function () {
   var resolvedPath = '',
       resolvedAbsolute = false;
@@ -412,23 +417,24 @@ exports.resolve = function () {
   // handle relative paths to be safe (might happen when process.cwd() fails)
 
   // Normalize the path
-  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function (p) {
-    return !!p;
-  }), !resolvedAbsolute).join('/');
+  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), _ref), !resolvedAbsolute).join('/');
 
   return (resolvedAbsolute ? '/' : '') + resolvedPath || '.';
 };
 
 // path.normalize(path)
 // posix version
+
+function _ref2(p) {
+  return !!p;
+}
+
 exports.normalize = function (path) {
   var isAbsolute = exports.isAbsolute(path),
       trailingSlash = substr(path, -1) === '/';
 
   // Normalize the path
-  path = normalizeArray(filter(path.split('/'), function (p) {
-    return !!p;
-  }), !isAbsolute).join('/');
+  path = normalizeArray(filter(path.split('/'), _ref2), !isAbsolute).join('/');
 
   if (!path && !isAbsolute) {
     path = '.';
@@ -446,38 +452,41 @@ exports.isAbsolute = function (path) {
 };
 
 // posix version
+
+function _ref3(p, index) {
+  if (typeof p !== 'string') {
+    throw new TypeError('Arguments to path.join must be strings');
+  }
+  return p;
+}
+
 exports.join = function () {
   var paths = Array.prototype.slice.call(arguments, 0);
-  return exports.normalize(filter(paths, function (p, index) {
-    if (typeof p !== 'string') {
-      throw new TypeError('Arguments to path.join must be strings');
-    }
-    return p;
-  }).join('/'));
+  return exports.normalize(filter(paths, _ref3).join('/'));
 };
 
 // path.relative(from, to)
 // posix version
-exports.relative = function (from, to) {
-  from = exports.resolve(from).substr(1);
-  to = exports.resolve(to).substr(1);
 
-  function trim(arr) {
-    var start = 0;
-    for (; start < arr.length; start++) {
-      if (arr[start] !== '') break;
-    }
 
-    var end = arr.length - 1;
-    for (; end >= 0; end--) {
-      if (arr[end] !== '') break;
-    }
-
-    if (start > end) return [];
-    return arr.slice(start, end - start + 1);
+function trim(arr) {
+  var start = 0;
+  for (; start < arr.length; start++) {
+    if (arr[start] !== '') break;
   }
 
-  var fromParts = trim(from.split('/'));
+  var end = arr.length - 1;
+  for (; end >= 0; end--) {
+    if (arr[end] !== '') break;
+  }
+
+  if (start > end) return [];
+  return arr.slice(start, end - start + 1);
+}
+
+exports.relative = function (from, to) {
+  from = exports.resolve(from).substr(1);
+  to = exports.resolve(to).substr(1);var fromParts = trim(from.split('/'));
   var toParts = trim(to.split('/'));
 
   var length = Math.min(fromParts.length, toParts.length);
@@ -1267,6 +1276,26 @@ var createWrapper = function createWrapper() {
     args[_key] = arguments[_key];
   }
 
+  function _ref() {
+    // i is set to the placeholder index now
+
+    //now grab all the elements to the left of the placeHolder
+    var left = args.splice(0, i);
+
+    //remove the placeHolder from the array
+    args.shift();
+
+    return {
+      v: function v() {
+        for (var _len2 = arguments.length, children = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          children[_key2] = arguments[_key2];
+        }
+
+        return [left, children, args];
+      }
+    };
+  }
+
   for (var i = 0; i < args.length; i++) {
     //parse and flatten the arguments
     while (args[i] && args[i].constructor === Array) {
@@ -1280,25 +1309,7 @@ var createWrapper = function createWrapper() {
     var type = args[i].type;
 
     if (type === 'placeholder') {
-      var _ret = function () {
-        // i is set to the placeholder index now
-
-        //now grab all the elements to the left of the placeHolder
-        var left = args.splice(0, i);
-
-        //remove the placeHolder from the array
-        args.shift();
-
-        return {
-          v: function v() {
-            for (var _len2 = arguments.length, children = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-              children[_key2] = arguments[_key2];
-            }
-
-            return [left, children, args];
-          }
-        };
-      }();
+      var _ret = _ref();
 
       if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
     }
@@ -1586,7 +1597,25 @@ var deserialize = function deserialize(data, custom) {
       i += 1;
       continue;
     }
+
+    if (command === consts.custom) {
+      if (!custom) {
+        throw new Error('Custom command object was falsy, did you forget to provide deserialize methods?');
+      }
+      var type = getString(data, i + 2, data[i + 1]);
+      if (!custom[type]) {
+        throw new Error('Custom command serialized but no matching deserialize method provided.');
+      }
+
+      i += 2 + data[i + 1];
+
+      //data[i] is count
+      //data[i + 1] is first element
+      tree.push(new Instruction(type, custom[type](data.slice(i + 1, i + 1 + data[i]))));
+      i += 1 + data[i];
+    }
   }
+
   return tree;
 };
 
@@ -2269,7 +2298,8 @@ module.exports = function () {
       ctx = args[args.length - 1];
 
   var regions = ctx.canvas[Symbol.for('regions')],
-      mousePoints = ctx.canvas[Symbol.for('mousePoints')];
+      mousePoints = ctx.canvas[Symbol.for('mousePoints')],
+      extensions = ctx.canvas[Symbol.for('extensions')];
 
   var cache = void 0;
 
@@ -2837,6 +2867,11 @@ module.exports = function () {
 
     if (type === 'endImageSmoothingEnabled') {
       ctx.imageSmoothingEnabled = imageSmoothingEnabledStack.pop();
+      continue;
+    }
+
+    if (extensions && extensions[type]) {
+      extensions[type](props, ctx);
       continue;
     }
   }

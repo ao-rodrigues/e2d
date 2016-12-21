@@ -42,7 +42,8 @@ module.exports = (...args) => {
    ctx = args[args.length - 1];
 
   let regions = ctx.canvas[Symbol.for('regions')],
-    mousePoints = ctx.canvas[Symbol.for('mousePoints')];
+    mousePoints = ctx.canvas[Symbol.for('mousePoints')],
+    extensions = ctx.canvas[Symbol.for('extensions')];
 
   let cache;
 
@@ -681,5 +682,9 @@ module.exports = (...args) => {
       continue;
     }
 
+    if (extensions && extensions[type]) {
+      extensions[type](props, ctx);
+      continue;
+    }
   }
 };

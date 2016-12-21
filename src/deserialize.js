@@ -76,7 +76,7 @@ let getArray = (data, index, length) => {
     value.push(data[i]);
   }
   return value;
-}
+};
 
 let deserialize = (data, custom) => {
   let tree = [];
@@ -377,7 +377,31 @@ let deserialize = (data, custom) => {
       i += 1;
       continue;
     }
+
+    if (command === consts.custom) {
+      if (!custom) {
+        throw new Error('Custom command object was falsy, did you forget to provide deserialize methods?');
+      }
+      let type = getString(data, i + 2, data[i + 1]);
+      if (!custom[type]) {
+        throw new Error('Custom command serialized but no matching deserialize method provided.');
+      }
+
+      i += 2 + data[i + 1];
+
+      //data[i] is count
+      //data[i + 1] is first element
+      tree.push(
+        new Instruction(type,
+          custom[type](
+            data.slice(i + 1, i + 1 + data[i])
+          )
+        )
+      );
+      i += 1 + data[i];
+    }
   }
+
   return tree;
 };
 

@@ -2,26 +2,23 @@ let deserialize = require('./src/deserialize');
 let serialize = require('./src/serialize');
 let prettyHrtime = require('pretty-hrtime');
 
-let textStyle = require('./src/textStyle');
-let fillText = require('./src/fillText');
+let Instruction = require('./src/Instruction');
 
-//  font: null,
-//  textAlign: null,
-//  textBaseline: null,
-//  direction: null
 let start = process.hrtime(), data;
 let tree = [
-  textStyle({ font: '12px monospace' }, fillText("Hello World!")),
-  textStyle({ textAlign: 'left' }, fillText("Hello World!")),
-  textStyle({ textAlign: 'right' }, fillText("Hello World!")),
-  textStyle({ textAlign: 'center' }, fillText("Hello World!")),
-  textStyle({ textAlign: 'start' }, fillText("Hello World!")),
-  textStyle({ textAlign: 'end' }, fillText("Hello World!")),
+ new Instruction('test', { a: 1, b: 2, c: 3 })
 ];
+
+let sMethods = {
+  'test': ({ a, b, c }) => [a, b, c]
+};
+let dsMethods = {
+  'test': ([a, b, c]) => ({ a, b, c })
+};
 
 for (let i = 0; i < 10000; i++) {
   data = serialize(
-    tree
+    tree, sMethods
   );
 }
 let end = process.hrtime(start);
@@ -33,7 +30,7 @@ setTimeout(() => console.log(`serialization 10000x took ${stime}`));
 let result;
 start = process.hrtime();
 for(let i = 0; i < 10000; i++) {
- result = deserialize(data);
+ result = deserialize(data, dsMethods);
 }
 end = process.hrtime(start);
 let dtime = prettyHrtime(end, {precise:true});
