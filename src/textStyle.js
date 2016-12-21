@@ -24,7 +24,7 @@ let textStyle = (value, ...children) => {
   }
 
   return [
-    new Instruction('textStyle', value),
+    new Instruction('textStyle', result),
     children,
     end
   ];

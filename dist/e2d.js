@@ -1222,6 +1222,8 @@ let emptyInstructions = {
   [consts.endLineStyle]: 'endLineStyle',
   [consts.endStrokeStyle]: 'endStrokeStyle',
   [consts.endLineStyle]: 'endLineStyle',
+  [consts.endShadowStyle]: 'endShadowStyle',
+  [consts.endTextStyle]: 'endTextStyle',
   [consts.restore]: 'restore',
   [consts.endGlobalCompositeOperation]: 'endGlobalCompositeOperation',
   [consts.fill]: 'fill',
@@ -1383,11 +1385,11 @@ let deserialize = (data, custom) => {
           direction: !isNaN(data[i + 3]) ? directionProps[data[i + 3]] || null : null,
         })
       );
-      i += 4 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
+      i += 5 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
       continue;
     }
 
-    if (command === consts.textStyle) {
+    if (command === consts.shadowStyle) {
       tree.push(
         new Instruction('shadowStyle', {
           shadowBlur: !isNaN(data[i + 1]) ? data[i + 1] : null,
@@ -1396,7 +1398,7 @@ let deserialize = (data, custom) => {
           shadowOffsetY: !isNaN(data[i + 3]) ? data[i + 3] : null,
         })
       );
-      i += 4 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
+      i += 5 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
       continue;
     }
 
@@ -1409,7 +1411,7 @@ let deserialize = (data, custom) => {
           maxWidth: !isNaN(data[i + 3]) ? data[i + 3] : null
         })
       );
-      i += 4 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
+      i += 5 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
       continue;
     }
 
@@ -2930,7 +2932,7 @@ let serialize = (...args) => {
 
     if (type === 'fillStyle' || type === 'strokeStyle') {
       result.push(
-        type === 'fillStyle' ? consts.fillStyle : consts.strokeStyle,
+        consts[type],
         props.value.length
       );
 
@@ -2938,26 +2940,6 @@ let serialize = (...args) => {
       continue;
     }
 
-
-
-    if (type === 'lineStyle') {
-      result.push(
-        consts.lineStyle,
-        props.lineWidth !== null ? props.lineWidth : NaN,
-        props.lineCap ? lineCapProps.indexOf(props.lineCap) : -1,
-        props.lineJoin ? lineJoinProps.indexOf(props.lineJoin) : -1,
-        props.miterLimit !== null ? props.miterLimit : NaN,
-        props.lineDashOffset !== null ? props.lineDashOffset : NaN,
-        props.lineDash !== null ? props.lineDash.length : NaN
-      );
-
-      if (props.lineDash !== null) {
-        for (let j = 0; j < props.lineDash.length; j++) {
-          result.push(props.lineDash);
-        }
-      }
-      continue;
-    }
 
     if (type === 'lineStyle') {
       result.push(
@@ -3377,7 +3359,7 @@ let textStyle = (value, ...children) => {
   }
 
   return [
-    new Instruction('textStyle', value),
+    new Instruction('textStyle', result),
     children,
     end
   ];

@@ -122,7 +122,7 @@ let serialize = (...args) => {
 
     if (type === 'fillStyle' || type === 'strokeStyle') {
       result.push(
-        type === 'fillStyle' ? consts.fillStyle : consts.strokeStyle,
+        consts[type],
         props.value.length
       );
 
@@ -130,26 +130,6 @@ let serialize = (...args) => {
       continue;
     }
 
-
-
-    if (type === 'lineStyle') {
-      result.push(
-        consts.lineStyle,
-        props.lineWidth !== null ? props.lineWidth : NaN,
-        props.lineCap ? lineCapProps.indexOf(props.lineCap) : -1,
-        props.lineJoin ? lineJoinProps.indexOf(props.lineJoin) : -1,
-        props.miterLimit !== null ? props.miterLimit : NaN,
-        props.lineDashOffset !== null ? props.lineDashOffset : NaN,
-        props.lineDash !== null ? props.lineDash.length : NaN
-      );
-
-      if (props.lineDash !== null) {
-        for (let j = 0; j < props.lineDash.length; j++) {
-          result.push(props.lineDash);
-        }
-      }
-      continue;
-    }
 
     if (type === 'lineStyle') {
       result.push(

@@ -1335,7 +1335,7 @@ var texts = (_texts = {}, _texts[consts.fillText] = 'fillText', _texts[consts.st
 
 var arcs = (_arcs = {}, _arcs[consts.fillArc] = 'fillArc', _arcs[consts.strokeArc] = 'strokeArc', _arcs[consts.arc] = 'arc', _arcs);
 
-var emptyInstructions = (_emptyInstructions = {}, _emptyInstructions[consts.endFillStyle] = 'endFillStyle', _emptyInstructions[consts.endLineStyle] = 'endLineStyle', _emptyInstructions[consts.endStrokeStyle] = 'endStrokeStyle', _emptyInstructions[consts.endLineStyle] = 'endLineStyle', _emptyInstructions[consts.restore] = 'restore', _emptyInstructions[consts.endGlobalCompositeOperation] = 'endGlobalCompositeOperation', _emptyInstructions[consts.fill] = 'fill', _emptyInstructions[consts.stroke] = 'stroke', _emptyInstructions[consts.beginClip] = 'beginClip', _emptyInstructions[consts.clip] = 'clip', _emptyInstructions[consts.endClip] = 'endClip', _emptyInstructions[consts.beginPath] = 'beginPath', _emptyInstructions[consts.closePath] = 'closePath', _emptyInstructions[consts.endGlobalAlpha] = 'endGlobalAlpha', _emptyInstructions[consts.endImageSmoothingEnabled] = 'endImageSmoothingEnabled', _emptyInstructions);
+var emptyInstructions = (_emptyInstructions = {}, _emptyInstructions[consts.endFillStyle] = 'endFillStyle', _emptyInstructions[consts.endLineStyle] = 'endLineStyle', _emptyInstructions[consts.endStrokeStyle] = 'endStrokeStyle', _emptyInstructions[consts.endLineStyle] = 'endLineStyle', _emptyInstructions[consts.endShadowStyle] = 'endShadowStyle', _emptyInstructions[consts.endTextStyle] = 'endTextStyle', _emptyInstructions[consts.restore] = 'restore', _emptyInstructions[consts.endGlobalCompositeOperation] = 'endGlobalCompositeOperation', _emptyInstructions[consts.fill] = 'fill', _emptyInstructions[consts.stroke] = 'stroke', _emptyInstructions[consts.beginClip] = 'beginClip', _emptyInstructions[consts.clip] = 'clip', _emptyInstructions[consts.endClip] = 'endClip', _emptyInstructions[consts.beginPath] = 'beginPath', _emptyInstructions[consts.closePath] = 'closePath', _emptyInstructions[consts.endGlobalAlpha] = 'endGlobalAlpha', _emptyInstructions[consts.endImageSmoothingEnabled] = 'endImageSmoothingEnabled', _emptyInstructions);
 
 var points = (_points = {}, _points[consts.moveTo] = 'moveTo', _points[consts.lineTo] = 'lineTo', _points);
 
@@ -1444,18 +1444,18 @@ var deserialize = function deserialize(data, custom) {
         textBaseline: !isNaN(data[i + 2]) ? textBaselineProps[data[i + 2]] || null : null,
         direction: !isNaN(data[i + 3]) ? directionProps[data[i + 3]] || null : null
       }));
-      i += 4 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
+      i += 5 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
       continue;
     }
 
-    if (command === consts.textStyle) {
+    if (command === consts.shadowStyle) {
       tree.push(new Instruction('shadowStyle', {
         shadowBlur: !isNaN(data[i + 1]) ? data[i + 1] : null,
         shadowColor: !isNaN(data[i + 4]) ? getString(data, i + 5, data[i + 4]) : null,
         shadowOffsetX: !isNaN(data[i + 2]) ? data[i + 2] : null,
         shadowOffsetY: !isNaN(data[i + 3]) ? data[i + 3] : null
       }));
-      i += 4 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
+      i += 5 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
       continue;
     }
 
@@ -1466,7 +1466,7 @@ var deserialize = function deserialize(data, custom) {
         y: data[i + 2],
         maxWidth: !isNaN(data[i + 3]) ? data[i + 3] : null
       }));
-      i += 4 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
+      i += 5 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
       continue;
     }
 
@@ -3030,20 +3030,9 @@ var serialize = function serialize() {
     }
 
     if (type === 'fillStyle' || type === 'strokeStyle') {
-      result.push(type === 'fillStyle' ? consts.fillStyle : consts.strokeStyle, props.value.length);
+      result.push(consts[type], props.value.length);
 
       pushString(result, props.value);
-      continue;
-    }
-
-    if (type === 'lineStyle') {
-      result.push(consts.lineStyle, props.lineWidth !== null ? props.lineWidth : NaN, props.lineCap ? lineCapProps.indexOf(props.lineCap) : -1, props.lineJoin ? lineJoinProps.indexOf(props.lineJoin) : -1, props.miterLimit !== null ? props.miterLimit : NaN, props.lineDashOffset !== null ? props.lineDashOffset : NaN, props.lineDash !== null ? props.lineDash.length : NaN);
-
-      if (props.lineDash !== null) {
-        for (var j = 0; j < props.lineDash.length; j++) {
-          result.push(props.lineDash);
-        }
-      }
       continue;
     }
 
@@ -3051,7 +3040,7 @@ var serialize = function serialize() {
       result.push(consts.lineStyle, props.lineWidth !== null ? props.lineWidth : NaN, props.lineCap ? lineCapProps.indexOf(props.lineCap) : NaN, props.lineJoin ? lineJoinProps.indexOf(props.lineJoin) : NaN, props.miterLimit !== null ? props.miterLimit : NaN, props.lineDashOffset !== null ? props.lineDashOffset : NaN, props.lineDash !== null ? props.lineDash.length : NaN);
 
       if (props.lineDash !== null) {
-        for (var _j = 0; _j < props.lineDash.length; _j++) {
+        for (var j = 0; j < props.lineDash.length; j++) {
           result.push(props.lineDash);
         }
       }
@@ -3129,8 +3118,8 @@ var serialize = function serialize() {
 
     if (type === 'hitRegion') {
       result.push(consts.hitRegion, props.points.length);
-      for (var _j2 = 0; _j2 < props.points.length; _j2++) {
-        result.push(props.points[_j2][0], props.points[_j2][1]);
+      for (var _j = 0; _j < props.points.length; _j++) {
+        result.push(props.points[_j][0], props.points[_j][1]);
       }
       result.push(props.id.length);
       pushString(result, props.id);
@@ -3167,8 +3156,8 @@ var serialize = function serialize() {
       var data = custom[type](props);
 
       result.push(data.length);
-      for (var _j3 = 0; _j3 < data.length; _j3++) {
-        result.push(data[_j3]);
+      for (var _j2 = 0; _j2 < data.length; _j2++) {
+        result.push(data[_j2]);
       }
       continue;
     }
@@ -3424,7 +3413,7 @@ var textStyle = function textStyle(value) {
     result.direction = value.direction;
   }
 
-  return [new Instruction('textStyle', value), children, end];
+  return [new Instruction('textStyle', result), children, end];
 };
 
 module.exports = textStyle;

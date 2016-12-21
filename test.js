@@ -2,24 +2,26 @@ let deserialize = require('./src/deserialize');
 let serialize = require('./src/serialize');
 let prettyHrtime = require('pretty-hrtime');
 
+let textStyle = require('./src/textStyle');
+let fillText = require('./src/fillText');
 
-let hitRect = require('./src/hitRect');
-let hitRegion = require('./src/hitRegion');
-
+//  font: null,
+//  textAlign: null,
+//  textBaseline: null,
+//  direction: null
 let start = process.hrtime(), data;
+let tree = [
+  textStyle({ font: '12px monospace' }, fillText("Hello World!")),
+  textStyle({ textAlign: 'left' }, fillText("Hello World!")),
+  textStyle({ textAlign: 'right' }, fillText("Hello World!")),
+  textStyle({ textAlign: 'center' }, fillText("Hello World!")),
+  textStyle({ textAlign: 'start' }, fillText("Hello World!")),
+  textStyle({ textAlign: 'end' }, fillText("Hello World!")),
+];
+
 for (let i = 0; i < 10000; i++) {
   data = serialize(
-
-    hitRegion('test3', [
-      [0,0],
-      [1,1],
-      [2,2]
-    ]),
-    hitRegion('test4', [
-      [3,3],
-      [4,4],
-      [5,5]
-    ])
+    tree
   );
 }
 let end = process.hrtime(start);

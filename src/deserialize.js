@@ -42,6 +42,8 @@ let emptyInstructions = {
   [consts.endLineStyle]: 'endLineStyle',
   [consts.endStrokeStyle]: 'endStrokeStyle',
   [consts.endLineStyle]: 'endLineStyle',
+  [consts.endShadowStyle]: 'endShadowStyle',
+  [consts.endTextStyle]: 'endTextStyle',
   [consts.restore]: 'restore',
   [consts.endGlobalCompositeOperation]: 'endGlobalCompositeOperation',
   [consts.fill]: 'fill',
@@ -203,11 +205,11 @@ let deserialize = (data, custom) => {
           direction: !isNaN(data[i + 3]) ? directionProps[data[i + 3]] || null : null,
         })
       );
-      i += 4 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
+      i += 5 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
       continue;
     }
 
-    if (command === consts.textStyle) {
+    if (command === consts.shadowStyle) {
       tree.push(
         new Instruction('shadowStyle', {
           shadowBlur: !isNaN(data[i + 1]) ? data[i + 1] : null,
@@ -216,7 +218,7 @@ let deserialize = (data, custom) => {
           shadowOffsetY: !isNaN(data[i + 3]) ? data[i + 3] : null,
         })
       );
-      i += 4 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
+      i += 5 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
       continue;
     }
 
@@ -229,7 +231,7 @@ let deserialize = (data, custom) => {
           maxWidth: !isNaN(data[i + 3]) ? data[i + 3] : null
         })
       );
-      i += 4 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
+      i += 5 + (!isNaN(data[i + 4]) ? data[i + 4] : 0);
       continue;
     }
 
