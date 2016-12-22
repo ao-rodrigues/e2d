@@ -49,6 +49,7 @@ There is also a babel plugin for `e2dx` elements so that developing on canvas ca
 //always call this ONCE to obtain mouse, activeRegion, and keyboard support
 e2d.initialize(ctx);
 
+//raf will call the provided function every frame
 e2d.raf(() => {
   //get the mouse position
   let { x, y } = e2d.mouseData(ctx);
