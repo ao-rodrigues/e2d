@@ -1,5 +1,7 @@
 # e2d.js
 
+[![Gitter](https://badges.gitter.im/e2d/e2d.svg)](https://gitter.im/e2d/e2d?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 An es2015/es5 declarative canvas renderer.
 
 # Introduction

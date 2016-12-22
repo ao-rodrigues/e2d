@@ -1,9 +1,10 @@
 var path = require('path'),
     pkg = require('./package.json'),
     webpack = require('webpack'),
-    Babili = require('babili-webpack-plugin');
+    Babili = require('babili-webpack-plugin'),
+    LibrarySourcePlugin = require('library-src-plugin');
 
-let buildConfig = (useBabel, useUglify, name) => ({
+let buildConfig = (useBabel, minify, name) => ({
   context: __dirname,
   entry: {
     [name]: './index.js'
@@ -11,7 +12,7 @@ let buildConfig = (useBabel, useUglify, name) => ({
   output: {
     path: path.join(__dirname, '/dist/'),
     filename: '[name].js',
-    library: 'e2d',
+    library: pkg.name,
     libraryTarget: 'umd'
   },
   module: {
@@ -22,18 +23,21 @@ let buildConfig = (useBabel, useUglify, name) => ({
       }
     ] : []
   },
-  plugins: useUglify && useBabel ? [
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true
+  plugins: [
+    minify ? new Babili() : null,
+    new LibrarySourcePlugin({
+      entry: pkg.name,
+      folder: './src/'
     })
-  ] :
-  useUglify && !useBabel ? [
-    new Babili()
-  ] : []
+  ].filter(Boolean),
+  externals: [
+    'e2d'
+  ],
+  performance: false
 });
 module.exports = [
-  buildConfig(false, false, 'e2d'),
-  buildConfig(true, false, 'e2d.compat'),
-  buildConfig(false, true, 'e2d.min'),
-  buildConfig(true, true, 'e2d.compat.min')
+  buildConfig(false, false, pkg.name),
+  buildConfig(true, false, `${pkg.name}.compat`),
+  buildConfig(false, true, `${pkg.name}.min`),
+  buildConfig(true, true, `${pkg.name}.compat.min`)
 ];
