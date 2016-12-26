@@ -1,4 +1,6 @@
 {
-  "plugins": ["closure-elimination"],
-  "presets": ["es2015-loose"]
+  "plugins": ["closure-elimination", "nofn"],
+  "presets": [
+    ["es2015", { "loose": true, "module": true }]
+  ]
 }
