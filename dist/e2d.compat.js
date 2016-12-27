@@ -1838,7 +1838,7 @@ module.exports = skewX;
 var Instruction = __webpack_require__(0);
 var end = new Instruction('restore');
 
-var skewY = function skewY(x) {
+var skewY = function skewY(y) {
   for (var _len = arguments.length, children = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     children[_key - 1] = arguments[_key];
   }
