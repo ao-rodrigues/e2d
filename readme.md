@@ -560,7 +560,7 @@ These are the most important functions abstracted by the e2d render engine. Inte
 The `rotate` function uses radians like this.
 
 ```javascript
-let rotatedSquare = e2d.rotate(Math.PI / 4, //90 degrees
+let rotatedSquare = e2d.rotate(Math.PI / 8, //45 degrees
   e2d.path(e2d.rect), e2d.stroke()
 );
 ```

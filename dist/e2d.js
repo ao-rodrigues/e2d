@@ -1587,7 +1587,7 @@ let shadowStyle = (value, ...children) => {
   }
 
   return [
-    new Instruction('shadowStyle', value),
+    new Instruction('shadowStyle', result),
     children,
     end
   ];

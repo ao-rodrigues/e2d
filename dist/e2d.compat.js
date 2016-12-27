@@ -1803,7 +1803,7 @@ var shadowStyle = function shadowStyle(value) {
     result.shadowOffsetY = value.shadowOffsetY;
   }
 
-  return [new Instruction('shadowStyle', value), children, end];
+  return [new Instruction('shadowStyle', result), children, end];
 };
 
 module.exports = shadowStyle;
