@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 56);
+/******/ 	return __webpack_require__(__webpack_require__.s = 57);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -273,7 +273,7 @@ module.exports = setTransform;
 "use strict";
 
 
-var pointInPolygon = __webpack_require__(55);
+var pointInPolygon = __webpack_require__(56);
 var transformPoints = __webpack_require__(1);
 var invertMatrix = __webpack_require__(5);
 var pointInRect = __webpack_require__(8);
@@ -636,6 +636,27 @@ module.exports = ellipse;
 "use strict";
 
 
+module.exports = function (ctx) {
+  for (var _len = arguments.length, methods = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    methods[_key - 1] = arguments[_key];
+  }
+
+  var extensions = ctx[Symbol.for('extensions')];
+  if (!extensions) {
+    extensions = ctx[Symbol.for('extensions')] = {};
+  }
+  methods.forEach(function (method) {
+    return Object.assign(extensions, method);
+  });
+};
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var Instruction = __webpack_require__(0);
 var cache = new Instruction('fill');
 
@@ -646,7 +667,7 @@ var fill = function fill() {
 module.exports = fill;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -687,7 +708,7 @@ var fillArc = function fillArc() {
 module.exports = fillArc;
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -702,7 +723,7 @@ var fillRect = function fillRect() {
 module.exports = fillRect;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -722,7 +743,7 @@ var fillStyle = function fillStyle(value) {
 module.exports = fillStyle;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -753,7 +774,7 @@ var fillText = function fillText() {
 module.exports = fillText;
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -772,7 +793,7 @@ var globalAlpha = function globalAlpha(value) {
 module.exports = globalAlpha;
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -793,7 +814,7 @@ var globalCompositeOperation = function globalCompositeOperation(value) {
 module.exports = globalCompositeOperation;
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -826,7 +847,7 @@ var hitRect = function hitRect(id) {
 module.exports = hitRect;
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -841,7 +862,7 @@ var hitRegion = function hitRegion(id, points) {
 module.exports = hitRegion;
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -860,13 +881,13 @@ var imageSmoothingEnabled = function imageSmoothingEnabled(value) {
 module.exports = imageSmoothingEnabled;
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var keycode = __webpack_require__(54);
+var keycode = __webpack_require__(55);
 
 module.exports = function (ctx) {
   var canvas = ctx.canvas;
@@ -963,7 +984,7 @@ module.exports = function (ctx) {
 };
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -974,7 +995,7 @@ module.exports = function (ctx) {
 };
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1022,7 +1043,7 @@ var lineStyle = function lineStyle(value) {
 module.exports = lineStyle;
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1033,7 +1054,7 @@ module.exports = function (ctx) {
 };
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1049,7 +1070,7 @@ var moveToLineTo = function moveToLineTo(point, index) {
 module.exports = moveToLineTo;
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1069,7 +1090,7 @@ var path = function path() {
 module.exports = path;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1089,7 +1110,7 @@ var quadraticCurveTo = function quadraticCurveTo(cpx, cpy, x, y) {
 module.exports = quadraticCurveTo;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1105,7 +1126,7 @@ var raf = function raf(func) {
 module.exports = raf;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1120,7 +1141,7 @@ var rect = function rect() {
 module.exports = rect;
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1704,7 +1725,7 @@ module.exports = function () {
 };
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1723,7 +1744,7 @@ var resetTransform = function resetTransform() {
 module.exports = resetTransform;
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1743,7 +1764,7 @@ var rotate = function rotate(r) {
 module.exports = rotate;
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1768,7 +1789,7 @@ var scale = function scale(x, y) {
 module.exports = scale;
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1809,7 +1830,7 @@ var shadowStyle = function shadowStyle(value) {
 module.exports = shadowStyle;
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1829,7 +1850,7 @@ var skewX = function skewX(x) {
 module.exports = skewX;
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1849,7 +1870,7 @@ var skewY = function skewY(y) {
 module.exports = skewY;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1864,7 +1885,7 @@ var stroke = function stroke() {
 module.exports = stroke;
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1905,7 +1926,7 @@ var strokeArc = function strokeArc() {
 module.exports = strokeArc;
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1920,7 +1941,7 @@ var strokeRect = function strokeRect() {
 module.exports = strokeRect;
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1940,7 +1961,7 @@ var strokeStyle = function strokeStyle(value) {
 module.exports = strokeStyle;
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1977,7 +1998,7 @@ var strokeText = function strokeText() {
 module.exports = strokeText;
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2018,7 +2039,7 @@ var textStyle = function textStyle(value) {
 module.exports = textStyle;
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2038,7 +2059,7 @@ var transform = function transform(values) {
 module.exports = transform;
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2058,7 +2079,7 @@ var translate = function translate(x, y) {
 module.exports = translate;
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2213,7 +2234,7 @@ for (var alias in aliases) {
 }
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2241,7 +2262,7 @@ module.exports = function (point, vs) {
 };
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2261,47 +2282,48 @@ module.exports = {
   'cycleMouseData': __webpack_require__(4),
   'drawImage': __webpack_require__(18),
   'ellipse': __webpack_require__(19),
-  'fill': __webpack_require__(20),
-  'fillArc': __webpack_require__(21),
-  'fillRect': __webpack_require__(22),
-  'fillStyle': __webpack_require__(23),
-  'fillText': __webpack_require__(24),
-  'globalAlpha': __webpack_require__(25),
-  'globalCompositeOperation': __webpack_require__(26),
-  'hitRect': __webpack_require__(27),
-  'hitRegion': __webpack_require__(28),
-  'imageSmoothingEnabled': __webpack_require__(29),
-  'initialize': __webpack_require__(30),
+  'extend': __webpack_require__(20),
+  'fill': __webpack_require__(21),
+  'fillArc': __webpack_require__(22),
+  'fillRect': __webpack_require__(23),
+  'fillStyle': __webpack_require__(24),
+  'fillText': __webpack_require__(25),
+  'globalAlpha': __webpack_require__(26),
+  'globalCompositeOperation': __webpack_require__(27),
+  'hitRect': __webpack_require__(28),
+  'hitRegion': __webpack_require__(29),
+  'imageSmoothingEnabled': __webpack_require__(30),
+  'initialize': __webpack_require__(31),
   'Instruction': __webpack_require__(0),
   'invertMatrix': __webpack_require__(5),
-  'keyData': __webpack_require__(31),
-  'lineStyle': __webpack_require__(32),
+  'keyData': __webpack_require__(32),
+  'lineStyle': __webpack_require__(33),
   'lineTo': __webpack_require__(6),
-  'mouseData': __webpack_require__(33),
+  'mouseData': __webpack_require__(34),
   'moveTo': __webpack_require__(7),
-  'moveToLineTo': __webpack_require__(34),
-  'path': __webpack_require__(35),
+  'moveToLineTo': __webpack_require__(35),
+  'path': __webpack_require__(36),
   'pointInRect': __webpack_require__(8),
-  'quadraticCurveTo': __webpack_require__(36),
-  'raf': __webpack_require__(37),
-  'rect': __webpack_require__(38),
-  'render': __webpack_require__(39),
-  'resetTransform': __webpack_require__(40),
-  'rotate': __webpack_require__(41),
-  'scale': __webpack_require__(42),
+  'quadraticCurveTo': __webpack_require__(37),
+  'raf': __webpack_require__(38),
+  'rect': __webpack_require__(39),
+  'render': __webpack_require__(40),
+  'resetTransform': __webpack_require__(41),
+  'rotate': __webpack_require__(42),
+  'scale': __webpack_require__(43),
   'setTransform': __webpack_require__(9),
-  'shadowStyle': __webpack_require__(43),
-  'skewX': __webpack_require__(44),
-  'skewY': __webpack_require__(45),
-  'stroke': __webpack_require__(46),
-  'strokeArc': __webpack_require__(47),
-  'strokeRect': __webpack_require__(48),
-  'strokeStyle': __webpack_require__(49),
-  'strokeText': __webpack_require__(50),
-  'textStyle': __webpack_require__(51),
-  'transform': __webpack_require__(52),
+  'shadowStyle': __webpack_require__(44),
+  'skewX': __webpack_require__(45),
+  'skewY': __webpack_require__(46),
+  'stroke': __webpack_require__(47),
+  'strokeArc': __webpack_require__(48),
+  'strokeRect': __webpack_require__(49),
+  'strokeStyle': __webpack_require__(50),
+  'strokeText': __webpack_require__(51),
+  'textStyle': __webpack_require__(52),
+  'transform': __webpack_require__(53),
   'transformPoints': __webpack_require__(1),
-  'translate': __webpack_require__(53)
+  'translate': __webpack_require__(54)
 };
 
 /***/ }

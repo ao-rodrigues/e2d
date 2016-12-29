@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 56);
+/******/ 	return __webpack_require__(__webpack_require__.s = 57);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -232,7 +232,7 @@ module.exports = setTransform;
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-let pointInPolygon = __webpack_require__(55);
+let pointInPolygon = __webpack_require__(56);
 let transformPoints = __webpack_require__(1);
 let invertMatrix = __webpack_require__(5);
 let pointInRect = __webpack_require__(8);
@@ -496,6 +496,20 @@ module.exports = ellipse;
 
 /***/ },
 /* 20 */
+/***/ function(module, exports) {
+
+module.exports = (ctx, ...methods) => {
+  let extensions = ctx[Symbol.for('extensions')];
+  if (!extensions) {
+    extensions = ctx[Symbol.for('extensions')] = {};
+  }
+  methods.forEach(
+    (method) => Object.assign(extensions, method)
+  );
+};
+
+/***/ },
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -507,7 +521,7 @@ module.exports = fill;
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 
@@ -539,7 +553,7 @@ module.exports = fillArc;
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -554,7 +568,7 @@ module.exports = fillRect;
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -570,7 +584,7 @@ module.exports = fillStyle;
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -590,7 +604,7 @@ let fillText = (...args) => {
 module.exports = fillText;
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 
@@ -607,7 +621,7 @@ module.exports = globalAlpha;
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 
@@ -626,7 +640,7 @@ module.exports = globalCompositeOperation;
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -651,7 +665,7 @@ let hitRect = (id, ...args) => {
 module.exports = hitRect;
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -662,7 +676,7 @@ module.exports = hitRegion;
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -677,10 +691,10 @@ module.exports = imageSmoothingEnabled;
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
-let keycode = __webpack_require__(54);
+let keycode = __webpack_require__(55);
 
 module.exports = (ctx) => {
   let { canvas } = ctx;
@@ -769,13 +783,13 @@ module.exports = (ctx) => {
 };
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 module.exports = (ctx) => ctx.canvas[Symbol.for('keyData')];
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -822,13 +836,13 @@ module.exports = lineStyle;
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 module.exports = (ctx) => ctx.canvas[Symbol.for('mouseData')];
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 let moveTo = __webpack_require__(7), lineTo = __webpack_require__(6);
@@ -841,7 +855,7 @@ module.exports = moveToLineTo;
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 let beginPath = __webpack_require__(2)(),
@@ -857,7 +871,7 @@ module.exports = path;
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -873,7 +887,7 @@ module.exports = quadraticCurveTo;
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports) {
 
 let raf = (func) => {
@@ -884,7 +898,7 @@ let raf = (func) => {
 module.exports = raf;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -899,7 +913,7 @@ module.exports = rect;
 
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 
@@ -1509,7 +1523,7 @@ module.exports = (...args) => {
 };
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 let setTransform = __webpack_require__(9);
@@ -1519,7 +1533,7 @@ let resetTransform = (...children) => setTransform([1, 0, 0, 1, 0, 0], children)
 module.exports = resetTransform;
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1535,7 +1549,7 @@ module.exports = rotate;
 
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1558,7 +1572,7 @@ module.exports = scale;
 
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1597,7 +1611,7 @@ module.exports = shadowStyle;
 
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1613,7 +1627,7 @@ module.exports = skewX;
 
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1629,7 +1643,7 @@ module.exports = skewY;
 
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1640,7 +1654,7 @@ module.exports = stroke;
 
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0),
@@ -1670,7 +1684,7 @@ module.exports = strokeArc;
 
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1685,7 +1699,7 @@ module.exports = strokeRect;
 
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1701,7 +1715,7 @@ module.exports = strokeStyle;
 
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1727,7 +1741,7 @@ let strokeText = (...args) => {
 module.exports = strokeText;
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1766,7 +1780,7 @@ module.exports = textStyle;
 
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1792,7 +1806,7 @@ module.exports = transform;
 
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 let Instruction = __webpack_require__(0);
@@ -1808,7 +1822,7 @@ module.exports = translate;
 
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports) {
 
 // Source: http://jsfiddle.net/vWx8V/
@@ -1960,7 +1974,7 @@ for (var alias in aliases) {
 
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports) {
 
 module.exports = function (point, vs) {
@@ -1984,7 +1998,7 @@ module.exports = function (point, vs) {
 
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = {
@@ -2001,47 +2015,48 @@ module.exports = {
   'cycleMouseData': __webpack_require__(4),
   'drawImage': __webpack_require__(18),
   'ellipse': __webpack_require__(19),
-  'fill': __webpack_require__(20),
-  'fillArc': __webpack_require__(21),
-  'fillRect': __webpack_require__(22),
-  'fillStyle': __webpack_require__(23),
-  'fillText': __webpack_require__(24),
-  'globalAlpha': __webpack_require__(25),
-  'globalCompositeOperation': __webpack_require__(26),
-  'hitRect': __webpack_require__(27),
-  'hitRegion': __webpack_require__(28),
-  'imageSmoothingEnabled': __webpack_require__(29),
-  'initialize': __webpack_require__(30),
+  'extend': __webpack_require__(20),
+  'fill': __webpack_require__(21),
+  'fillArc': __webpack_require__(22),
+  'fillRect': __webpack_require__(23),
+  'fillStyle': __webpack_require__(24),
+  'fillText': __webpack_require__(25),
+  'globalAlpha': __webpack_require__(26),
+  'globalCompositeOperation': __webpack_require__(27),
+  'hitRect': __webpack_require__(28),
+  'hitRegion': __webpack_require__(29),
+  'imageSmoothingEnabled': __webpack_require__(30),
+  'initialize': __webpack_require__(31),
   'Instruction': __webpack_require__(0),
   'invertMatrix': __webpack_require__(5),
-  'keyData': __webpack_require__(31),
-  'lineStyle': __webpack_require__(32),
+  'keyData': __webpack_require__(32),
+  'lineStyle': __webpack_require__(33),
   'lineTo': __webpack_require__(6),
-  'mouseData': __webpack_require__(33),
+  'mouseData': __webpack_require__(34),
   'moveTo': __webpack_require__(7),
-  'moveToLineTo': __webpack_require__(34),
-  'path': __webpack_require__(35),
+  'moveToLineTo': __webpack_require__(35),
+  'path': __webpack_require__(36),
   'pointInRect': __webpack_require__(8),
-  'quadraticCurveTo': __webpack_require__(36),
-  'raf': __webpack_require__(37),
-  'rect': __webpack_require__(38),
-  'render': __webpack_require__(39),
-  'resetTransform': __webpack_require__(40),
-  'rotate': __webpack_require__(41),
-  'scale': __webpack_require__(42),
+  'quadraticCurveTo': __webpack_require__(37),
+  'raf': __webpack_require__(38),
+  'rect': __webpack_require__(39),
+  'render': __webpack_require__(40),
+  'resetTransform': __webpack_require__(41),
+  'rotate': __webpack_require__(42),
+  'scale': __webpack_require__(43),
   'setTransform': __webpack_require__(9),
-  'shadowStyle': __webpack_require__(43),
-  'skewX': __webpack_require__(44),
-  'skewY': __webpack_require__(45),
-  'stroke': __webpack_require__(46),
-  'strokeArc': __webpack_require__(47),
-  'strokeRect': __webpack_require__(48),
-  'strokeStyle': __webpack_require__(49),
-  'strokeText': __webpack_require__(50),
-  'textStyle': __webpack_require__(51),
-  'transform': __webpack_require__(52),
+  'shadowStyle': __webpack_require__(44),
+  'skewX': __webpack_require__(45),
+  'skewY': __webpack_require__(46),
+  'stroke': __webpack_require__(47),
+  'strokeArc': __webpack_require__(48),
+  'strokeRect': __webpack_require__(49),
+  'strokeStyle': __webpack_require__(50),
+  'strokeText': __webpack_require__(51),
+  'textStyle': __webpack_require__(52),
+  'transform': __webpack_require__(53),
   'transformPoints': __webpack_require__(1),
-  'translate': __webpack_require__(53)
+  'translate': __webpack_require__(54)
 };
 
 /***/ }

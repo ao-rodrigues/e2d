@@ -12,6 +12,7 @@ module.exports = {
   'cycleMouseData': require('./src/cycleMouseData'),
   'drawImage': require('./src/drawImage'),
   'ellipse': require('./src/ellipse'),
+  'extend': require('./src/extend'),
   'fill': require('./src/fill'),
   'fillArc': require('./src/fillArc'),
   'fillRect': require('./src/fillRect'),
