@@ -39,7 +39,8 @@ let empty = (target) => target && target.splice(0, target.length);
 
 module.exports = (...args) => {
   let children = args.slice(0, -1),
-   ctx = args[args.length - 1];
+   ctx = args[args.length - 1],
+   isTransformDirty = true;
 
   let regions = ctx.canvas[Symbol.for('regions')],
     mousePoints = ctx.canvas[Symbol.for('mousePoints')],

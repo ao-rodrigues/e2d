@@ -210,6 +210,34 @@ e2d.raf(
 );
 ```
 
+### __extend.js__
+
+For use with custom instructions.
+
+```javascript
+import { Instruction, extend } from 'e2d';
+
+let extensions = {
+  //first argument is props, second is the canvas context.
+  drawSprite({ x, y, size, rotation, texture }, ctx) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(size, size);
+    ctx.drawImage(texture, 0, 0, texture.width, texture.height);
+    //always make sure to restore canvas context state to prevent render side-effects
+    ctx.restore();
+  }
+}
+
+//to use it, pass an Instruction object to e2d.render
+e2d.render(
+  new Instruction('drawSprite', { x, y, size, rotation, texture }),
+  ctx
+);
+
+
+```
+
 # Render Commands
 
 The following render commands are provided to you in this library.

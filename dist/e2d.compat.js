@@ -1193,7 +1193,8 @@ module.exports = function () {
   }
 
   var children = args.slice(0, -1),
-      ctx = args[args.length - 1];
+      ctx = args[args.length - 1],
+      isTransformDirty = true;
 
   var regions = ctx.canvas[Symbol.for('regions')],
       mousePoints = ctx.canvas[Symbol.for('mousePoints')],
