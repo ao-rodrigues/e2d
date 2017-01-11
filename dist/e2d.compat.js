@@ -1117,10 +1117,12 @@ module.exports = quadraticCurveTo;
 
 
 var raf = function raf(func) {
-  requestAnimationFrame(function () {
-    return raf(func);
-  });
-  return func();
+  var funcCaller = function funcCaller() {
+    requestAnimationFrame(funcCaller);
+    func();
+  };
+
+  requestAnimationFrame(funcCaller);
 };
 
 module.exports = raf;

@@ -1,6 +1,10 @@
 let raf = (func) => {
-  requestAnimationFrame(() => raf(func));
-  return func();
+  let funcCaller = function() {
+    requestAnimationFrame(funcCaller);
+    func();
+  };
+
+  requestAnimationFrame(funcCaller);
 };
 
 module.exports = raf;
