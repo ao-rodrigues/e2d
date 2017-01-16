@@ -1412,6 +1412,7 @@ module.exports = function () {
     }
 
     if (isTransformDirty) {
+      isTransformDirty = false;
       ctx.setTransform(transformStack[transformStackIndex - 6], transformStack[transformStackIndex - 5], transformStack[transformStackIndex - 4], transformStack[transformStackIndex - 3], transformStack[transformStackIndex - 2], transformStack[transformStackIndex - 1]);
     }
 

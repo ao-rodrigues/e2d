@@ -259,6 +259,7 @@ module.exports = (...args) => {
     }
 
     if (isTransformDirty) {
+      isTransformDirty = false;
       ctx.setTransform(
         transformStack[transformStackIndex - 6],
         transformStack[transformStackIndex - 5],
