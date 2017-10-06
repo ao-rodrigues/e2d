@@ -1,5 +1,5 @@
-const Instruction = require('./Instruction');
+import Instruction from './Instruction';
 
 const clipPath = () => new Instruction('call', { name: 'clip', args: [], count: 0 });
 
-module.exports = clipPath;
+export default clipPath;

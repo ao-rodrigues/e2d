@@ -1,5 +1,5 @@
-const Instruction = require('./Instruction'),
-   end = new Instruction('endTextStyle');
+import Instruction from './Instruction';
+const end = new Instruction('endTextStyle');
 
 const textStyle = (value, ...children) => {
   value = value || {};
@@ -30,4 +30,4 @@ const textStyle = (value, ...children) => {
   ];
 };
 
-module.exports = textStyle;
+export default textStyle;

@@ -10,4 +10,4 @@ const invertMatrix = ([a, b, c, d, e, f]) => (
     (e * b - a * f) * det
   ]
 );
- module.exports = invertMatrix;
+export default invertMatrix;

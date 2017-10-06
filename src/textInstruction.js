@@ -1,4 +1,4 @@
-const Instruction = require('./Instruction');
+import Instruction from './Instruction';
 
 const textInstruction = (name) => (...args) => new Instruction('call', {
   name,
@@ -6,4 +6,4 @@ const textInstruction = (name) => (...args) => new Instruction('call', {
   count: args.length >= 4 ? 4 : 3
 });
 
-module.exports = textInstruction;
+export default textInstruction;

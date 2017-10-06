@@ -1,5 +1,5 @@
-const Instruction = require('./Instruction'),
-    pi2 = Math.PI * 2;
+import Instruction from './Instruction';
+const pi2 = Math.PI * 2;
 
 const fillArc = (...args) => {
   const [x, y, r, startAngle, endAngle, counterclockwise] = args;
@@ -21,4 +21,4 @@ const fillArc = (...args) => {
   return new Instruction("fillArc",  props);
 };
 
-module.exports = fillArc;
+export default fillArc;

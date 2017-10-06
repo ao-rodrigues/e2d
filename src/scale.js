@@ -1,5 +1,6 @@
-const Instruction = require('./Instruction'),
-  end = new Instruction('restore');
+import Instruction from './Instruction';
+
+const end = new Instruction('restore');
 
 const scale = (x, y, ...children) => {
   if (typeof y !== 'number') {
@@ -14,4 +15,4 @@ const scale = (x, y, ...children) => {
   ];
 };
 
-module.exports = scale;
+export default scale;

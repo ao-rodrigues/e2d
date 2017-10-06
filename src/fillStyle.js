@@ -1,1 +1,3 @@
-module.exports = require('./stackable')('fillStyle');
+import stackable from './stackable';
+
+export default stackable('fillStyle');

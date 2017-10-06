@@ -11,4 +11,4 @@ const createRegularPolygon = (radius = 0, position = [0, 0], sides = 3) => {
   return polygon;
 };
 
-module.exports = createRegularPolygon;
+export default createRegularPolygon;

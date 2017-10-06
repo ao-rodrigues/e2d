@@ -1,5 +1,5 @@
-const setTransform = require('./setTransform');
+import setTransform from './setTransform';
 
 const resetTransform = (...children) => setTransform([1, 0, 0, 1, 0, 0], children);
 
-module.exports = resetTransform;
+export default resetTransform;

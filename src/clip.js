@@ -1,6 +1,6 @@
-const emptyCall = require('./emptyCall');
+import emptyCall from './emptyCall';
 
-const Instruction = require('./Instruction');
+import Instruction from './Instruction';
 
 const begin = [emptyCall('save'), emptyCall('beginPath')],
   performClip = emptyCall('clip'),
@@ -14,4 +14,4 @@ const clip = (path, ...children) => [
   end
 ];
 
-module.exports = clip;
+export default clip;

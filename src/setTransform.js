@@ -1,5 +1,5 @@
-const Instruction = require('./Instruction'),
-   end = new Instruction('restore');
+import Instruction from './Instruction';
+const end = new Instruction('restore');
 
 const setTransform = (matrix, ...children) => [
   new Instruction('setTransform', [
@@ -14,4 +14,4 @@ const setTransform = (matrix, ...children) => [
   end
 ];
 
-module.exports = setTransform;
+export default setTransform;

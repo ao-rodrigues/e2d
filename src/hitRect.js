@@ -1,4 +1,4 @@
-const Instruction = require('./Instruction');
+import Instruction from './Instruction';
 
 const hitRect = (id, ...args) => {
   let [x, y, width, height] = args;
@@ -17,4 +17,4 @@ const hitRect = (id, ...args) => {
   });
 };
 
-module.exports = hitRect;
+export default hitRect;

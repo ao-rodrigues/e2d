@@ -1,4 +1,4 @@
-const Instruction = require('./Instruction');
+import Instruction from './Instruction';
 
 const stackable = (stack) => {
   const end = new Instruction('pop', { stack });
@@ -10,4 +10,5 @@ const stackable = (stack) => {
 
   return stackableFunc;
 };
-module.exports = stackable;
+
+export default stackable;

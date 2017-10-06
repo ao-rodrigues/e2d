@@ -12,4 +12,4 @@ const cycleMouseData = (ctx) => {
   }
 };
 
-module.exports = cycleMouseData;
+export default cycleMouseData;

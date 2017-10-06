@@ -1,1 +1,3 @@
-module.exports = require('./stackable')('imageSmoothingEnabled');
+import stackable from './stackable';
+
+export default stackable('imageSmoothingEnabled');

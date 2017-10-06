@@ -1,3 +1,3 @@
-const rectInstruction = require('./rectInstruction');
+import rectInstruction from './rectInstruction';
 
-module.exports = rectInstruction('strokeRect');
+export default rectInstruction('strokeRect');

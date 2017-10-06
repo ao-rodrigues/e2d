@@ -1,5 +1,3 @@
-const Instruction = require('./Instruction');
+import textInstruction from './textInstruction';
 
-const textInstruction = require('./textInstruction');
-
-module.exports = textInstruction('strokeText');
+export default textInstruction('strokeText');

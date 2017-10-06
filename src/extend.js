@@ -3,4 +3,4 @@ const extend = (ctx, ...methods) => {
   Object.assign(extensions, ...methods);
 };
 
-module.exports = extend;
+export default extend;

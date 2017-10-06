@@ -1,4 +1,4 @@
-const Instruction = require('./Instruction');
+import Instruction from './Instruction';
 
 const drawImage = (...args) => {
   if (args.length >= 9) {
@@ -26,4 +26,4 @@ const drawImage = (...args) => {
   });
 };
 
-module.exports = drawImage;
+export default drawImage;

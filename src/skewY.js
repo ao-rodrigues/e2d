@@ -1,5 +1,5 @@
-const Instruction = require('./Instruction'),
-   end = new Instruction('restore');
+import Instruction from './Instruction';
+const end = new Instruction('restore');
 
 const skewY = (y, ...children) => [
   new Instruction('skewY', { y: Math.tan(y) }),
@@ -7,4 +7,4 @@ const skewY = (y, ...children) => [
   end
 ];
 
-module.exports = skewY;
+export default skewY;

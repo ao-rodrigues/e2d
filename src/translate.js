@@ -1,5 +1,5 @@
-const Instruction = require('./Instruction'),
-  end = new Instruction('restore');
+import Instruction from './Instruction';
+const end = new Instruction('restore');
 
 const translate = (x, y, ...children) => [
   new Instruction('translate', { x, y }),
@@ -7,4 +7,4 @@ const translate = (x, y, ...children) => [
   end
 ];
 
-module.exports = translate;
+export default translate;

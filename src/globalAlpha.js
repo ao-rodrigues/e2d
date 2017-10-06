@@ -1,9 +1,11 @@
-const Instruction = require('./Instruction'),
-  end = new Instruction('endGlobalAlpha');
+import Instruction from './Instruction';
+
+const end = new Instruction('endGlobalAlpha');
 
 const globalAlpha = (value, ...children) => [
   new Instruction('globalAlpha', { value }),
   children,
   end
 ];
-module.exports = globalAlpha;
+
+export default globalAlpha;

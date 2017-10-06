@@ -1,9 +1,11 @@
-const pointInPolygon = require('point-in-polygon'),
-  transformPoints = require('./transformPoints'),
-  invertMatrix = require('./invertMatrix'),
-  pointInRect = require('./pointInRect'),
-  pointInCircle = require('./pointInCircle'),
-  matrix = new Float64Array(6),
+import transformPoints from './transformPoints';
+import invertMatrix from './invertMatrix';
+import pointInRect from './pointInRect';
+import pointInCircle from './pointInCircle';
+
+import pointInPolygon from 'point-in-polygon';
+
+const matrix = new Float64Array(6),
   alwaysFalse = () => false;
 
 const activeRegions = (ctx) => {
@@ -39,4 +41,4 @@ const activeRegions = (ctx) => {
   return results;
 };
 
-module.exports = activeRegions;
+export default activeRegions;

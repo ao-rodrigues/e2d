@@ -12,4 +12,4 @@ const transformPoints = (points, matrix) => {
   return result;
 };
 
-module.exports = transformPoints;
+export default transformPoints;

@@ -1,10 +1,10 @@
-const beginPath = require('./beginPath')(),
-    closePath = require('./closePath')();
+import beginPath from './beginPath';
+import closePath from './closePath';
 
 const path = (...children) => [
-  beginPath,
+  beginPath(),
   children,
-  closePath
+  closePath()
 ];
 
-module.exports = path;
+export default path;

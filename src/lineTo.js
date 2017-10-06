@@ -1,3 +1,3 @@
-const pointInstruction = require('./pointInstruction');
+import pointInstruction from './pointInstruction';
 
-module.exports = pointInstruction('lineTo');
+export default pointInstruction('lineTo');

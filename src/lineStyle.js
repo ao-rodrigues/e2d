@@ -1,5 +1,6 @@
-const Instruction = require('./Instruction'),
-  end = new Instruction('endLineStyle');
+import Instruction from './Instruction';
+
+const end = new Instruction('endLineStyle');
 
 const lineStyle = (value, ...children) => {
   value = value || {};
@@ -38,4 +39,4 @@ const lineStyle = (value, ...children) => {
   ];
 };
 
-module.exports = lineStyle;
+export default lineStyle;

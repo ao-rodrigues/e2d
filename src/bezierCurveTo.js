@@ -1,4 +1,4 @@
-const Instruction = require('./Instruction');
+import Instruction from './Instruction';
 
 const bezierCurveTo = (cp1x, cp1y, cp2x, cp2y, x, y) => new Instruction('call', {
   name: 'bezierCurveTo',
@@ -6,4 +6,4 @@ const bezierCurveTo = (cp1x, cp1y, cp2x, cp2y, x, y) => new Instruction('call', 
   count: 5
 });
 
-module.exports = bezierCurveTo;
+export default bezierCurveTo;

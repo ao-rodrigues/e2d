@@ -1,141 +1,8 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["e2d"] = factory();
-	else
-		root["e2d"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 14);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ (function(module, exports) {
-
-class Instruction {
-  constructor(type, props) {
-    this.type = type;
-    this.props = props;
-    return Object.seal(this);
-  }
-}
-
-Object.seal(Instruction);
-Object.seal(Instruction.prototype);
-
-module.exports = Instruction;
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
-
-const emptyCall = (name) => () => new Instruction('call', { name, args: [], count: 0 });
-
-module.exports = emptyCall;
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
-
-const rectInstruction = (name) => (...args) => new Instruction("call", {
-  name,
-  args: args.length > 2 ? args : [0, 0, args[0], args[1]],
-  count: 4
-});
-
-module.exports = rectInstruction;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
-
-const stackable = (stack) => {
-  const end = new Instruction('pop', { stack });
-  const stackableFunc = (value, ...children) => [
-    new Instruction('push', { stack, value }),
-    ...children,
-    end
-  ];
-
-  return stackableFunc;
-};
-module.exports = stackable;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.e2d = factory());
+}(this, (function () { 'use strict';
 
 const transformPoints = (points, matrix) => {
   const result = [];
@@ -151,13 +18,6 @@ const transformPoints = (points, matrix) => {
   return result;
 };
 
-module.exports = transformPoints;
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
 let det = 0;
 const invertMatrix = ([a, b, c, d, e, f]) => (
   det = 1 / (a * d - c * b),
@@ -170,160 +30,31 @@ const invertMatrix = ([a, b, c, d, e, f]) => (
     (e * b - a * f) * det
   ]
 );
- module.exports = invertMatrix;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports) {
 
 const pointInRect = ([px, py], [[x, y], [width, height]]) => px > x && py > y && px < width && py < height;
 
-module.exports = pointInRect;
+const pointInCircle = ([x, y], [cx, cy, cr]) => ((cx - x) ** 2 + (cy - y) ** 2) < cr ** 2;
 
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const emptyCall = __webpack_require__(1);
-
-module.exports = emptyCall('beginPath');
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const emptyCall = __webpack_require__(1);
-
-module.exports = emptyCall('closePath');
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
-
-const textInstruction = (name) => (...args) => new Instruction('call', {
-  name,
-  args: args.length >= 3 ? args : [args[0], 0, 0],
-  count: args.length >= 4 ? 4 : 3
-});
-
-module.exports = textInstruction;
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const pointInstruction = __webpack_require__(66);
-
-module.exports = pointInstruction('lineTo');
-
-
-/***/ }),
-/* 11 */,
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const pointInstruction = __webpack_require__(66);
-
-module.exports = pointInstruction('moveTo');
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-   end = new Instruction('restore');
-
-const setTransform = (matrix, ...children) => [
-  new Instruction('setTransform', [
-    matrix[0],
-    matrix[1],
-    matrix[2],
-    matrix[3],
-    matrix[4],
-    matrix[5]
-  ]),
-  children,
-  end
-];
-
-module.exports = setTransform;
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = {
-  'activeRegions': __webpack_require__(15),
-  'arc': __webpack_require__(18),
-  'arcTo': __webpack_require__(19),
-  'beginPath': __webpack_require__(7),
-  'bezierCurveTo': __webpack_require__(20),
-  'clearRect': __webpack_require__(21),
-  'clip': __webpack_require__(22),
-  'clipPath': __webpack_require__(23),
-  'closePath': __webpack_require__(8),
-  'createRegularPolygon': __webpack_require__(24),
-  'drawImage': __webpack_require__(25),
-  'ellipse': __webpack_require__(26),
-  'endClip': __webpack_require__(27),
-  'extend': __webpack_require__(28),
-  'fill': __webpack_require__(29),
-  'fillArc': __webpack_require__(30),
-  'fillRect': __webpack_require__(31),
-  'fillStyle': __webpack_require__(32),
-  'fillText': __webpack_require__(33),
-  'globalAlpha': __webpack_require__(34),
-  'globalCompositeOperation': __webpack_require__(35),
-  'hitCircle': __webpack_require__(36),
-  'hitRect': __webpack_require__(37),
-  'hitRegion': __webpack_require__(38),
-  'imageSmoothingEnabled': __webpack_require__(39),
-  'initialize': __webpack_require__(40),
-  'Instruction': __webpack_require__(0),
-  'invertMatrix': __webpack_require__(5),
-  'keyData': __webpack_require__(42),
-  'lineStyle': __webpack_require__(43),
-  'lineTo': __webpack_require__(10),
-  'mouseData': __webpack_require__(44),
-  'moveTo': __webpack_require__(12),
-  'moveToLineTo': __webpack_require__(45),
-  'path': __webpack_require__(46),
-  'pointInRect': __webpack_require__(6),
-  'quadraticCurveTo': __webpack_require__(47),
-  'raf': __webpack_require__(48),
-  'rect': __webpack_require__(49),
-  'render': __webpack_require__(50),
-  'resetTransform': __webpack_require__(52),
-  'rotate': __webpack_require__(53),
-  'scale': __webpack_require__(54),
-  'setTransform': __webpack_require__(13),
-  'shadowStyle': __webpack_require__(55),
-  'skewX': __webpack_require__(56),
-  'skewY': __webpack_require__(57),
-  'stroke': __webpack_require__(58),
-  'strokeArc': __webpack_require__(59),
-  'strokeRect': __webpack_require__(60),
-  'strokeStyle': __webpack_require__(61),
-  'strokeText': __webpack_require__(62),
-  'textStyle': __webpack_require__(63),
-  'transform': __webpack_require__(64),
-  'transformPoints': __webpack_require__(4),
-  'translate': __webpack_require__(65),
+var pointInPolygon = function (point, vs) {
+    // ray-casting algorithm based on
+    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+    
+    var x = point[0], y = point[1];
+    
+    var inside = false;
+    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        var xi = vs[i][0], yi = vs[i][1];
+        var xj = vs[j][0], yj = vs[j][1];
+        
+        var intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+    
+    return inside;
 };
 
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const pointInPolygon = __webpack_require__(16),
-  transformPoints = __webpack_require__(4),
-  invertMatrix = __webpack_require__(5),
-  pointInRect = __webpack_require__(6),
-  pointInCircle = __webpack_require__(17),
-  matrix = new Float64Array(6),
-  alwaysFalse = () => false;
+const alwaysFalse = () => false;
 
 const activeRegions = (ctx) => {
   const regions = ctx.canvas[Symbol.for('regions')],
@@ -358,46 +89,18 @@ const activeRegions = (ctx) => {
   return results;
 };
 
-module.exports = activeRegions;
+class Instruction {
+  constructor(type, props) {
+    this.type = type;
+    this.props = props;
+    return Object.seal(this);
+  }
+}
 
-/***/ }),
-/* 16 */
-/***/ (function(module, exports) {
+Object.seal(Instruction);
+Object.seal(Instruction.prototype);
 
-module.exports = function (point, vs) {
-    // ray-casting algorithm based on
-    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
-    
-    var x = point[0], y = point[1];
-    
-    var inside = false;
-    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-        var xi = vs[i][0], yi = vs[i][1];
-        var xj = vs[j][0], yj = vs[j][1];
-        
-        var intersect = ((yi > y) != (yj > y))
-            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-        if (intersect) inside = !inside;
-    }
-    
-    return inside;
-};
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports) {
-
-const pointInCircle = ([x, y], [cx, cy, cr]) => ((cx - x) ** 2 + (cy - y) ** 2) < cr ** 2;
-
-module.exports = pointInCircle;
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-    pi2 = Math.PI * 2;
+const pi2 = Math.PI * 2;
 
 const arc = (...args) => {
   if (args.length > 3) {
@@ -410,25 +113,11 @@ const arc = (...args) => {
   return new Instruction("call",  { name: 'arc', args: [0, 0, args[0], 0, pi2, false], count: 6 });
 };
 
-module.exports = arc;
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
-
 const arcTo = (x1, y1, x2, y2, r) => new Instruction('call', { name: 'arcTo', args: [x1, y1, x2, y2, r], count: 5 });
 
-module.exports = arcTo;
+const emptyCall = (name) => () => new Instruction('call', { name, args: [], count: 0 });
 
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
+var beginPath = emptyCall('beginPath');
 
 const bezierCurveTo = (cp1x, cp1y, cp2x, cp2y, x, y) => new Instruction('call', {
   name: 'bezierCurveTo',
@@ -436,27 +125,17 @@ const bezierCurveTo = (cp1x, cp1y, cp2x, cp2y, x, y) => new Instruction('call', 
   count: 5
 });
 
-module.exports = bezierCurveTo;
+const rectInstruction = (name) => (...args) => new Instruction("call", {
+  name,
+  args: args.length > 2 ? args : [0, 0, args[0], args[1]],
+  count: 4
+});
 
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
+var clearRect = rectInstruction('clearRect');
 
-const rectInstruction = __webpack_require__(2);
-
-module.exports = rectInstruction('clearRect');
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const emptyCall = __webpack_require__(1);
-
-const Instruction = __webpack_require__(0);
-
-const begin = [emptyCall('save'), emptyCall('beginPath')],
-  performClip = emptyCall('clip'),
-  end = emptyCall('restore');
+const begin = [emptyCall('save'), emptyCall('beginPath')];
+const performClip = emptyCall('clip');
+const end = emptyCall('restore');
 
 const clip = (path, ...children) => [
   begin,
@@ -466,23 +145,9 @@ const clip = (path, ...children) => [
   end
 ];
 
-module.exports = clip;
-
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
-
 const clipPath = () => new Instruction('call', { name: 'clip', args: [], count: 0 });
 
-module.exports = clipPath;
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports) {
+var closePath = emptyCall('closePath');
 
 const PI2 = Math.PI * 2;
 const createRegularPolygon = (radius = 0, position = [0, 0], sides = 3) => {
@@ -496,15 +161,6 @@ const createRegularPolygon = (radius = 0, position = [0, 0], sides = 3) => {
   }
   return polygon;
 };
-
-module.exports = createRegularPolygon;
-
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
 
 const drawImage = (...args) => {
   if (args.length >= 9) {
@@ -532,15 +188,7 @@ const drawImage = (...args) => {
   });
 };
 
-module.exports = drawImage;
-
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-    pi2 = Math.PI * 2;
+const pi2$1 = Math.PI * 2;
 
 const ellipse = (...args) => {
   const [x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise] = args;
@@ -550,52 +198,26 @@ const ellipse = (...args) => {
     name: 'ellipse',
     args: args.length > 5 ? args :
       args.length > 4 ? [x, y, radiusX, radiusY, rotation, startAngle, false] :
-      args.length > 2 ? [x, y, radiusX, radiusY, 0, pi2, false] :
-      [0, 0, x, y, 0, pi2, false],
+      args.length > 2 ? [x, y, radiusX, radiusY, 0, pi2$1, false] :
+      [0, 0, x, y, 0, pi2$1, false],
     count: 7
   });
 };
 
-module.exports = ellipse;
-
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const emptyCall = __webpack_require__(1);
-
-module.exports = emptyCall('restore');
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports) {
+var endClip = emptyCall('restore');
 
 const extend = (ctx, ...methods) => {
   const extensions = ctx[Symbol.for('extensions')] || (ctx[Symbol.for('extensions')] = {});
   Object.assign(extensions, ...methods);
 };
 
-module.exports = extend;
+var fill = emptyCall('fill');
 
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const emptyCall = __webpack_require__(1);
-
-module.exports = emptyCall('fill');
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-    pi2 = Math.PI * 2;
+const pi2$2 = Math.PI * 2;
 
 const fillArc = (...args) => {
   const [x, y, r, startAngle, endAngle, counterclockwise] = args;
-  const props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2, counterclockwise: false };
+  const props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2$2, counterclockwise: false };
 
 
   if (args.length > 3) {
@@ -613,72 +235,43 @@ const fillArc = (...args) => {
   return new Instruction("fillArc",  props);
 };
 
-module.exports = fillArc;
+var fillRect = rectInstruction('fillRect');
 
+const stackable = (stack) => {
+  const end = new Instruction('pop', { stack });
+  const stackableFunc = (value, ...children) => [
+    new Instruction('push', { stack, value }),
+    ...children,
+    end
+  ];
 
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
+  return stackableFunc;
+};
 
-const rectInstruction = __webpack_require__(2);
+var fillStyle = stackable('fillStyle');
 
-module.exports = rectInstruction('fillRect');
+const textInstruction = (name) => (...args) => new Instruction('call', {
+  name,
+  args: args.length >= 3 ? args : [args[0], 0, 0],
+  count: args.length >= 4 ? 4 : 3
+});
 
+var fillText = textInstruction('fillText');
 
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(3)('fillStyle');
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const textInstruction = __webpack_require__(9);
-
-module.exports = textInstruction('fillText');
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-  end = new Instruction('endGlobalAlpha');
+const end$1 = new Instruction('endGlobalAlpha');
 
 const globalAlpha = (value, ...children) => [
   new Instruction('globalAlpha', { value }),
   children,
-  end
+  end$1
 ];
-module.exports = globalAlpha;
 
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(3)('globalCompositeOperation');
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
+var globalCompositeOperation = stackable('globalCompositeOperation');
 
 const hitCircle = (id, ...args) => new Instruction('hitCircle', {
   id,
   points: args.length === 1 ? [0, 0, args[0]] : [args[0], args[1], args[2]]
 });
-
-module.exports = hitCircle;
-
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
 
 const hitRect = (id, ...args) => {
   let [x, y, width, height] = args;
@@ -697,33 +290,162 @@ const hitRect = (id, ...args) => {
   });
 };
 
-module.exports = hitRect;
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
-
 const hitRegion = (id, points) => new Instruction('hitRegion', { id, points });
 
-module.exports = hitRegion;
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+var keycode = createCommonjsModule(function (module, exports) {
+// Source: http://jsfiddle.net/vWx8V/
+// http://stackoverflow.com/questions/5603195/full-list-of-javascript-keycodes
+
+/**
+ * Conenience method returns corresponding value for given keyName or keyCode.
+ *
+ * @param {Mixed} keyCode {Number} or keyName {String}
+ * @return {Mixed}
+ * @api public
+ */
+
+exports = module.exports = function(searchInput) {
+  // Keyboard Events
+  if (searchInput && 'object' === typeof searchInput) {
+    var hasKeyCode = searchInput.which || searchInput.keyCode || searchInput.charCode;
+    if (hasKeyCode) searchInput = hasKeyCode;
+  }
+
+  // Numbers
+  if ('number' === typeof searchInput) return names[searchInput]
+
+  // Everything else (cast to string)
+  var search = String(searchInput);
+
+  // check codes
+  var foundNamedKey = codes[search.toLowerCase()];
+  if (foundNamedKey) return foundNamedKey
+
+  // check aliases
+  var foundNamedKey = aliases[search.toLowerCase()];
+  if (foundNamedKey) return foundNamedKey
+
+  // weird character?
+  if (search.length === 1) return search.charCodeAt(0)
+
+  return undefined
+};
+
+/**
+ * Get by name
+ *
+ *   exports.code['enter'] // => 13
+ */
+
+var codes = exports.code = exports.codes = {
+  'backspace': 8,
+  'tab': 9,
+  'enter': 13,
+  'shift': 16,
+  'ctrl': 17,
+  'alt': 18,
+  'pause/break': 19,
+  'caps lock': 20,
+  'esc': 27,
+  'space': 32,
+  'page up': 33,
+  'page down': 34,
+  'end': 35,
+  'home': 36,
+  'left': 37,
+  'up': 38,
+  'right': 39,
+  'down': 40,
+  'insert': 45,
+  'delete': 46,
+  'command': 91,
+  'left command': 91,
+  'right command': 93,
+  'numpad *': 106,
+  'numpad +': 107,
+  'numpad -': 109,
+  'numpad .': 110,
+  'numpad /': 111,
+  'num lock': 144,
+  'scroll lock': 145,
+  'my computer': 182,
+  'my calculator': 183,
+  ';': 186,
+  '=': 187,
+  ',': 188,
+  '-': 189,
+  '.': 190,
+  '/': 191,
+  '`': 192,
+  '[': 219,
+  '\\': 220,
+  ']': 221,
+  "'": 222
+};
+
+// Helper aliases
+
+var aliases = exports.aliases = {
+  'windows': 91,
+  '⇧': 16,
+  '⌥': 18,
+  '⌃': 17,
+  '⌘': 91,
+  'ctl': 17,
+  'control': 17,
+  'option': 18,
+  'pause': 19,
+  'break': 19,
+  'caps': 20,
+  'return': 13,
+  'escape': 27,
+  'spc': 32,
+  'pgup': 33,
+  'pgdn': 34,
+  'ins': 45,
+  'del': 46,
+  'cmd': 91
+};
 
 
-/***/ }),
-/* 39 */
-/***/ (function(module, exports, __webpack_require__) {
+/*!
+ * Programatically add the following
+ */
 
-module.exports = __webpack_require__(3)('imageSmoothingEnabled');
+// lower case chars
+for (i = 97; i < 123; i++) codes[String.fromCharCode(i)] = i - 32;
 
+// numbers
+for (var i = 48; i < 58; i++) codes[i - 48] = i;
 
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
+// function keys
+for (i = 1; i < 13; i++) codes['f'+i] = i + 111;
 
-const keycode = __webpack_require__(41);
+// numpad keys
+for (i = 0; i < 10; i++) codes['numpad '+i] = i + 96;
 
-module.exports = (ctx) => {
+/**
+ * Get by code
+ *
+ *   exports.name[13] // => 'Enter'
+ */
+
+var names = exports.names = exports.title = {}; // title for backward compat
+
+// Create reverse mapping
+for (i in codes) names[codes[i]] = i;
+
+// Add aliases
+for (var alias in aliases) {
+  codes[alias] = aliases[alias];
+}
+});
+
+const initialize = (ctx) => {
   const { canvas } = ctx;
 
   //mouseData
@@ -816,172 +538,9 @@ module.exports = (ctx) => {
   });
 };
 
-/***/ }),
-/* 41 */
-/***/ (function(module, exports) {
-
-// Source: http://jsfiddle.net/vWx8V/
-// http://stackoverflow.com/questions/5603195/full-list-of-javascript-keycodes
-
-/**
- * Conenience method returns corresponding value for given keyName or keyCode.
- *
- * @param {Mixed} keyCode {Number} or keyName {String}
- * @return {Mixed}
- * @api public
- */
-
-exports = module.exports = function(searchInput) {
-  // Keyboard Events
-  if (searchInput && 'object' === typeof searchInput) {
-    var hasKeyCode = searchInput.which || searchInput.keyCode || searchInput.charCode
-    if (hasKeyCode) searchInput = hasKeyCode
-  }
-
-  // Numbers
-  if ('number' === typeof searchInput) return names[searchInput]
-
-  // Everything else (cast to string)
-  var search = String(searchInput)
-
-  // check codes
-  var foundNamedKey = codes[search.toLowerCase()]
-  if (foundNamedKey) return foundNamedKey
-
-  // check aliases
-  var foundNamedKey = aliases[search.toLowerCase()]
-  if (foundNamedKey) return foundNamedKey
-
-  // weird character?
-  if (search.length === 1) return search.charCodeAt(0)
-
-  return undefined
-}
-
-/**
- * Get by name
- *
- *   exports.code['enter'] // => 13
- */
-
-var codes = exports.code = exports.codes = {
-  'backspace': 8,
-  'tab': 9,
-  'enter': 13,
-  'shift': 16,
-  'ctrl': 17,
-  'alt': 18,
-  'pause/break': 19,
-  'caps lock': 20,
-  'esc': 27,
-  'space': 32,
-  'page up': 33,
-  'page down': 34,
-  'end': 35,
-  'home': 36,
-  'left': 37,
-  'up': 38,
-  'right': 39,
-  'down': 40,
-  'insert': 45,
-  'delete': 46,
-  'command': 91,
-  'left command': 91,
-  'right command': 93,
-  'numpad *': 106,
-  'numpad +': 107,
-  'numpad -': 109,
-  'numpad .': 110,
-  'numpad /': 111,
-  'num lock': 144,
-  'scroll lock': 145,
-  'my computer': 182,
-  'my calculator': 183,
-  ';': 186,
-  '=': 187,
-  ',': 188,
-  '-': 189,
-  '.': 190,
-  '/': 191,
-  '`': 192,
-  '[': 219,
-  '\\': 220,
-  ']': 221,
-  "'": 222
-}
-
-// Helper aliases
-
-var aliases = exports.aliases = {
-  'windows': 91,
-  '⇧': 16,
-  '⌥': 18,
-  '⌃': 17,
-  '⌘': 91,
-  'ctl': 17,
-  'control': 17,
-  'option': 18,
-  'pause': 19,
-  'break': 19,
-  'caps': 20,
-  'return': 13,
-  'escape': 27,
-  'spc': 32,
-  'pgup': 33,
-  'pgdn': 34,
-  'ins': 45,
-  'del': 46,
-  'cmd': 91
-}
-
-
-/*!
- * Programatically add the following
- */
-
-// lower case chars
-for (i = 97; i < 123; i++) codes[String.fromCharCode(i)] = i - 32
-
-// numbers
-for (var i = 48; i < 58; i++) codes[i - 48] = i
-
-// function keys
-for (i = 1; i < 13; i++) codes['f'+i] = i + 111
-
-// numpad keys
-for (i = 0; i < 10; i++) codes['numpad '+i] = i + 96
-
-/**
- * Get by code
- *
- *   exports.name[13] // => 'Enter'
- */
-
-var names = exports.names = exports.title = {} // title for backward compat
-
-// Create reverse mapping
-for (i in codes) names[codes[i]] = i
-
-// Add aliases
-for (var alias in aliases) {
-  codes[alias] = aliases[alias]
-}
-
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports) {
-
 const keyData = (ctx) => ctx.canvas[Symbol.for('keyData')];
 
-module.exports = keyData;
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-  end = new Instruction('endLineStyle');
+const end$2 = new Instruction('endLineStyle');
 
 const lineStyle = (value, ...children) => {
   value = value || {};
@@ -1016,63 +575,33 @@ const lineStyle = (value, ...children) => {
   return [
     new Instruction('lineStyle', result),
     children,
-    end
+    end$2
   ];
 };
 
-module.exports = lineStyle;
+const pointInstruction = (name) => (x, y) => new Instruction("call", {
+  name,
+  args: [x, y],
+  count: 2
+});
 
-
-/***/ }),
-/* 44 */
-/***/ (function(module, exports) {
+var lineTo = pointInstruction('lineTo');
 
 const mouseData = (ctx) => ctx.canvas[Symbol.for('mouseData')];
 
-module.exports = mouseData;
-
-/***/ }),
-/* 45 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const moveTo = __webpack_require__(12), lineTo = __webpack_require__(10);
+var moveTo = pointInstruction('moveTo');
 
 const moveToLineTo = (point, index) => index === 0 ?
   moveTo(point[0], point[1]) :
   lineTo(point[0], point[1]);
 
-module.exports = moveToLineTo;
-
-
-/***/ }),
-/* 46 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const beginPath = __webpack_require__(7)(),
-    closePath = __webpack_require__(8)();
-
 const path = (...children) => [
-  beginPath,
+  beginPath(),
   children,
-  closePath
+  closePath()
 ];
 
-module.exports = path;
-
-
-/***/ }),
-/* 47 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
-
 const quadraticCurveTo = (cpx, cpy, x, y) => new Instruction('call', { name: 'quadraticCurveTo', args: [cpx, cpy, x, y], count: 4 });
-
-module.exports = quadraticCurveTo;
-
-/***/ }),
-/* 48 */
-/***/ (function(module, exports) {
 
 const raf = (func) => {
   const funcCaller = function() {
@@ -1083,31 +612,26 @@ const raf = (func) => {
   requestAnimationFrame(funcCaller);
 };
 
-module.exports = raf;
+var rect = rectInstruction('rect');
 
-/***/ }),
-/* 49 */
-/***/ (function(module, exports, __webpack_require__) {
+const cycleMouseData = (ctx) => {
+  const mouseData = ctx.canvas[Symbol.for('mouseData')];
+  if (mouseData) {
+    mouseData.dx = mouseData.x - mouseData.previousX;
+    mouseData.dy = mouseData.y - mouseData.previousY;
 
-const rectInstruction = __webpack_require__(2);
+    mouseData.previousX = mouseData.x;
+    mouseData.previousY = mouseData.y;
 
-module.exports = rectInstruction('rect');
-
-
-/***/ }),
-/* 50 */
-/***/ (function(module, exports, __webpack_require__) {
+    mouseData.clicked = 0;
+  }
+};
 
 //initialize all the properties
-const identity = [1, 0, 0, 1, 0, 0],
-  concat = [].concat;
+const identity = [1, 0, 0, 1, 0, 0];
+const concat = [].concat;
 
 //transform points function
-const transformPoints = __webpack_require__(4);
-const cycleMouseData = __webpack_require__(51);
-
-const PI2 = Math.PI * 2;
-
 const relativeTransforms = {
   transform: true,
   scale: true,
@@ -1127,7 +651,7 @@ const upTransforms = {
   setTransform: true
 };
 
-module.exports = (...args) => {
+const render = (...args) => {
   let children = args.slice(0, -1),
     isTransformDirty = true,
     transformStackIndex = 6,
@@ -1530,58 +1054,15 @@ module.exports = (...args) => {
   }
 };
 
-/***/ }),
-/* 51 */
-/***/ (function(module, exports) {
-
-
-const cycleMouseData = (ctx) => {
-  const mouseData = ctx.canvas[Symbol.for('mouseData')];
-  if (mouseData) {
-    mouseData.dx = mouseData.x - mouseData.previousX;
-    mouseData.dy = mouseData.y - mouseData.previousY;
-
-    mouseData.previousX = mouseData.x;
-    mouseData.previousY = mouseData.y;
-
-    mouseData.clicked = 0;
-  }
-};
-
-module.exports = cycleMouseData;
-
-/***/ }),
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const setTransform = __webpack_require__(13);
-
-const resetTransform = (...children) => setTransform([1, 0, 0, 1, 0, 0], children);
-
-module.exports = resetTransform;
-
-/***/ }),
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-  end = new Instruction('restore');
+const end$3 = new Instruction('restore');
 
 const rotate = (r, ...children) => [
   new Instruction('rotate', { cos: Math.cos(r), sin: Math.sin(r) }),
   children,
-  end
+  end$3
 ];
 
-module.exports = rotate;
-
-
-/***/ }),
-/* 54 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-  end = new Instruction('restore');
+const end$4 = new Instruction('restore');
 
 const scale = (x, y, ...children) => {
   if (typeof y !== 'number') {
@@ -1592,21 +1073,28 @@ const scale = (x, y, ...children) => {
   return [
     new Instruction('scale', { x, y }),
     children,
-    end
+    end$4
   ];
 };
 
-module.exports = scale;
+const end$5 = new Instruction('restore');
 
+const setTransform = (matrix, ...children) => [
+  new Instruction('setTransform', [
+    matrix[0],
+    matrix[1],
+    matrix[2],
+    matrix[3],
+    matrix[4],
+    matrix[5]
+  ]),
+  children,
+  end$5
+];
 
-/***/ }),
-/* 55 */
-/***/ (function(module, exports, __webpack_require__) {
+const end$6 = new Instruction('endShadowStyle');
 
-const Instruction = __webpack_require__(0),
-  end = new Instruction('endShadowStyle');
-
-let shadowStyle = (value, ...children) => {
+const shadowStyle = (value, ...children) => {
   value = value || {};
   const result = {
     shadowBlur: null,
@@ -1631,64 +1119,33 @@ let shadowStyle = (value, ...children) => {
   return [
     new Instruction('shadowStyle', result),
     children,
-    end
+    end$6
   ];
 };
 
-module.exports = shadowStyle;
-
-
-/***/ }),
-/* 56 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-   end = new Instruction('restore');
+const end$7 = new Instruction('restore');
 
 const skewX = (x, ...children) => [
   new Instruction('skewX', { x: Math.tan(x) }),
   children,
-  end
+  end$7
 ];
 
-module.exports = skewX;
-
-
-/***/ }),
-/* 57 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-   end = new Instruction('restore');
+const end$8 = new Instruction('restore');
 
 const skewY = (y, ...children) => [
   new Instruction('skewY', { y: Math.tan(y) }),
   children,
-  end
+  end$8
 ];
 
-module.exports = skewY;
+var stroke = emptyCall('stroke');
 
-
-/***/ }),
-/* 58 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const emptyCall = __webpack_require__(1);
-
-module.exports = emptyCall('stroke');
-
-/***/ }),
-/* 59 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-    pi2 = Math.PI * 2;
+const pi2$3 = Math.PI * 2;
 
 const strokeArc = (...args) => {
   const [x, y, r, startAngle, endAngle, counterclockwise] = args;
-  const props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2, counterclockwise: false };
-
+  const props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2$3, counterclockwise: false };
 
   if (args.length > 3) {
     props.startAngle = startAngle;
@@ -1705,41 +1162,13 @@ const strokeArc = (...args) => {
   return new Instruction("strokeArc",  props);
 };
 
-module.exports = strokeArc;
+var strokeRect = rectInstruction('strokeRect');
 
+var strokeStyle = stackable('strokeStyle');
 
-/***/ }),
-/* 60 */
-/***/ (function(module, exports, __webpack_require__) {
+var strokeText = textInstruction('strokeText');
 
-const rectInstruction = __webpack_require__(2);
-
-module.exports = rectInstruction('strokeRect');
-
-
-/***/ }),
-/* 61 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(3)('strokeStyle');
-
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
-
-const textInstruction = __webpack_require__(9);
-
-module.exports = textInstruction('strokeText');
-
-/***/ }),
-/* 63 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-   end = new Instruction('endTextStyle');
+const end$9 = new Instruction('endTextStyle');
 
 const textStyle = (value, ...children) => {
   value = value || {};
@@ -1766,19 +1195,11 @@ const textStyle = (value, ...children) => {
   return [
     new Instruction('textStyle', result),
     children,
-    end
+    end$9
   ];
 };
 
-module.exports = textStyle;
-
-
-/***/ }),
-/* 64 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-  end = new Instruction('restore');
+const end$10 = new Instruction('restore');
 
 const transform = (values, ...children) => {
   return [
@@ -1791,44 +1212,77 @@ const transform = (values, ...children) => {
       values[5]
     ]),
     children,
-    end
+    end$10
   ];
 };
 
-
-module.exports = transform;
-
-
-/***/ }),
-/* 65 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0),
-  end = new Instruction('restore');
+const end$11 = new Instruction('restore');
 
 const translate = (x, y, ...children) => [
   new Instruction('translate', { x, y }),
   children,
-  end
+  end$11
 ];
 
-module.exports = translate;
+var index = {
+  activeRegions,
+  arc,
+  arcTo,
+  beginPath,
+  bezierCurveTo,
+  clearRect,
+  clip,
+  clipPath,
+  closePath,
+  createRegularPolygon,
+  drawImage,
+  ellipse,
+  endClip,
+  extend,
+  fill,
+  fillArc,
+  fillRect,
+  fillStyle,
+  fillText,
+  globalAlpha,
+  globalCompositeOperation,
+  hitCircle,
+  hitRect,
+  hitRegion,
+  imageSmoothingEnabled: hitRegion,
+  initialize,
+  Instruction,
+  invertMatrix,
+  keyData,
+  lineStyle,
+  lineTo,
+  mouseData,
+  moveTo,
+  moveToLineTo,
+  path,
+  pointInRect,
+  quadraticCurveTo,
+  raf,
+  rect,
+  render,
+  resetTransform: render,
+  rotate,
+  scale,
+  setTransform,
+  shadowStyle,
+  skewX,
+  skewY,
+  stroke,
+  strokeArc,
+  strokeRect,
+  strokeStyle,
+  strokeText,
+  textStyle,
+  transform,
+  transformPoints,
+  translate,
+};
 
+return index;
 
-/***/ }),
-/* 66 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const Instruction = __webpack_require__(0);
-
-const pointInstruction = (name) => (x, y) => new Instruction("call", {
-  name,
-  args: [x, y],
-  count: 2
-});
-
-module.exports = pointInstruction;
-
-/***/ })
-/******/ ]);
-});
+})));

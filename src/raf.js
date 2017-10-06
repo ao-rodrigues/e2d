@@ -6,5 +6,4 @@ const raf = (func) => {
 
   requestAnimationFrame(funcCaller);
 };
-
-module.exports = raf;
+export default raf;

@@ -3,8 +3,8 @@ const identity = [1, 0, 0, 1, 0, 0],
   concat = [].concat;
 
 //transform points function
-const transformPoints = require('./transformPoints');
-const cycleMouseData = require('./cycleMouseData');
+import transformPoints from './transformPoints';
+import cycleMouseData from './cycleMouseData';
 
 const PI2 = Math.PI * 2;
 
@@ -27,7 +27,7 @@ const upTransforms = {
   setTransform: true
 };
 
-module.exports = (...args) => {
+const render = (...args) => {
   let children = args.slice(0, -1),
     isTransformDirty = true,
     transformStackIndex = 6,
@@ -429,3 +429,5 @@ module.exports = (...args) => {
     }
   }
 };
+
+export default render;

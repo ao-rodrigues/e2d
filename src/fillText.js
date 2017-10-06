@@ -1,3 +1,3 @@
-const textInstruction = require('./textInstruction');
+import textInstruction from './textInstruction';
 
-module.exports = textInstruction('fillText');
+export default textInstruction('fillText');

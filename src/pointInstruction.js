@@ -1,4 +1,4 @@
-const Instruction = require('./Instruction');
+import Instruction from './Instruction';
 
 const pointInstruction = (name) => (x, y) => new Instruction("call", {
   name,
@@ -6,4 +6,4 @@ const pointInstruction = (name) => (x, y) => new Instruction("call", {
   count: 2
 });
 
-module.exports = pointInstruction;
+export default pointInstruction;

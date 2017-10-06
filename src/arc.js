@@ -1,5 +1,5 @@
-const Instruction = require('./Instruction'),
-    pi2 = Math.PI * 2;
+import Instruction from './Instruction';
+const pi2 = Math.PI * 2;
 
 const arc = (...args) => {
   if (args.length > 3) {
@@ -12,4 +12,4 @@ const arc = (...args) => {
   return new Instruction("call",  { name: 'arc', args: [0, 0, args[0], 0, pi2, false], count: 6 });
 };
 
-module.exports = arc;
+export default arc;

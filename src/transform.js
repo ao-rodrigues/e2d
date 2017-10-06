@@ -1,5 +1,5 @@
-const Instruction = require('./Instruction'),
-  end = new Instruction('restore');
+import Instruction from './Instruction';
+const end = new Instruction('restore');
 
 const transform = (values, ...children) => {
   return [
@@ -17,4 +17,4 @@ const transform = (values, ...children) => {
 };
 
 
-module.exports = transform;
+export default transform;

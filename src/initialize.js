@@ -1,6 +1,6 @@
-const keycode = require('keycode');
+import keycode from 'keycode';
 
-module.exports = (ctx) => {
+const initialize = (ctx) => {
   const { canvas } = ctx;
 
   //mouseData
@@ -92,3 +92,5 @@ module.exports = (ctx) => {
     evt.preventDefault();
   });
 };
+
+export default initialize;

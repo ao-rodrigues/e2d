@@ -1,1 +1,3 @@
-module.exports = require('./stackable')('strokeStyle');
+import stackable from './stackable';
+
+export default stackable('strokeStyle');

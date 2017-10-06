@@ -1,10 +1,9 @@
-const Instruction = require('./Instruction'),
-    pi2 = Math.PI * 2;
+import Instruction from './Instruction';
+const pi2 = Math.PI * 2;
 
 const strokeArc = (...args) => {
   const [x, y, r, startAngle, endAngle, counterclockwise] = args;
   const props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2, counterclockwise: false };
-
 
   if (args.length > 3) {
     props.startAngle = startAngle;
@@ -21,4 +20,4 @@ const strokeArc = (...args) => {
   return new Instruction("strokeArc",  props);
 };
 
-module.exports = strokeArc;
+export default strokeArc;

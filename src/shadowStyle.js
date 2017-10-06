@@ -1,7 +1,7 @@
-const Instruction = require('./Instruction'),
-  end = new Instruction('endShadowStyle');
+import Instruction from './Instruction';
+const  end = new Instruction('endShadowStyle');
 
-let shadowStyle = (value, ...children) => {
+const shadowStyle = (value, ...children) => {
   value = value || {};
   const result = {
     shadowBlur: null,
@@ -30,4 +30,4 @@ let shadowStyle = (value, ...children) => {
   ];
 };
 
-module.exports = shadowStyle;
+export default shadowStyle;

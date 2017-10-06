@@ -1,58 +1,115 @@
-module.exports = {
-  'activeRegions': require('./src/activeRegions'),
-  'arc': require('./src/arc'),
-  'arcTo': require('./src/arcTo'),
-  'beginPath': require('./src/beginPath'),
-  'bezierCurveTo': require('./src/bezierCurveTo'),
-  'clearRect': require('./src/clearRect'),
-  'clip': require('./src/clip'),
-  'clipPath': require('./src/clipPath'),
-  'closePath': require('./src/closePath'),
-  'createRegularPolygon': require('./src/createRegularPolygon'),
-  'drawImage': require('./src/drawImage'),
-  'ellipse': require('./src/ellipse'),
-  'endClip': require('./src/endClip'),
-  'extend': require('./src/extend'),
-  'fill': require('./src/fill'),
-  'fillArc': require('./src/fillArc'),
-  'fillRect': require('./src/fillRect'),
-  'fillStyle': require('./src/fillStyle'),
-  'fillText': require('./src/fillText'),
-  'globalAlpha': require('./src/globalAlpha'),
-  'globalCompositeOperation': require('./src/globalCompositeOperation'),
-  'hitCircle': require('./src/hitCircle'),
-  'hitRect': require('./src/hitRect'),
-  'hitRegion': require('./src/hitRegion'),
-  'imageSmoothingEnabled': require('./src/imageSmoothingEnabled'),
-  'initialize': require('./src/initialize'),
-  'Instruction': require('./src/Instruction'),
-  'invertMatrix': require('./src/invertMatrix'),
-  'keyData': require('./src/keyData'),
-  'lineStyle': require('./src/lineStyle'),
-  'lineTo': require('./src/lineTo'),
-  'mouseData': require('./src/mouseData'),
-  'moveTo': require('./src/moveTo'),
-  'moveToLineTo': require('./src/moveToLineTo'),
-  'path': require('./src/path'),
-  'pointInRect': require('./src/pointInRect'),
-  'quadraticCurveTo': require('./src/quadraticCurveTo'),
-  'raf': require('./src/raf'),
-  'rect': require('./src/rect'),
-  'render': require('./src/render'),
-  'resetTransform': require('./src/resetTransform'),
-  'rotate': require('./src/rotate'),
-  'scale': require('./src/scale'),
-  'setTransform': require('./src/setTransform'),
-  'shadowStyle': require('./src/shadowStyle'),
-  'skewX': require('./src/skewX'),
-  'skewY': require('./src/skewY'),
-  'stroke': require('./src/stroke'),
-  'strokeArc': require('./src/strokeArc'),
-  'strokeRect': require('./src/strokeRect'),
-  'strokeStyle': require('./src/strokeStyle'),
-  'strokeText': require('./src/strokeText'),
-  'textStyle': require('./src/textStyle'),
-  'transform': require('./src/transform'),
-  'transformPoints': require('./src/transformPoints'),
-  'translate': require('./src/translate'),
+import activeRegions from './src/activeRegions';
+import arc from './src/arc';
+import arcTo from './src/arcTo';
+import beginPath from './src/beginPath';
+import bezierCurveTo from './src/bezierCurveTo';
+import clearRect from './src/clearRect';
+import clip from './src/clip';
+import clipPath from './src/clipPath';
+import closePath from './src/closePath';
+import createRegularPolygon from './src/createRegularPolygon';
+import drawImage from './src/drawImage';
+import ellipse from './src/ellipse';
+import endClip from './src/endClip';
+import extend from './src/extend';
+import fill from './src/fill';
+import fillArc from './src/fillArc';
+import fillRect from './src/fillRect';
+import fillStyle from './src/fillStyle';
+import fillText from './src/fillText';
+import globalAlpha from './src/globalAlpha';
+import globalCompositeOperation from './src/globalCompositeOperation';
+import hitCircle from './src/hitCircle';
+import hitRect from './src/hitRect';
+import hitRegion from './src/hitRegion';
+import imageSmoothingEnabled from './src/hitRegion';
+import initialize from './src/initialize';
+import Instruction from './src/Instruction';
+import invertMatrix from './src/invertMatrix';
+import keyData from './src/keyData';
+import lineStyle from './src/lineStyle';
+import lineTo from './src/lineTo';
+import mouseData from './src/mouseData';
+import moveTo from './src/moveTo';
+import moveToLineTo from './src/moveToLineTo';
+import path from './src/path';
+import pointInRect from './src/pointInRect';
+import quadraticCurveTo from './src/quadraticCurveTo';
+import raf from './src/raf';
+import rect from './src/rect';
+import render from './src/render';
+import resetTransform from './src/render';
+import rotate from './src/rotate';
+import scale from './src/scale';
+import setTransform from './src/setTransform';
+import shadowStyle from './src/shadowStyle';
+import skewX from './src/skewX';
+import skewY from './src/skewY';
+import stroke from './src/stroke';
+import strokeArc from './src/strokeArc';
+import strokeRect from './src/strokeRect';
+import strokeStyle from './src/strokeStyle';
+import strokeText from './src/strokeText';
+import textStyle from './src/textStyle';
+import transform from './src/transform';
+import transformPoints from './src/transformPoints';
+import translate from './src/translate';
+
+export default {
+  activeRegions,
+  arc,
+  arcTo,
+  beginPath,
+  bezierCurveTo,
+  clearRect,
+  clip,
+  clipPath,
+  closePath,
+  createRegularPolygon,
+  drawImage,
+  ellipse,
+  endClip,
+  extend,
+  fill,
+  fillArc,
+  fillRect,
+  fillStyle,
+  fillText,
+  globalAlpha,
+  globalCompositeOperation,
+  hitCircle,
+  hitRect,
+  hitRegion,
+  imageSmoothingEnabled,
+  initialize,
+  Instruction,
+  invertMatrix,
+  keyData,
+  lineStyle,
+  lineTo,
+  mouseData,
+  moveTo,
+  moveToLineTo,
+  path,
+  pointInRect,
+  quadraticCurveTo,
+  raf,
+  rect,
+  render,
+  resetTransform,
+  rotate,
+  scale,
+  setTransform,
+  shadowStyle,
+  skewX,
+  skewY,
+  stroke,
+  strokeArc,
+  strokeRect,
+  strokeStyle,
+  strokeText,
+  textStyle,
+  transform,
+  transformPoints,
+  translate,
 };

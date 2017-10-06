@@ -9,4 +9,4 @@ class Instruction {
 Object.seal(Instruction);
 Object.seal(Instruction.prototype);
 
-module.exports = Instruction;
+export default Instruction;

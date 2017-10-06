@@ -1,3 +1,3 @@
-const emptyCall = require('./emptyCall');
+import emptyCall from './emptyCall';
 
-module.exports = emptyCall('restore');
+export default emptyCall('restore');

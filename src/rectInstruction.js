@@ -1,4 +1,4 @@
-const Instruction = require('./Instruction');
+import Instruction from './Instruction';
 
 const rectInstruction = (name) => (...args) => new Instruction("call", {
   name,
@@ -6,4 +6,4 @@ const rectInstruction = (name) => (...args) => new Instruction("call", {
   count: 4
 });
 
-module.exports = rectInstruction;
+export default rectInstruction;

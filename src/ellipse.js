@@ -1,5 +1,5 @@
-const Instruction = require('./Instruction'),
-    pi2 = Math.PI * 2;
+import Instruction from  './Instruction';
+const pi2 = Math.PI * 2;
 
 const ellipse = (...args) => {
   const [x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise] = args;
@@ -15,4 +15,4 @@ const ellipse = (...args) => {
   });
 };
 
-module.exports = ellipse;
+export default ellipse;

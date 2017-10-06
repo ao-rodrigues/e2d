@@ -1,5 +1,5 @@
-const Instruction = require('./Instruction');
+import Instruction from './Instruction';
 
 const hitRegion = (id, points) => new Instruction('hitRegion', { id, points });
 
-module.exports = hitRegion;
+export default hitRegion;
