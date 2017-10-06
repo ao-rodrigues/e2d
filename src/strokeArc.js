@@ -1,9 +1,9 @@
-let Instruction = require('./Instruction'),
+const Instruction = require('./Instruction'),
     pi2 = Math.PI * 2;
 
-let strokeArc = (...args) => {
-  let [x, y, r, startAngle, endAngle, counterclockwise] = args;
-  let props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2, counterclockwise: false };
+const strokeArc = (...args) => {
+  const [x, y, r, startAngle, endAngle, counterclockwise] = args;
+  const props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2, counterclockwise: false };
 
 
   if (args.length > 3) {

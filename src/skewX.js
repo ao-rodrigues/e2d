@@ -1,7 +1,7 @@
-let Instruction = require('./Instruction');
-let end = new Instruction('restore');
+const Instruction = require('./Instruction'),
+   end = new Instruction('restore');
 
-let skewX = (x, ...children) => [
+const skewX = (x, ...children) => [
   new Instruction('skewX', { x: Math.tan(x) }),
   children,
   end

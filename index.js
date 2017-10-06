@@ -9,9 +9,9 @@ module.exports = {
   'clipPath': require('./src/clipPath'),
   'closePath': require('./src/closePath'),
   'createRegularPolygon': require('./src/createRegularPolygon'),
-  'cycleMouseData': require('./src/cycleMouseData'),
   'drawImage': require('./src/drawImage'),
   'ellipse': require('./src/ellipse'),
+  'endClip': require('./src/endClip'),
   'extend': require('./src/extend'),
   'fill': require('./src/fill'),
   'fillArc': require('./src/fillArc'),
@@ -20,6 +20,7 @@ module.exports = {
   'fillText': require('./src/fillText'),
   'globalAlpha': require('./src/globalAlpha'),
   'globalCompositeOperation': require('./src/globalCompositeOperation'),
+  'hitCircle': require('./src/hitCircle'),
   'hitRect': require('./src/hitRect'),
   'hitRegion': require('./src/hitRegion'),
   'imageSmoothingEnabled': require('./src/imageSmoothingEnabled'),
@@ -53,5 +54,5 @@ module.exports = {
   'textStyle': require('./src/textStyle'),
   'transform': require('./src/transform'),
   'transformPoints': require('./src/transformPoints'),
-  'translate': require('./src/translate')
+  'translate': require('./src/translate'),
 };

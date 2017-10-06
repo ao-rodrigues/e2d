@@ -1,7 +1,7 @@
-let raf = (func) => {
-  let funcCaller = function() {
+const raf = (func) => {
+  const funcCaller = function() {
     requestAnimationFrame(funcCaller);
-    func();
+    return func();
   };
 
   requestAnimationFrame(funcCaller);

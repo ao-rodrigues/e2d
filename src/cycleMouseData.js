@@ -1,6 +1,6 @@
 
-let cycleMouseData = (ctx) => {
-  let mouseData = ctx.canvas[Symbol.for('mouseData')];
+const cycleMouseData = (ctx) => {
+  const mouseData = ctx.canvas[Symbol.for('mouseData')];
   if (mouseData) {
     mouseData.dx = mouseData.x - mouseData.previousX;
     mouseData.dy = mouseData.y - mouseData.previousY;

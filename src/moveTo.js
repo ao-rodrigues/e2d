@@ -1,5 +1,3 @@
-let Instruction = require('./Instruction');
+const pointInstruction = require('./pointInstruction');
 
-let moveTo = (x, y) => new Instruction('moveTo', { x, y });
-
-module.exports = moveTo;
+module.exports = pointInstruction('moveTo');

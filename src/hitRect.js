@@ -1,6 +1,6 @@
-let Instruction = require('./Instruction');
+const Instruction = require('./Instruction');
 
-let hitRect = (id, ...args) => {
+const hitRect = (id, ...args) => {
   let [x, y, width, height] = args;
   if (args.length <= 3) {
     width = x;

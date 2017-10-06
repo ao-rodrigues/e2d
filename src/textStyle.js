@@ -1,9 +1,9 @@
-let Instruction = require('./Instruction');
-let end = new Instruction('endTextStyle');
+const Instruction = require('./Instruction'),
+   end = new Instruction('endTextStyle');
 
-let textStyle = (value, ...children) => {
+const textStyle = (value, ...children) => {
   value = value || {};
-  var result = {
+  const result = {
     font: null,
     textAlign: null,
     textBaseline: null,

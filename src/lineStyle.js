@@ -1,9 +1,9 @@
-let Instruction = require('./Instruction');
-let end = new Instruction('endLineStyle');
+const Instruction = require('./Instruction'),
+  end = new Instruction('endLineStyle');
 
-let lineStyle = (value, ...children) => {
-
+const lineStyle = (value, ...children) => {
   value = value || {};
+  
   var result = {
     lineWidth: null,
     lineCap: null,

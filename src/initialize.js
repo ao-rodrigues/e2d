@@ -1,7 +1,7 @@
-let keycode = require('keycode');
+const keycode = require('keycode');
 
 module.exports = (ctx) => {
-  let { canvas } = ctx;
+  const { canvas } = ctx;
 
   //mouseData
   canvas[Symbol.for('mouseData')] = {
@@ -15,9 +15,9 @@ module.exports = (ctx) => {
     clicked: 0
   };
 
-  let keys = canvas[Symbol.for('keyData')] = {};
+  const keys = canvas[Symbol.for('keyData')] = {};
 
-  for (let name in keycode.code) {
+  for (const name in keycode.code) {
     if (keycode.code.hasOwnProperty(name)) {
       keys[name] = false;
     }
@@ -30,19 +30,20 @@ module.exports = (ctx) => {
   //make the canvas receive touch and mouse events
   canvas.tabIndex = 1;
 
-  let mouseMove = (evt) => {
-    let { clientX, clientY } = evt;
+  const mouseMove = (evt) => {
+    const { clientX, clientY } = evt;
+
     //get left and top coordinates
-    let { left, top } = canvas.getBoundingClientRect();
+    const { left, top } = canvas.getBoundingClientRect();
 
-    let mouseData = canvas[Symbol.for('mouseData')];
+    const mouseData = canvas[Symbol.for('mouseData')];
 
-    let point = [clientX - left, clientY - top, mouseData.state];
+    const point = [clientX - left, clientY - top, mouseData.state];
 
     mouseData.x = point[0];
     mouseData.y = point[1];
 
-    let points = canvas[Symbol.for('mousePoints')];
+    const points = canvas[Symbol.for('mousePoints')];
 
     points.push(point);
 
@@ -55,11 +56,14 @@ module.exports = (ctx) => {
     return false;
   };
 
-  canvas.addEventListener('mousemove', (evt) => mouseMove(evt));
+  //up target needs to detect mouse up and keyup events if the mouse leaves the canvas
+  const upTarget = typeof window !== 'undefined' ? window : canvas;
+
+  canvas.addEventListener('mousemove', mouseMove);
   canvas.addEventListener('mousedown', (evt) => {
-    let { target } = evt;
+    const { target } = evt;
     if (target === canvas) {
-      let mouseData = canvas[Symbol.for('mouseData')];
+      const mouseData = canvas[Symbol.for('mouseData')];
 
       if (!mouseData.state) {
         mouseData.clicked += 1;
@@ -69,19 +73,22 @@ module.exports = (ctx) => {
       return mouseMove(evt);
     }
   });
-  canvas.addEventListener('mouseup', (evt) => {
-    let mouseData = canvas[Symbol.for('mouseData')];
-    mouseData.state = false;
-    return mouseMove(evt);
-  });
+
   canvas.addEventListener('keydown', (evt) => {
     canvas[Symbol.for('keyData')][keycode(evt.keyCode)] = true;
     evt.preventDefault();
     return false;
   });
-  canvas.addEventListener('keyup', (evt) => {
+
+
+  upTarget.addEventListener('mouseup', (evt) => {
+    const mouseData = canvas[Symbol.for('mouseData')];
+    mouseData.state = false;
+    mouseMove(evt);
+  });
+
+  upTarget.addEventListener('keyup', (evt) => {
     canvas[Symbol.for('keyData')][keycode(evt.keyCode)] = false;
     evt.preventDefault();
-    return false;
   });
 };

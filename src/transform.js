@@ -1,9 +1,9 @@
-let Instruction = require('./Instruction');
-let end = new Instruction('restore');
+const Instruction = require('./Instruction'),
+  end = new Instruction('restore');
 
-let transform = (values, ...children) => {
+const transform = (values, ...children) => {
   return [
-    new Instruction('transform',[
+    new Instruction('transform', [
       values[0],
       values[1],
       values[2],

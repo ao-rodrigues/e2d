@@ -1,6 +1,3 @@
-let Instruction = require('./Instruction');
-let cache = new Instruction('closePath');
+const emptyCall = require('./emptyCall');
 
-let closePath = () => cache;
-
-module.exports = closePath;
+module.exports = emptyCall('closePath');

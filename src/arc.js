@@ -1,24 +1,15 @@
-let Instruction = require('./Instruction'),
+const Instruction = require('./Instruction'),
     pi2 = Math.PI * 2;
 
-let arc = (...args) => {
-  let  [x, y, r, startAngle, endAngle, counterclockwise] = args;
-  let props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2, counterclockwise: false };
-
-
+const arc = (...args) => {
   if (args.length > 3) {
-    props.startAngle = startAngle;
-    props.endAngle = endAngle;
-    props.counterclockwise = !!counterclockwise;
+    return new Instruction("call", { name: 'arc', args, count: 6 });
+  }
+  if (args.length > 1) {
+    return new Instruction("call", { name: 'arc', args: [args[0], args[1], args[2], 0, pi2, false], count: 6 });
   }
 
-  if (args.length > 1){
-    props.x = x;
-    props.y = y;
-    props.r = r;
-  }
-
-  return new Instruction("arc",  props);
+  return new Instruction("call",  { name: 'arc', args: [0, 0, args[0], 0, pi2, false], count: 6 });
 };
 
 module.exports = arc;

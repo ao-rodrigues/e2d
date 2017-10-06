@@ -1,5 +1,5 @@
-let Instruction = require('./Instruction');
+const Instruction = require('./Instruction');
 
-let arcTo = (x1, y1, x2, y2, r) => new Instruction('arcTo', { x1, y1, x2, y2, r });
+const arcTo = (x1, y1, x2, y2, r) => new Instruction('call', { name: 'arcTo', args: [x1, y1, x2, y2, r], count: 5 });
 
 module.exports = arcTo;

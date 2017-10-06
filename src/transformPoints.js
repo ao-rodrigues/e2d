@@ -1,6 +1,6 @@
-let transformPoints = (points, matrix) => {
-  let result = [],
-      x, y;
+const transformPoints = (points, matrix) => {
+  const result = [];
+  let x, y;
 
   for(let i = 0; i < points.length; i++) {
     [x, y] = points[i];

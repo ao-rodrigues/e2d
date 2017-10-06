@@ -1,7 +1,7 @@
-let Instruction = require('./Instruction');
-let end = new Instruction('restore');
+const Instruction = require('./Instruction'),
+  end = new Instruction('restore');
 
-let scale = (x, y, ...children) => {
+const scale = (x, y, ...children) => {
   if (typeof y !== 'number') {
     children = [y].concat(children);
     y = x;

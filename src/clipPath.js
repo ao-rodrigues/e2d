@@ -1,6 +1,5 @@
-let Instruction = require('./Instruction');
-let cache = new Instruction('clipPath');
+const Instruction = require('./Instruction');
 
-let clipPath = () => cache;
+const clipPath = () => new Instruction('call', { name: 'clip', args: [], count: 0 });
 
 module.exports = clipPath;

@@ -1,5 +1,5 @@
 let det = 0;
-let invertMatrix = ([a, b, c, d, e, f]) => (
+const invertMatrix = ([a, b, c, d, e, f]) => (
   det = 1 / (a * d - c * b),
   [
     d * det,

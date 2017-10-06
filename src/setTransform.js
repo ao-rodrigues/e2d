@@ -1,7 +1,7 @@
-let Instruction = require('./Instruction');
-let end = new Instruction('restore');
+const Instruction = require('./Instruction'),
+   end = new Instruction('restore');
 
-let setTransform = (matrix, ...children) => [
+const setTransform = (matrix, ...children) => [
   new Instruction('setTransform', [
     matrix[0],
     matrix[1],

@@ -1,8 +1,8 @@
-let Instruction = require('./Instruction');
-let end = new Instruction('restore');
+const Instruction = require('./Instruction'),
+  end = new Instruction('restore');
 
-let translate = (x, y, ...children) => [
-  new Instruction('translate', { x: x, y: y }),
+const translate = (x, y, ...children) => [
+  new Instruction('translate', { x, y }),
   children,
   end
 ];

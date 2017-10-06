@@ -1,5 +1,3 @@
-let Instruction = require('./Instruction');
-let cache = new Instruction('stroke');
+const emptyCall = require('./emptyCall');
 
-let stroke = () => cache;
-module.exports = stroke;
+module.exports = emptyCall('stroke');

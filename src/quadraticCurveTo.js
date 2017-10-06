@@ -1,10 +1,5 @@
-let Instruction = require('./Instruction');
+const Instruction = require('./Instruction');
 
-let quadraticCurveTo = (cpx, cpy, x, y) => new Instruction('quadraticCurveTo', {
-  cpx,
-  cpy,
-  x,
-  y
-});
+const quadraticCurveTo = (cpx, cpy, x, y) => new Instruction('call', { name: 'quadraticCurveTo', args: [cpx, cpy, x, y], count: 4 });
 
 module.exports = quadraticCurveTo;

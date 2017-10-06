@@ -1,9 +1,9 @@
-let Instruction = require('./Instruction');
-let end = new Instruction('endShadowStyle');
+const Instruction = require('./Instruction'),
+  end = new Instruction('endShadowStyle');
 
 let shadowStyle = (value, ...children) => {
   value = value || {};
-  var result = {
+  const result = {
     shadowBlur: null,
     shadowColor: null,
     shadowOffsetX: null,

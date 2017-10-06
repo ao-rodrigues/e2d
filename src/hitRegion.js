@@ -1,5 +1,5 @@
-let Instruction = require('./Instruction');
+const Instruction = require('./Instruction');
 
-let hitRegion = (id, points) => new Instruction('hitRegion', { id, points });
+const hitRegion = (id, points) => new Instruction('hitRegion', { id, points });
 
 module.exports = hitRegion;

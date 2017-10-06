@@ -1,44 +1,28 @@
-let Instruction = require('./Instruction');
+const Instruction = require('./Instruction');
 
-let drawImage = (...args) => {
-  let [img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight] = args;
-
-  if (args.length === 9) {
-    return new Instruction('drawImageSource', {
-      img,
-      sx,
-      sy,
-      sWidth,
-      sHeight,
-      dx,
-      dy,
-      dWidth,
-      dHeight
+const drawImage = (...args) => {
+  if (args.length >= 9) {
+    return new Instruction('call', {
+      name: 'drawImage',
+      args,
+      count: 9
     });
   }
+
+  const [img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight] = args;
 
   if (args.length >= 5) {
-    return new Instruction('drawImageSize', {
-      img,
-      dx: sx,
-      dy: sy,
-      dWidth: sWidth,
-      dHeight: sHeight
+    return new Instruction('call', {
+      name: 'drawImage',
+      args: [img, sx, sy, sWidth, sHeight],
+      count: 5
     });
   }
 
-  if (args.length >= 3) {
-    return new Instruction('drawImage', {
-      img,
-      dx: sx,
-      dy: sy
-    });
-  }
-
-  return new Instruction('drawImage', {
-    img,
-    dx: 0,
-    dy: 0
+  return new Instruction('call', {
+    name: 'drawImage',
+    args: args.length >= 3 ? [img, sx, sy] : [img, 0, 0],
+    count: 3
   });
 };
 

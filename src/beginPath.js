@@ -1,6 +1,3 @@
-let Instruction = require('./Instruction'),
-  cache = new Instruction('beginPath');
+const emptyCall = require('./emptyCall');
 
-let beginPath = () => cache;
-
-module.exports = beginPath;
+module.exports = emptyCall('beginPath');

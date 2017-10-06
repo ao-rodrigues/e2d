@@ -1,57 +1,76 @@
-
 //initialize all the properties
-
-let identity = [1, 0, 0, 1, 0, 0],
-  matrix = new Float64Array(identity),
-  fillStyleStack = [],
-  strokeStyleStack = [],
-  lineStyleStack = [],
-  textStyleStack = [],
-  shadowStyleStack = [],
-  globalCompositeOperationStack = [],
-  globalAlphaStack = [],
-  imageSmoothingEnabledStack = [],
-  transformStack = new Float64Array(501 * 6),
-  transformStackIndex = 6,
-  concat = [].concat,
-  supportsEllipse = false;
-
-if (typeof CanvasRenderingContext2D !== 'undefined') {
-  supportsEllipse = CanvasRenderingContext2D.prototype.hasOwnProperty('ellipse');
-}
+const identity = [1, 0, 0, 1, 0, 0],
+  concat = [].concat;
 
 //transform points function
 const transformPoints = require('./transformPoints');
 const cycleMouseData = require('./cycleMouseData');
 
-const increaseTransformStackSize = () => {
-  let cache = transformStack;
-  transformStack = new Float64Array(transformStack.length + 600); //add 100 more
-  transformStack.set(cache);
-  return this;
-};
-
-transformStack.set(identity);
-
 const PI2 = Math.PI * 2;
 
-let empty = (target) => target && target.splice(0, target.length);
+const relativeTransforms = {
+  transform: true,
+  scale: true,
+  rotate: true,
+  translate: true,
+  skewX: true,
+  skewY: true
+};
+
+const upTransforms = {
+  transform: true,
+  scale: true,
+  rotate: true,
+  translate: true,
+  skewX: true,
+  skewY: true,
+  setTransform: true
+};
 
 module.exports = (...args) => {
   let children = args.slice(0, -1),
-   ctx = args[args.length - 1],
-   isTransformDirty = true;
+    isTransformDirty = true,
+    transformStackIndex = 6,
+    transformStack = new Float64Array(501 * 6),
+    cache;
 
-  let regions = ctx.canvas[Symbol.for('regions')],
-    mousePoints = ctx.canvas[Symbol.for('mousePoints')],
-    extensions = ctx.canvas[Symbol.for('extensions')];
+  transformStack.set(identity);
 
-  let cache;
+  const ctx = args[args.length - 1];
 
   cycleMouseData(ctx);
 
-  empty(regions);
-  empty(mousePoints);
+  const matrix = new Float64Array(identity),
+    regions = ctx.canvas[Symbol.for('regions')] = [],
+    mousePoints = ctx.canvas[Symbol.for('mousePoints')] = [],
+    extensions = ctx.canvas[Symbol.for('extensions')];
+
+  const stack = {
+    fillStyle: [],
+    strokeStyle: [],
+    globalCompositeOperation: [],
+    imageSmoothingEnabled: [],
+  };
+
+  const lineStyleStack = [],
+    textStyleStack = [],
+    shadowStyleStack = [],
+    globalAlphaStack = [];
+
+  transformStack[0] = identity[0];
+  transformStack[1] = identity[1];
+  transformStack[2] = identity[2];
+  transformStack[3] = identity[3];
+  transformStack[4] = identity[4];
+  transformStack[5] = identity[5];
+
+  const increaseTransformStackSize = () => {
+    cache = transformStack;
+    transformStack = new Float64Array(transformStack.length + 600); //add 100 more
+    transformStack.set(cache);
+  };
+
+  
 
   let len = children.length;
 
@@ -59,7 +78,7 @@ module.exports = (...args) => {
   for (let i = 0; i < len; i++) {
     let child = children[i];
 
-    //flattening algorithm
+    //flatten as you go algorithm
     if (child && child.constructor === Array) {
       children = concat.apply([], children);
       child = children[i];
@@ -78,23 +97,27 @@ module.exports = (...args) => {
       continue;
     }
 
-    let { props, type } = child;
+    const { props, type } = child;
 
-    switch(type) {
+    if (relativeTransforms[type]) {
+      matrix[0] = transformStack[transformStackIndex - 6];
+      matrix[1] = transformStack[transformStackIndex - 5];
+      matrix[2] = transformStack[transformStackIndex - 4];
+      matrix[3] = transformStack[transformStackIndex - 3];
+      matrix[4] = transformStack[transformStackIndex - 2];
+      matrix[5] = transformStack[transformStackIndex - 1];
+    }
+
+    if (upTransforms[type]) {
+      //increase the index
+      transformStackIndex += 6;
+      if (transformStackIndex >= transformStack.length) {
+        increaseTransformStackSize();
+      }
+    }
+
+    switch (type) {
       case 'transform':
-        matrix[0] = transformStack[transformStackIndex - 6];
-        matrix[1] = transformStack[transformStackIndex - 5];
-        matrix[2] = transformStack[transformStackIndex - 4];
-        matrix[3] = transformStack[transformStackIndex - 3];
-        matrix[4] = transformStack[transformStackIndex - 2];
-        matrix[5] = transformStack[transformStackIndex - 1];
-
-        //increase the index
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
         //perform the transform math
         transformStack[transformStackIndex - 6] = //d
           matrix[0] * props[0] + matrix[2] * props[1];
@@ -113,11 +136,6 @@ module.exports = (...args) => {
         continue;
 
       case "setTransform":
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
         transformStack[transformStackIndex - 6] = props[0];//a
         transformStack[transformStackIndex - 5] = props[1];//b
         transformStack[transformStackIndex - 4] = props[2];//c
@@ -129,18 +147,6 @@ module.exports = (...args) => {
         continue;
 
       case "scale":
-        matrix[0] = transformStack[transformStackIndex - 6];
-        matrix[1] = transformStack[transformStackIndex - 5];
-        matrix[2] = transformStack[transformStackIndex - 4];
-        matrix[3] = transformStack[transformStackIndex - 3];
-        matrix[4] = transformStack[transformStackIndex - 2];
-        matrix[5] = transformStack[transformStackIndex - 1];
-
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
         transformStack[transformStackIndex - 6] = matrix[0] * props.x; //a
         transformStack[transformStackIndex - 5] = matrix[1] * props.x; //b
         transformStack[transformStackIndex - 4] = matrix[2] * props.y; //c
@@ -152,18 +158,6 @@ module.exports = (...args) => {
         continue;
 
       case "translate":
-        matrix[0] = transformStack[transformStackIndex - 6];
-        matrix[1] = transformStack[transformStackIndex - 5];
-        matrix[2] = transformStack[transformStackIndex - 4];
-        matrix[3] = transformStack[transformStackIndex - 3];
-        matrix[4] = transformStack[transformStackIndex - 2];
-        matrix[5] = transformStack[transformStackIndex - 1];
-
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
         transformStack[transformStackIndex - 6] = matrix[0]; //a
         transformStack[transformStackIndex - 5] = matrix[1]; //b
         transformStack[transformStackIndex - 4] = matrix[2]; //c
@@ -175,18 +169,6 @@ module.exports = (...args) => {
         continue;
 
       case "rotate":
-        matrix[0] = transformStack[transformStackIndex - 6];
-        matrix[1] = transformStack[transformStackIndex - 5];
-        matrix[2] = transformStack[transformStackIndex - 4];
-        matrix[3] = transformStack[transformStackIndex - 3];
-        matrix[4] = transformStack[transformStackIndex - 2];
-        matrix[5] = transformStack[transformStackIndex - 1];
-
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
         transformStack[transformStackIndex - 6] =
           matrix[0] * props.cos + matrix[2] * props.sin; //a
         transformStack[transformStackIndex - 5] =
@@ -202,18 +184,6 @@ module.exports = (...args) => {
         continue;
 
       case "skewX":
-        matrix[0] = transformStack[transformStackIndex - 6];
-        matrix[1] = transformStack[transformStackIndex - 5];
-        matrix[2] = transformStack[transformStackIndex - 4];
-        matrix[3] = transformStack[transformStackIndex - 3];
-        matrix[4] = transformStack[transformStackIndex - 2];
-        matrix[5] = transformStack[transformStackIndex - 1];
-
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
         transformStack[transformStackIndex - 6] = matrix[0]; //a
         transformStack[transformStackIndex - 5] = matrix[1]; //b
         transformStack[transformStackIndex - 4] = //c
@@ -227,18 +197,6 @@ module.exports = (...args) => {
         continue;
 
       case "skewY":
-        matrix[0] = transformStack[transformStackIndex - 6];
-        matrix[1] = transformStack[transformStackIndex - 5];
-        matrix[2] = transformStack[transformStackIndex - 4];
-        matrix[3] = transformStack[transformStackIndex - 3];
-        matrix[4] = transformStack[transformStackIndex - 2];
-        matrix[5] = transformStack[transformStackIndex - 1];
-
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
         transformStack[transformStackIndex - 6] =
           matrix[0] * 1 + matrix[2] * props.y; //a
         transformStack[transformStackIndex - 5] =
@@ -253,7 +211,6 @@ module.exports = (...args) => {
 
       case "restore":
         transformStackIndex -= 6;
-
         isTransformDirty = true;
         continue;
     }
@@ -271,40 +228,51 @@ module.exports = (...args) => {
     }
 
 
-    switch(type) {
-      case 'fillRect':
-        ctx.fillRect(props.x, props.y, props.width, props.height);
+    switch (type) {
+      case 'push':
+        stack[props.stack].push(ctx[props.stack]);
+        ctx[props.stack] = props.value;
         continue;
 
-      case 'strokeRect':
-        ctx.strokeRect(props.x, props.y, props.width, props.height);
+      case 'pop':
+        ctx[props.stack] = stack[props.stack].pop();
         continue;
 
-      case 'clearRect':
-        ctx.clearRect(props.x, props.y, props.width, props.height);
-        continue;
 
-      case 'rect':
-        ctx.rect(props.x, props.y, props.width, props.height);
-        continue;
-
-      case 'fillStyle':
-        fillStyleStack.push(ctx.fillStyle);
-        ctx.fillStyle = props.value;
-        continue;
-
-      case 'strokeStyle':
-        strokeStyleStack.push(ctx.strokeStyle);
-        ctx.strokeStyle = props.value;
-        continue;
-
-      case 'endFillStyle':
-        ctx.fillStyle = fillStyleStack.pop();
-        continue;
-
-      case 'endStrokeStyle':
-        ctx.strokeStyle = strokeStyleStack.pop();
-        continue;
+      case 'call':
+        const { name, args, count } = props;
+        switch (count) {
+          case 0:
+            ctx[name]();
+            continue;
+          case 1:
+            ctx[name](args[0]);
+            continue;
+          case 2:
+            ctx[name](args[0], args[1]);
+            continue;
+          case 3:
+            ctx[name](args[0], args[1], args[2]);
+            continue;
+          case 4:
+            ctx[name](args[0], args[1], args[2], args[3]);
+            continue;
+          case 5:
+            ctx[name](args[0], args[1], args[2], args[3], args[4]);
+            continue;
+          case 6:
+            ctx[name](args[0], args[1], args[2], args[3], args[4], args[5]);
+            continue;
+          case 7:
+            ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+            continue;
+          case 8:
+            ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+            continue;
+          case 9:
+            ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
+            continue;
+        }
 
       case 'lineStyle':
         lineStyleStack.push({
@@ -406,34 +374,6 @@ module.exports = (...args) => {
         ctx.shadowOffsetY = cache.shadowOffsetY;
         continue;
 
-      case 'strokeText':
-        if (props.maxWidth) {
-          ctx.strokeText(props.text, props.x, props.y, props.maxWidth);
-          continue;
-        }
-        ctx.strokeText(props.text, props.x, props.y);
-        continue;
-
-      case 'fillText':
-        if (props.maxWidth) {
-          ctx.fillText(props.text, props.x, props.y, props.maxWidth);
-          continue;
-        }
-        ctx.fillText(props.text, props.x, props.y);
-        continue;
-
-      case 'drawImage':
-        ctx.drawImage(props.img, props.dx, props.dy);
-        continue;
-
-      case 'drawImageSize':
-        ctx.drawImage(props.img, props.dx, props.dy, props.dWidth, props.dHeight);
-        continue;
-
-      case 'drawImageSource':
-        ctx.drawImage(props.img, props.sx, props.sy, props.sWidth, props.sHeight, props.dx, props.dy, props.dWidth, props.dHeight);
-        continue;
-
       case 'strokeArc':
         ctx.beginPath();
         ctx.arc(props.x, props.y, props.r, props.startAngle, props.endAngle, props.counterclockwise);
@@ -448,90 +388,6 @@ module.exports = (...args) => {
         ctx.fill();
         continue;
 
-      case 'moveTo':
-        ctx.moveTo(props.x, props.y);
-        continue;
-
-      case 'lineTo':
-        ctx.lineTo(props.x, props.y);
-        continue;
-
-      case 'bezierCurveTo':
-        ctx.bezierCurveTo(props.cp1x, props.cp1y, props.cp2x, props.cp2y, props.x, props.y);
-        continue;
-
-      case 'quadraticCurveTo':
-        ctx.quadraticCurveTo(props.cpx, props.cpy, props.x, props.y);
-        continue;
-
-      case 'arc':
-        ctx.arc(props.x, props.y, props.r, props.startAngle, props.endAngle, props.counterclockwise);
-        continue;
-
-      case 'arcTo':
-        ctx.arcTo(props.x1, props.y1, props.x2, props.y2, props.r);
-        continue;
-
-      case 'ellipse':
-        if (supportsEllipse) {
-          ctx.ellipse(
-            props.x,
-            props.y,
-            props.radiusX,
-            props.radiusY,
-            props.rotation,
-            props.startAngle,
-            props.endAngle,
-            props.anticlockwise
-          );
-          continue;
-        }
-        ctx.save();
-        ctx.translate(props.x, props.y);
-        ctx.rotate(props.rotation);
-        ctx.scale(props.radiusX, props.radiusY);
-        ctx.arc(0, 0, 1, props.startAngle, props.endAngle, props.anticlockwise);
-        ctx.restore();
-        continue;
-
-      case 'globalCompositeOperation':
-        globalCompositeOperationStack.push(ctx.globalCompositeOperation);
-        ctx.globalCompositeOperation = props.value;
-        continue;
-
-      case 'endGlobalCompositeOperation':
-        ctx.globalCompositeOperation = globalCompositeOperationStack.pop();
-        continue;
-
-      case 'fill':
-        ctx.fill();
-        continue;
-
-      case 'stroke':
-        ctx.stroke();
-        continue;
-
-      case 'beginClip':
-       ctx.save();
-       ctx.beginPath();
-       continue;
-
-      case 'clip':
-        ctx.clip();
-        continue;
-
-      case 'endClip':
-        ctx.restore();
-        continue;
-
-      case 'beginPath':
-        ctx.beginPath();
-        continue;
-
-      case 'closePath':
-        ctx.closePath();
-        continue;
-
       case 'globalAlpha':
         globalAlphaStack.push(ctx.globalAlpha);
         ctx.globalAlpha *= props.value;
@@ -542,59 +398,27 @@ module.exports = (...args) => {
         continue;
 
       case 'hitRect':
-        if (regions) {
-          cache = [
-            transformStack[transformStackIndex - 6],
-            transformStack[transformStackIndex - 5],
-            transformStack[transformStackIndex - 4],
-            transformStack[transformStackIndex - 3],
-            transformStack[transformStackIndex - 2],
-            transformStack[transformStackIndex - 1]
-          ];
-
-          regions.push({
-            id: props.id,
-            points: props.points,
-            matrix: cache,
-            //rectangle!
-            polygon: false,
-            hover: false,
-            touched: false,
-            clicked: false
-          });
-        }
-        continue;
-
       case 'hitRegion':
+      case 'hitCircle':
         if (regions) {
-          cache = [
-            transformStack[transformStackIndex - 6],
-            transformStack[transformStackIndex - 5],
-            transformStack[transformStackIndex - 4],
-            transformStack[transformStackIndex - 3],
-            transformStack[transformStackIndex - 2],
-            transformStack[transformStackIndex - 1]
-          ];
-
           regions.push({
             id: props.id,
             points: props.points,
-            matrix: cache,
-            polygon: true,
+            matrix: [
+              transformStack[transformStackIndex - 6],
+              transformStack[transformStackIndex - 5],
+              transformStack[transformStackIndex - 4],
+              transformStack[transformStackIndex - 3],
+              transformStack[transformStackIndex - 2],
+              transformStack[transformStackIndex - 1]
+            ],
+            //rectangle!
+            type,
             hover: false,
             touched: false,
             clicked: false
           });
         }
-        continue;
-
-      case 'imageSmoothingEnabled':
-        imageSmoothingEnabledStack.push(ctx.imageSmoothingEnabled);
-        ctx.imageSmoothingEnabled = props.value;
-        continue;
-
-      case 'endImageSmoothingEnabled':
-        ctx.imageSmoothingEnabled = imageSmoothingEnabledStack.pop();
         continue;
 
       default:

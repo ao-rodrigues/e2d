@@ -11,41 +11,38 @@
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -56,7 +53,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -65,20 +62,20 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 57);
+/******/ 	return __webpack_require__(__webpack_require__.s = 14);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 class Instruction {
   constructor(type, props) {
@@ -94,13 +91,55 @@ Object.seal(Instruction.prototype);
 module.exports = Instruction;
 
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-let transformPoints = (points, matrix) => {
-  let result = [],
-      x, y;
+const Instruction = __webpack_require__(0);
+
+const emptyCall = (name) => () => new Instruction('call', { name, args: [], count: 0 });
+
+module.exports = emptyCall;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0);
+
+const rectInstruction = (name) => (...args) => new Instruction("call", {
+  name,
+  args: args.length > 2 ? args : [0, 0, args[0], args[1]],
+  count: 4
+});
+
+module.exports = rectInstruction;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0);
+
+const stackable = (stack) => {
+  const end = new Instruction('pop', { stack });
+  const stackableFunc = (value, ...children) => [
+    new Instruction('push', { stack, value }),
+    ...children,
+    end
+  ];
+
+  return stackableFunc;
+};
+module.exports = stackable;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+const transformPoints = (points, matrix) => {
+  const result = [];
+  let x, y;
 
   for(let i = 0; i < points.length; i++) {
     [x, y] = points[i];
@@ -115,55 +154,12 @@ let transformPoints = (points, matrix) => {
 module.exports = transformPoints;
 
 
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0),
-  cache = new Instruction('beginPath');
-
-let beginPath = () => cache;
-
-module.exports = beginPath;
-
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-let cache = new Instruction('closePath');
-
-let closePath = () => cache;
-
-module.exports = closePath;
-
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-
-let cycleMouseData = (ctx) => {
-  let mouseData = ctx.canvas[Symbol.for('mouseData')];
-  if (mouseData) {
-    mouseData.dx = mouseData.x - mouseData.previousX;
-    mouseData.dy = mouseData.y - mouseData.previousY;
-
-    mouseData.previousX = mouseData.x;
-    mouseData.previousY = mouseData.y;
-
-    mouseData.clicked = 0;
-  }
-};
-
-module.exports = cycleMouseData;
-
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 let det = 0;
-let invertMatrix = ([a, b, c, d, e, f]) => (
+const invertMatrix = ([a, b, c, d, e, f]) => (
   det = 1 / (a * d - c * b),
   [
     d * det,
@@ -176,44 +172,70 @@ let invertMatrix = ([a, b, c, d, e, f]) => (
 );
  module.exports = invertMatrix;
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-let Instruction = __webpack_require__(0);
-
-let lineTo = (x, y) => new Instruction('lineTo', { x, y });
-
-module.exports = lineTo;
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-
-let moveTo = (x, y) => new Instruction('moveTo', { x, y });
-
-module.exports = moveTo;
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-let pointInRect = ([px, py], [[x, y], [width, height]]) => px > x && py > y && px < width && py < height;
+const pointInRect = ([px, py], [[x, y], [width, height]]) => px > x && py > y && px < width && py < height;
 
 module.exports = pointInRect;
 
-/***/ },
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const emptyCall = __webpack_require__(1);
+
+module.exports = emptyCall('beginPath');
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const emptyCall = __webpack_require__(1);
+
+module.exports = emptyCall('closePath');
+
+/***/ }),
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-let Instruction = __webpack_require__(0);
-let end = new Instruction('restore');
+const Instruction = __webpack_require__(0);
 
-let setTransform = (matrix, ...children) => [
+const textInstruction = (name) => (...args) => new Instruction('call', {
+  name,
+  args: args.length >= 3 ? args : [args[0], 0, 0],
+  count: args.length >= 4 ? 4 : 3
+});
+
+module.exports = textInstruction;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const pointInstruction = __webpack_require__(66);
+
+module.exports = pointInstruction('lineTo');
+
+
+/***/ }),
+/* 11 */,
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const pointInstruction = __webpack_require__(66);
+
+module.exports = pointInstruction('moveTo');
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0),
+   end = new Instruction('restore');
+
+const setTransform = (matrix, ...children) => [
   new Instruction('setTransform', [
     matrix[0],
     matrix[1],
@@ -228,49 +250,104 @@ let setTransform = (matrix, ...children) => [
 
 module.exports = setTransform;
 
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let pointInPolygon = __webpack_require__(56);
-let transformPoints = __webpack_require__(1);
-let invertMatrix = __webpack_require__(5);
-let pointInRect = __webpack_require__(8);
+module.exports = {
+  'activeRegions': __webpack_require__(15),
+  'arc': __webpack_require__(18),
+  'arcTo': __webpack_require__(19),
+  'beginPath': __webpack_require__(7),
+  'bezierCurveTo': __webpack_require__(20),
+  'clearRect': __webpack_require__(21),
+  'clip': __webpack_require__(22),
+  'clipPath': __webpack_require__(23),
+  'closePath': __webpack_require__(8),
+  'createRegularPolygon': __webpack_require__(24),
+  'drawImage': __webpack_require__(25),
+  'ellipse': __webpack_require__(26),
+  'endClip': __webpack_require__(27),
+  'extend': __webpack_require__(28),
+  'fill': __webpack_require__(29),
+  'fillArc': __webpack_require__(30),
+  'fillRect': __webpack_require__(31),
+  'fillStyle': __webpack_require__(32),
+  'fillText': __webpack_require__(33),
+  'globalAlpha': __webpack_require__(34),
+  'globalCompositeOperation': __webpack_require__(35),
+  'hitCircle': __webpack_require__(36),
+  'hitRect': __webpack_require__(37),
+  'hitRegion': __webpack_require__(38),
+  'imageSmoothingEnabled': __webpack_require__(39),
+  'initialize': __webpack_require__(40),
+  'Instruction': __webpack_require__(0),
+  'invertMatrix': __webpack_require__(5),
+  'keyData': __webpack_require__(42),
+  'lineStyle': __webpack_require__(43),
+  'lineTo': __webpack_require__(10),
+  'mouseData': __webpack_require__(44),
+  'moveTo': __webpack_require__(12),
+  'moveToLineTo': __webpack_require__(45),
+  'path': __webpack_require__(46),
+  'pointInRect': __webpack_require__(6),
+  'quadraticCurveTo': __webpack_require__(47),
+  'raf': __webpack_require__(48),
+  'rect': __webpack_require__(49),
+  'render': __webpack_require__(50),
+  'resetTransform': __webpack_require__(52),
+  'rotate': __webpack_require__(53),
+  'scale': __webpack_require__(54),
+  'setTransform': __webpack_require__(13),
+  'shadowStyle': __webpack_require__(55),
+  'skewX': __webpack_require__(56),
+  'skewY': __webpack_require__(57),
+  'stroke': __webpack_require__(58),
+  'strokeArc': __webpack_require__(59),
+  'strokeRect': __webpack_require__(60),
+  'strokeStyle': __webpack_require__(61),
+  'strokeText': __webpack_require__(62),
+  'textStyle': __webpack_require__(63),
+  'transform': __webpack_require__(64),
+  'transformPoints': __webpack_require__(4),
+  'translate': __webpack_require__(65),
+};
 
-let matrix = new Float64Array(6);
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (ctx) => {
-  let regions = ctx.canvas[Symbol.for('regions')],
+const pointInPolygon = __webpack_require__(16),
+  transformPoints = __webpack_require__(4),
+  invertMatrix = __webpack_require__(5),
+  pointInRect = __webpack_require__(6),
+  pointInCircle = __webpack_require__(17),
+  matrix = new Float64Array(6),
+  alwaysFalse = () => false;
+
+const activeRegions = (ctx) => {
+  const regions = ctx.canvas[Symbol.for('regions')],
     mousePoints = ctx.canvas[Symbol.for('mousePoints')],
     mouseData = ctx.canvas[Symbol.for('mouseData')],
     results = {};
 
-  //the mouse might have held still, add the current mouse position
+  //the mouse might have held still, add the current mouse position to make the data consistent
   if (mousePoints.length === 0) {
     mousePoints.push([mouseData.x, mouseData.y, mouseData.state]);
   }
 
-  for(let region of regions) {
+  for (const region of regions) {
 
     //invert the region matrix and transform the mouse points
-    let transformedMousePoints = transformPoints(mousePoints, invertMatrix(region.matrix));
-    //the mouse points are now relative to the mouse region
+    const transformedMousePoints = transformPoints(mousePoints, invertMatrix(region.matrix));
 
-    if (!region.polygon) {
-      for (let mousePoint of transformedMousePoints) {
-        if (pointInRect(mousePoint, region.points)) {
-          region.hover = true;
-          region.clicked = !!mouseData.clicked;
-          results[region.id] = region;
-          break;
-        }
-      }
-      continue;
-    }
-
-    //loop over each point until one is matched
-    for(let mousePoint of transformedMousePoints) {
-      if (pointInPolygon(mousePoint, region.points)) {
+    //the mouse points are now relative to the mouse region, use the appropriate test
+    const test = region.type === 'hitRect' ? pointInRect :
+      region.type === 'hitRegion' ? pointInPolygon :
+      region.type === 'hitCircle' ? pointInCircle :
+      alwaysFalse;
+    for (const mousePoint of transformedMousePoints) {
+      if (test(mousePoint, region.points)) {
         region.hover = true;
         region.clicked = !!mouseData.clicked;
         results[region.id] = region;
@@ -281,93 +358,107 @@ module.exports = (ctx) => {
   return results;
 };
 
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
+module.exports = activeRegions;
 
-let Instruction = __webpack_require__(0),
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+module.exports = function (point, vs) {
+    // ray-casting algorithm based on
+    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+    
+    var x = point[0], y = point[1];
+    
+    var inside = false;
+    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        var xi = vs[i][0], yi = vs[i][1];
+        var xj = vs[j][0], yj = vs[j][1];
+        
+        var intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+    
+    return inside;
+};
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+const pointInCircle = ([x, y], [cx, cy, cr]) => ((cx - x) ** 2 + (cy - y) ** 2) < cr ** 2;
+
+module.exports = pointInCircle;
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0),
     pi2 = Math.PI * 2;
 
-let arc = (...args) => {
-  let  [x, y, r, startAngle, endAngle, counterclockwise] = args;
-  let props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2, counterclockwise: false };
-
-
+const arc = (...args) => {
   if (args.length > 3) {
-    props.startAngle = startAngle;
-    props.endAngle = endAngle;
-    props.counterclockwise = !!counterclockwise;
+    return new Instruction("call", { name: 'arc', args, count: 6 });
+  }
+  if (args.length > 1) {
+    return new Instruction("call", { name: 'arc', args: [args[0], args[1], args[2], 0, pi2, false], count: 6 });
   }
 
-  if (args.length > 1){
-    props.x = x;
-    props.y = y;
-    props.r = r;
-  }
-
-  return new Instruction("arc",  props);
+  return new Instruction("call",  { name: 'arc', args: [0, 0, args[0], 0, pi2, false], count: 6 });
 };
 
 module.exports = arc;
 
 
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let Instruction = __webpack_require__(0);
+const Instruction = __webpack_require__(0);
 
-let arcTo = (x1, y1, x2, y2, r) => new Instruction('arcTo', { x1, y1, x2, y2, r });
+const arcTo = (x1, y1, x2, y2, r) => new Instruction('call', { name: 'arcTo', args: [x1, y1, x2, y2, r], count: 5 });
 
 module.exports = arcTo;
 
 
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let Instruction = __webpack_require__(0);
+const Instruction = __webpack_require__(0);
 
-let bezierCurveTo = (cp1x, cp1y, cp2x, cp2y, x, y) => new Instruction('bezierCurveTo', {
-  cp1x,
-  cp1y,
-  cp2x,
-  cp2y,
-  x,
-  y
+const bezierCurveTo = (cp1x, cp1y, cp2x, cp2y, x, y) => new Instruction('call', {
+  name: 'bezierCurveTo',
+  args: [cp1x, cp1y, cp2x, cp2y, x, y],
+  count: 5
 });
-
 
 module.exports = bezierCurveTo;
 
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
 
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
+const rectInstruction = __webpack_require__(2);
 
-let Instruction = __webpack_require__(0);
+module.exports = rectInstruction('clearRect');
 
-let clearRect = (...args) => new Instruction('clearRect',
-  args.length > 2 ?
-    { x: args[0], y: args[1], width: args[2], height: args[3] } :
-    { x: 0, y: 0, width: args[0], height: args[1] }
-);
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
 
+const emptyCall = __webpack_require__(1);
 
-module.exports = clearRect;
+const Instruction = __webpack_require__(0);
 
+const begin = [emptyCall('save'), emptyCall('beginPath')],
+  performClip = emptyCall('clip'),
+  end = emptyCall('restore');
 
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-
-let begin = new Instruction('beginClip'),
-  performClip = new Instruction('clip'),
-  end = new Instruction('endClip');
-
-let clip = (path, ...children) => [
+const clip = (path, ...children) => [
   begin,
   path,
   performClip,
@@ -378,28 +469,29 @@ let clip = (path, ...children) => [
 module.exports = clip;
 
 
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let Instruction = __webpack_require__(0);
-let cache = new Instruction('clipPath');
+const Instruction = __webpack_require__(0);
 
-let clipPath = () => cache;
+const clipPath = () => new Instruction('call', { name: 'clip', args: [], count: 0 });
 
 module.exports = clipPath;
 
 
-/***/ },
-/* 17 */
-/***/ function(module, exports) {
+/***/ }),
+/* 24 */
+/***/ (function(module, exports) {
 
-let createRegularPolygon = (radius = 0, position = [0, 0], sides = 3) => {
-  let polygon = [];
+const PI2 = Math.PI * 2;
+const createRegularPolygon = (radius = 0, position = [0, 0], sides = 3) => {
+  const polygon = [];
+  const factor = PI2 / sides;
   for(let i = 0; i < sides; i++) {
     polygon.push([
-      position[0] + radius * Math.cos(Math.PI * 2 * i / sides),
-      position[1] + radius * Math.sin(Math.PI * 2 * i / sides)
+      position[0] + radius * Math.cos(factor * i),
+      position[1] + radius * Math.sin(factor * i)
     ]);
   }
   return polygon;
@@ -408,130 +500,102 @@ let createRegularPolygon = (radius = 0, position = [0, 0], sides = 3) => {
 module.exports = createRegularPolygon;
 
 
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let Instruction = __webpack_require__(0);
+const Instruction = __webpack_require__(0);
 
-let drawImage = (...args) => {
-  let [img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight] = args;
-
-  if (args.length === 9) {
-    return new Instruction('drawImageSource', {
-      img,
-      sx,
-      sy,
-      sWidth,
-      sHeight,
-      dx,
-      dy,
-      dWidth,
-      dHeight
+const drawImage = (...args) => {
+  if (args.length >= 9) {
+    return new Instruction('call', {
+      name: 'drawImage',
+      args,
+      count: 9
     });
   }
+
+  const [img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight] = args;
 
   if (args.length >= 5) {
-    return new Instruction('drawImageSize', {
-      img,
-      dx: sx,
-      dy: sy,
-      dWidth: sWidth,
-      dHeight: sHeight
+    return new Instruction('call', {
+      name: 'drawImage',
+      args: [img, sx, sy, sWidth, sHeight],
+      count: 5
     });
   }
 
-  if (args.length >= 3) {
-    return new Instruction('drawImage', {
-      img,
-      dx: sx,
-      dy: sy
-    });
-  }
-
-  return new Instruction('drawImage', {
-    img,
-    dx: 0,
-    dy: 0
+  return new Instruction('call', {
+    name: 'drawImage',
+    args: args.length >= 3 ? [img, sx, sy] : [img, 0, 0],
+    count: 3
   });
 };
 
 module.exports = drawImage;
 
 
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let Instruction = __webpack_require__(0),
+const Instruction = __webpack_require__(0),
     pi2 = Math.PI * 2;
 
-let ellipse = (...args) => {
-  let [x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise] = args;
+const ellipse = (...args) => {
+  const [x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise] = args;
 
-  let props = { x: 0, y: 0, radiusX: x, radiusY: y, rotation: 0, startAngle: 0, endAngle: pi2, anticlockwise: false };
-
-  if (args.length > 5) {
-    props.startAngle = startAngle;
-    props.endAngle = endAngle;
-    props.anticlockwise = !!anticlockwise;
-  }
-
-  if (args.length > 4) {
-    props.rotation = rotation;
-  }
-
-  if (args.length > 2){
-    props.x = x;
-    props.y = y;
-    props.radiusX = radiusX;
-    props.radiusY = radiusY;
-  }
-
-  return new Instruction("ellipse",  props);
+  //const props = { x: 0, y: 0, radiusX: x, radiusY: y, rotation: 0, startAngle: 0, endAngle: pi2, anticlockwise: false };
+  return new Instruction('call', {
+    name: 'ellipse',
+    args: args.length > 5 ? args :
+      args.length > 4 ? [x, y, radiusX, radiusY, rotation, startAngle, false] :
+      args.length > 2 ? [x, y, radiusX, radiusY, 0, pi2, false] :
+      [0, 0, x, y, 0, pi2, false],
+    count: 7
+  });
 };
 
 module.exports = ellipse;
 
 
-/***/ },
-/* 20 */
-/***/ function(module, exports) {
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (ctx, ...methods) => {
-  let extensions = ctx[Symbol.for('extensions')];
-  if (!extensions) {
-    extensions = ctx[Symbol.for('extensions')] = {};
-  }
-  methods.forEach(
-    (method) => Object.assign(extensions, method)
-  );
+const emptyCall = __webpack_require__(1);
+
+module.exports = emptyCall('restore');
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports) {
+
+const extend = (ctx, ...methods) => {
+  const extensions = ctx[Symbol.for('extensions')] || (ctx[Symbol.for('extensions')] = {});
+  Object.assign(extensions, ...methods);
 };
 
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
+module.exports = extend;
 
-let Instruction = __webpack_require__(0);
-let cache = new Instruction('fill');
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let fill = () => cache;
+const emptyCall = __webpack_require__(1);
 
-module.exports = fill;
+module.exports = emptyCall('fill');
 
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
 
-/***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-
-
-let Instruction = __webpack_require__(0),
+const Instruction = __webpack_require__(0),
     pi2 = Math.PI * 2;
 
-let fillArc = (...args) => {
-  let [x, y, r, startAngle, endAngle, counterclockwise] = args;
-  let props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2, counterclockwise: false };
+const fillArc = (...args) => {
+  const [x, y, r, startAngle, endAngle, counterclockwise] = args;
+  const props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2, counterclockwise: false };
 
 
   if (args.length > 3) {
@@ -552,67 +616,37 @@ let fillArc = (...args) => {
 module.exports = fillArc;
 
 
-/***/ },
-/* 23 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let Instruction = __webpack_require__(0);
+const rectInstruction = __webpack_require__(2);
 
-let fillRect = (...args) => new Instruction('fillRect',
-  args.length > 2 ?
-    { x: args[0], y: args[1], width: args[2], height: args[3] } :
-    { x: 0, y: 0, width: args[0], height: args[1] }
-);
-
-module.exports = fillRect;
+module.exports = rectInstruction('fillRect');
 
 
-/***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let Instruction = __webpack_require__(0);
-let end = new Instruction('endFillStyle');
+module.exports = __webpack_require__(3)('fillStyle');
 
-let fillStyle = (value, ...children) => [
-    new Instruction('fillStyle', { value }),
-    children,
-    end
-];
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = fillStyle;
+const textInstruction = __webpack_require__(9);
 
+module.exports = textInstruction('fillText');
 
-/***/ },
-/* 25 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let Instruction = __webpack_require__(0);
+const Instruction = __webpack_require__(0),
+  end = new Instruction('endGlobalAlpha');
 
-let fillText = (...args) => {
-  let [text, x, y, maxWidth] = args;
-  if (args.length < 4) {
-    maxWidth = null;
-  }
-  if (args.length < 3) {
-    x = 0;
-    y = 0;
-  }
-  return new Instruction('fillText', { text, x, y, maxWidth });
-};
-
-module.exports = fillText;
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
-
-
-let Instruction = __webpack_require__(0);
-let end = new Instruction('endGlobalAlpha');
-
-let globalAlpha = (value, ...children) => [
+const globalAlpha = (value, ...children) => [
   new Instruction('globalAlpha', { value }),
   children,
   end
@@ -620,32 +654,33 @@ let globalAlpha = (value, ...children) => [
 module.exports = globalAlpha;
 
 
-/***/ },
-/* 27 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(3)('globalCompositeOperation');
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0);
+
+const hitCircle = (id, ...args) => new Instruction('hitCircle', {
+  id,
+  points: args.length === 1 ? [0, 0, args[0]] : [args[0], args[1], args[2]]
+});
+
+module.exports = hitCircle;
 
 
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
 
-var Instruction = __webpack_require__(0);
+const Instruction = __webpack_require__(0);
 
-let end = new Instruction('endGlobalCompositeOperation');
-
-let globalCompositeOperation = (value, ...children) => [
-  new Instruction('globalCompositeOperation', { value }),
-  children,
-  end
-];
-
-module.exports = globalCompositeOperation;
-
-
-/***/ },
-/* 28 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-
-let hitRect = (id, ...args) => {
+const hitRect = (id, ...args) => {
   let [x, y, width, height] = args;
   if (args.length <= 3) {
     width = x;
@@ -664,40 +699,32 @@ let hitRect = (id, ...args) => {
 
 module.exports = hitRect;
 
-/***/ },
-/* 29 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 38 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let Instruction = __webpack_require__(0);
+const Instruction = __webpack_require__(0);
 
-let hitRegion = (id, points) => new Instruction('hitRegion', { id, points });
+const hitRegion = (id, points) => new Instruction('hitRegion', { id, points });
 
 module.exports = hitRegion;
 
 
-/***/ },
-/* 30 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let Instruction = __webpack_require__(0);
-let end = new Instruction('endImageSmoothingEnabled');
-
-let imageSmoothingEnabled = (value, ...children) => [
-  new Instruction('imageSmoothingEnabled', { value }),
-  children,
-  end
-];
-module.exports = imageSmoothingEnabled;
+module.exports = __webpack_require__(3)('imageSmoothingEnabled');
 
 
-/***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
 
-let keycode = __webpack_require__(55);
+const keycode = __webpack_require__(41);
 
 module.exports = (ctx) => {
-  let { canvas } = ctx;
+  const { canvas } = ctx;
 
   //mouseData
   canvas[Symbol.for('mouseData')] = {
@@ -711,9 +738,9 @@ module.exports = (ctx) => {
     clicked: 0
   };
 
-  let keys = canvas[Symbol.for('keyData')] = {};
+  const keys = canvas[Symbol.for('keyData')] = {};
 
-  for (let name in keycode.code) {
+  for (const name in keycode.code) {
     if (keycode.code.hasOwnProperty(name)) {
       keys[name] = false;
     }
@@ -726,19 +753,20 @@ module.exports = (ctx) => {
   //make the canvas receive touch and mouse events
   canvas.tabIndex = 1;
 
-  let mouseMove = (evt) => {
-    let { clientX, clientY } = evt;
+  const mouseMove = (evt) => {
+    const { clientX, clientY } = evt;
+
     //get left and top coordinates
-    let { left, top } = canvas.getBoundingClientRect();
+    const { left, top } = canvas.getBoundingClientRect();
 
-    let mouseData = canvas[Symbol.for('mouseData')];
+    const mouseData = canvas[Symbol.for('mouseData')];
 
-    let point = [clientX - left, clientY - top, mouseData.state];
+    const point = [clientX - left, clientY - top, mouseData.state];
 
     mouseData.x = point[0];
     mouseData.y = point[1];
 
-    let points = canvas[Symbol.for('mousePoints')];
+    const points = canvas[Symbol.for('mousePoints')];
 
     points.push(point);
 
@@ -751,11 +779,14 @@ module.exports = (ctx) => {
     return false;
   };
 
-  canvas.addEventListener('mousemove', (evt) => mouseMove(evt));
+  //up target needs to detect mouse up and keyup events if the mouse leaves the canvas
+  const upTarget = typeof window !== 'undefined' ? window : canvas;
+
+  canvas.addEventListener('mousemove', mouseMove);
   canvas.addEventListener('mousedown', (evt) => {
-    let { target } = evt;
+    const { target } = evt;
     if (target === canvas) {
-      let mouseData = canvas[Symbol.for('mouseData')];
+      const mouseData = canvas[Symbol.for('mouseData')];
 
       if (!mouseData.state) {
         mouseData.clicked += 1;
@@ -765,1071 +796,29 @@ module.exports = (ctx) => {
       return mouseMove(evt);
     }
   });
-  canvas.addEventListener('mouseup', (evt) => {
-    let mouseData = canvas[Symbol.for('mouseData')];
-    mouseData.state = false;
-    return mouseMove(evt);
-  });
+
   canvas.addEventListener('keydown', (evt) => {
     canvas[Symbol.for('keyData')][keycode(evt.keyCode)] = true;
     evt.preventDefault();
     return false;
   });
-  canvas.addEventListener('keyup', (evt) => {
+
+
+  upTarget.addEventListener('mouseup', (evt) => {
+    const mouseData = canvas[Symbol.for('mouseData')];
+    mouseData.state = false;
+    mouseMove(evt);
+  });
+
+  upTarget.addEventListener('keyup', (evt) => {
     canvas[Symbol.for('keyData')][keycode(evt.keyCode)] = false;
     evt.preventDefault();
-    return false;
   });
 };
 
-/***/ },
-/* 32 */
-/***/ function(module, exports) {
-
-module.exports = (ctx) => ctx.canvas[Symbol.for('keyData')];
-
-/***/ },
-/* 33 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-let end = new Instruction('endLineStyle');
-
-let lineStyle = (value, ...children) => {
-
-  value = value || {};
-  var result = {
-    lineWidth: null,
-    lineCap: null,
-    lineJoin: null,
-    miterLimit: null,
-    lineDash: null,
-    lineDashOffset: null
-  };
-
-  if (typeof value.lineWidth !== 'undefined') {
-    result.lineWidth = value.lineWidth;
-  }
-  if (typeof value.lineCap !== 'undefined') {
-    result.lineCap = value.lineCap;
-  }
-  if (typeof value.lineJoin !== 'undefined') {
-    result.lineJoin = value.lineJoin;
-  }
-  if (typeof value.miterLimit !== 'undefined') {
-    result.miterLimit = value.miterLimit;
-  }
-  if (typeof value.lineDash !== 'undefined') {
-    result.lineDash = value.lineDash || [];
-  }
-  if (typeof value.lineDashOffset !== 'undefined') {
-    result.lineDashOffset = value.lineDashOffset;
-  }
-  return [
-    new Instruction('lineStyle', result),
-    children,
-    end
-  ];
-};
-
-module.exports = lineStyle;
-
-
-/***/ },
-/* 34 */
-/***/ function(module, exports) {
-
-module.exports = (ctx) => ctx.canvas[Symbol.for('mouseData')];
-
-/***/ },
-/* 35 */
-/***/ function(module, exports, __webpack_require__) {
-
-let moveTo = __webpack_require__(7), lineTo = __webpack_require__(6);
-
-let moveToLineTo = (point, index) => index === 0 ?
-  moveTo(point[0], point[1]) :
-  lineTo(point[0], point[1]);
-
-module.exports = moveToLineTo;
-
-
-/***/ },
-/* 36 */
-/***/ function(module, exports, __webpack_require__) {
-
-let beginPath = __webpack_require__(2)(),
-    closePath = __webpack_require__(3)();
-
-let path = (...children) => [
-  beginPath,
-  children,
-  closePath
-];
-
-module.exports = path;
-
-
-/***/ },
-/* 37 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-
-let quadraticCurveTo = (cpx, cpy, x, y) => new Instruction('quadraticCurveTo', {
-  cpx,
-  cpy,
-  x,
-  y
-});
-
-module.exports = quadraticCurveTo;
-
-
-/***/ },
-/* 38 */
-/***/ function(module, exports) {
-
-let raf = (func) => {
-  let funcCaller = function() {
-    requestAnimationFrame(funcCaller);
-    func();
-  };
-
-  requestAnimationFrame(funcCaller);
-};
-
-module.exports = raf;
-
-/***/ },
-/* 39 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-
-let rect = (...args) => new Instruction('rect',
-  args.length > 2 ?
-    { x: args[0], y: args[1], width: args[2], height: args[3] } :
-    { x: 0, y: 0, width: args[0], height: args[1] }
-);
-
-module.exports = rect;
-
-
-/***/ },
-/* 40 */
-/***/ function(module, exports, __webpack_require__) {
-
-
-//initialize all the properties
-
-let identity = [1, 0, 0, 1, 0, 0],
-  matrix = new Float64Array(identity),
-  fillStyleStack = [],
-  strokeStyleStack = [],
-  lineStyleStack = [],
-  textStyleStack = [],
-  shadowStyleStack = [],
-  globalCompositeOperationStack = [],
-  globalAlphaStack = [],
-  imageSmoothingEnabledStack = [],
-  transformStack = new Float64Array(501 * 6),
-  transformStackIndex = 6,
-  concat = [].concat,
-  supportsEllipse = false;
-
-if (typeof CanvasRenderingContext2D !== 'undefined') {
-  supportsEllipse = CanvasRenderingContext2D.prototype.hasOwnProperty('ellipse');
-}
-
-//transform points function
-const transformPoints = __webpack_require__(1);
-const cycleMouseData = __webpack_require__(4);
-
-const increaseTransformStackSize = () => {
-  let cache = transformStack;
-  transformStack = new Float64Array(transformStack.length + 600); //add 100 more
-  transformStack.set(cache);
-  return this;
-};
-
-transformStack.set(identity);
-
-const PI2 = Math.PI * 2;
-
-let empty = (target) => target && target.splice(0, target.length);
-
-module.exports = (...args) => {
-  let children = args.slice(0, -1),
-   ctx = args[args.length - 1],
-   isTransformDirty = true;
-
-  let regions = ctx.canvas[Symbol.for('regions')],
-    mousePoints = ctx.canvas[Symbol.for('mousePoints')],
-    extensions = ctx.canvas[Symbol.for('extensions')];
-
-  let cache;
-
-  cycleMouseData(ctx);
-
-  empty(regions);
-  empty(mousePoints);
-
-  let len = children.length;
-
-  //flatten children during the loop process to save cpu
-  for (let i = 0; i < len; i++) {
-    let child = children[i];
-
-    //flattening algorithm
-    if (child && child.constructor === Array) {
-      children = concat.apply([], children);
-      child = children[i];
-
-      //repeat as necessary
-      while (child && child.constructor === Array) {
-        children = concat.apply([], children);
-        child = children[i];
-      }
-
-      len = children.length;
-    }
-
-    //child must be truthy
-    if (!child) {
-      continue;
-    }
-
-    let { props, type } = child;
-
-    switch(type) {
-      case 'transform':
-        matrix[0] = transformStack[transformStackIndex - 6];
-        matrix[1] = transformStack[transformStackIndex - 5];
-        matrix[2] = transformStack[transformStackIndex - 4];
-        matrix[3] = transformStack[transformStackIndex - 3];
-        matrix[4] = transformStack[transformStackIndex - 2];
-        matrix[5] = transformStack[transformStackIndex - 1];
-
-        //increase the index
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
-        //perform the transform math
-        transformStack[transformStackIndex - 6] = //d
-          matrix[0] * props[0] + matrix[2] * props[1];
-        transformStack[transformStackIndex - 5] = //b
-          matrix[1] * props[0] + matrix[3] * props[1];
-        transformStack[transformStackIndex - 4] = //c
-          matrix[0] * props[2] + matrix[2] * props[3];
-        transformStack[transformStackIndex - 3] = //d
-          matrix[1] * props[2] + matrix[3] * props[3];
-        transformStack[transformStackIndex - 2] = //e
-          matrix[0] * props[4] + matrix[2] * props[5] + matrix[4];
-        transformStack[transformStackIndex - 1] = //f
-          matrix[1] * props[4] + matrix[3] * props[5] + matrix[5];
-
-        isTransformDirty = true;
-        continue;
-
-      case "setTransform":
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
-        transformStack[transformStackIndex - 6] = props[0];//a
-        transformStack[transformStackIndex - 5] = props[1];//b
-        transformStack[transformStackIndex - 4] = props[2];//c
-        transformStack[transformStackIndex - 3] = props[3];//d
-        transformStack[transformStackIndex - 2] = props[4];//e
-        transformStack[transformStackIndex - 1] = props[5];//f
-
-        isTransformDirty = true;
-        continue;
-
-      case "scale":
-        matrix[0] = transformStack[transformStackIndex - 6];
-        matrix[1] = transformStack[transformStackIndex - 5];
-        matrix[2] = transformStack[transformStackIndex - 4];
-        matrix[3] = transformStack[transformStackIndex - 3];
-        matrix[4] = transformStack[transformStackIndex - 2];
-        matrix[5] = transformStack[transformStackIndex - 1];
-
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
-        transformStack[transformStackIndex - 6] = matrix[0] * props.x; //a
-        transformStack[transformStackIndex - 5] = matrix[1] * props.x; //b
-        transformStack[transformStackIndex - 4] = matrix[2] * props.y; //c
-        transformStack[transformStackIndex - 3] = matrix[3] * props.y; //d
-        transformStack[transformStackIndex - 2] = matrix[4]; //e
-        transformStack[transformStackIndex - 1] = matrix[5]; //f
-
-        isTransformDirty = true;
-        continue;
-
-      case "translate":
-        matrix[0] = transformStack[transformStackIndex - 6];
-        matrix[1] = transformStack[transformStackIndex - 5];
-        matrix[2] = transformStack[transformStackIndex - 4];
-        matrix[3] = transformStack[transformStackIndex - 3];
-        matrix[4] = transformStack[transformStackIndex - 2];
-        matrix[5] = transformStack[transformStackIndex - 1];
-
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
-        transformStack[transformStackIndex - 6] = matrix[0]; //a
-        transformStack[transformStackIndex - 5] = matrix[1]; //b
-        transformStack[transformStackIndex - 4] = matrix[2]; //c
-        transformStack[transformStackIndex - 3] = matrix[3]; //d
-        transformStack[transformStackIndex - 2] = matrix[4] + matrix[0] * props.x + matrix[2] * props.y; //e
-        transformStack[transformStackIndex - 1] = matrix[5] + matrix[1] * props.x + matrix[3] * props.y; //f
-
-        isTransformDirty = true;
-        continue;
-
-      case "rotate":
-        matrix[0] = transformStack[transformStackIndex - 6];
-        matrix[1] = transformStack[transformStackIndex - 5];
-        matrix[2] = transformStack[transformStackIndex - 4];
-        matrix[3] = transformStack[transformStackIndex - 3];
-        matrix[4] = transformStack[transformStackIndex - 2];
-        matrix[5] = transformStack[transformStackIndex - 1];
-
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
-        transformStack[transformStackIndex - 6] =
-          matrix[0] * props.cos + matrix[2] * props.sin; //a
-        transformStack[transformStackIndex - 5] =
-          matrix[1] * props.cos + matrix[3] * props.sin; //b
-        transformStack[transformStackIndex - 4] =
-          matrix[0] * -props.sin + matrix[2] * props.cos; //c
-        transformStack[transformStackIndex - 3] =
-          matrix[1] * -props.sin + matrix[3] * props.cos; //d
-        transformStack[transformStackIndex - 2] = matrix[4]; //e
-        transformStack[transformStackIndex - 1] = matrix[5];//f
-
-        isTransformDirty = true;
-        continue;
-
-      case "skewX":
-        matrix[0] = transformStack[transformStackIndex - 6];
-        matrix[1] = transformStack[transformStackIndex - 5];
-        matrix[2] = transformStack[transformStackIndex - 4];
-        matrix[3] = transformStack[transformStackIndex - 3];
-        matrix[4] = transformStack[transformStackIndex - 2];
-        matrix[5] = transformStack[transformStackIndex - 1];
-
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
-        transformStack[transformStackIndex - 6] = matrix[0]; //a
-        transformStack[transformStackIndex - 5] = matrix[1]; //b
-        transformStack[transformStackIndex - 4] = //c
-          matrix[0] * props.x + matrix[2];
-        transformStack[transformStackIndex - 3] = //d
-          matrix[1] * props.x + matrix[3];
-        transformStack[transformStackIndex - 2] = matrix[4]; //e
-        transformStack[transformStackIndex - 1] = matrix[5]; //f
-
-        isTransformDirty = true;
-        continue;
-
-      case "skewY":
-        matrix[0] = transformStack[transformStackIndex - 6];
-        matrix[1] = transformStack[transformStackIndex - 5];
-        matrix[2] = transformStack[transformStackIndex - 4];
-        matrix[3] = transformStack[transformStackIndex - 3];
-        matrix[4] = transformStack[transformStackIndex - 2];
-        matrix[5] = transformStack[transformStackIndex - 1];
-
-        transformStackIndex += 6;
-        if (transformStackIndex > transformStack.length) {
-          increaseTransformStackSize();
-        }
-
-        transformStack[transformStackIndex - 6] =
-          matrix[0] * 1 + matrix[2] * props.y; //a
-        transformStack[transformStackIndex - 5] =
-          matrix[1] * 1 + matrix[3] * props.y; //b
-        transformStack[transformStackIndex - 4] = matrix[2]; //c
-        transformStack[transformStackIndex - 3] = matrix[3]; //d
-        transformStack[transformStackIndex - 2] = matrix[4]; //e
-        transformStack[transformStackIndex - 1] = matrix[5]; //f
-
-        isTransformDirty = true;
-        continue;
-
-      case "restore":
-        transformStackIndex -= 6;
-
-        isTransformDirty = true;
-        continue;
-    }
-
-    if (isTransformDirty) {
-      isTransformDirty = false;
-      ctx.setTransform(
-        transformStack[transformStackIndex - 6],
-        transformStack[transformStackIndex - 5],
-        transformStack[transformStackIndex - 4],
-        transformStack[transformStackIndex - 3],
-        transformStack[transformStackIndex - 2],
-        transformStack[transformStackIndex - 1]
-      );
-    }
-
-
-    switch(type) {
-      case 'fillRect':
-        ctx.fillRect(props.x, props.y, props.width, props.height);
-        continue;
-
-      case 'strokeRect':
-        ctx.strokeRect(props.x, props.y, props.width, props.height);
-        continue;
-
-      case 'clearRect':
-        ctx.clearRect(props.x, props.y, props.width, props.height);
-        continue;
-
-      case 'rect':
-        ctx.rect(props.x, props.y, props.width, props.height);
-        continue;
-
-      case 'fillStyle':
-        fillStyleStack.push(ctx.fillStyle);
-        ctx.fillStyle = props.value;
-        continue;
-
-      case 'strokeStyle':
-        strokeStyleStack.push(ctx.strokeStyle);
-        ctx.strokeStyle = props.value;
-        continue;
-
-      case 'endFillStyle':
-        ctx.fillStyle = fillStyleStack.pop();
-        continue;
-
-      case 'endStrokeStyle':
-        ctx.strokeStyle = strokeStyleStack.pop();
-        continue;
-
-      case 'lineStyle':
-        lineStyleStack.push({
-          lineWidth: ctx.lineWidth,
-          lineCap: ctx.lineCap,
-          lineJoin: ctx.lineJoin,
-          miterLimit: ctx.miterLimit,
-          lineDash: ctx.getLineDash(),
-          lineDashOffset: ctx.lineDashOffset
-        });
-
-        if (props.lineWidth !== null) {
-          ctx.lineWidth = props.lineWidth;
-        }
-        if (props.lineCap !== null) {
-          ctx.lineCap = props.lineCap;
-        }
-        if (props.lineJoin !== null) {
-          ctx.lineJoin = props.lineJoin;
-        }
-        if (props.miterLimit !== null) {
-          ctx.miterLimit = props.miterLimit;
-        }
-        if (props.lineDash !== null) {
-          ctx.setLineDash(props.lineDash);
-        }
-
-        if (props.lineDashOffset !== null) {
-          ctx.lineDashOffset = props.lineDashOffset;
-        }
-        continue;
-
-      case 'endLineStyle':
-        cache = lineStyleStack.pop();
-        ctx.lineWidth = cache.lineWidth;
-        ctx.lineCap = cache.lineCap;
-        ctx.lineJoin = cache.lineJoin;
-        ctx.miterLimit = cache.miterLimit;
-        ctx.setLineDash(cache.lineDash);
-        ctx.lineDashOffset = cache.lineDashOffset;
-
-        continue;
-
-      case 'textStyle':
-        textStyleStack.push({
-          font: ctx.font,
-          textAlign: ctx.textAlign,
-          textBaseline: ctx.textBaseline,
-          direction: ctx.direction
-        });
-        if (props.font !== null) {
-          ctx.font = props.font;
-        }
-        if (props.textAlign !== null) {
-          ctx.textAlign = props.textAlign;
-        }
-        if (props.textBaseline !== null) {
-          ctx.textBaseline = props.textBaseline;
-        }
-        if (props.direction !== null) {
-          ctx.direction = props.direction;
-        }
-        continue;
-
-      case 'endTextStyle':
-        cache = textStyleStack.pop();
-        ctx.font = cache.font;
-        ctx.textAlign = cache.textAlign;
-        ctx.textBaseline = cache.textBaseline;
-        ctx.direction = cache.direction;
-        continue;
-
-      case 'shadowStyle':
-        shadowStyleStack.push({
-          shadowBlur: ctx.shadowBlur,
-          shadowColor: ctx.shadowColor,
-          shadowOffsetX: ctx.shadowOffsetX,
-          shadowOffsetY: ctx.shadowOffsetY
-        });
-        if (props.shadowBlur !== null) {
-          ctx.shadowBlur = props.shadowBlur;
-        }
-        if (props.shadowColor !== null) {
-          ctx.shadowColor = props.shadowColor;
-        }
-        if (props.shadowOffsetX !== null) {
-          ctx.shadowOffsetX = props.shadowOffsetX;
-        }
-        if (props.shadowOffsetY !== null) {
-          ctx.shadowOffsetY = props.shadowOffsetY;
-        }
-        continue;
-
-      case 'endShadowStyle':
-        cache = shadowStyleStack.pop();
-        ctx.shadowBlur = cache.shadowBlur;
-        ctx.shadowColor = cache.shadowColor;
-        ctx.shadowOffsetX = cache.shadowOffsetX;
-        ctx.shadowOffsetY = cache.shadowOffsetY;
-        continue;
-
-      case 'strokeText':
-        if (props.maxWidth) {
-          ctx.strokeText(props.text, props.x, props.y, props.maxWidth);
-          continue;
-        }
-        ctx.strokeText(props.text, props.x, props.y);
-        continue;
-
-      case 'fillText':
-        if (props.maxWidth) {
-          ctx.fillText(props.text, props.x, props.y, props.maxWidth);
-          continue;
-        }
-        ctx.fillText(props.text, props.x, props.y);
-        continue;
-
-      case 'drawImage':
-        ctx.drawImage(props.img, props.dx, props.dy);
-        continue;
-
-      case 'drawImageSize':
-        ctx.drawImage(props.img, props.dx, props.dy, props.dWidth, props.dHeight);
-        continue;
-
-      case 'drawImageSource':
-        ctx.drawImage(props.img, props.sx, props.sy, props.sWidth, props.sHeight, props.dx, props.dy, props.dWidth, props.dHeight);
-        continue;
-
-      case 'strokeArc':
-        ctx.beginPath();
-        ctx.arc(props.x, props.y, props.r, props.startAngle, props.endAngle, props.counterclockwise);
-        ctx.closePath();
-        ctx.stroke();
-        continue;
-
-      case 'fillArc':
-        ctx.beginPath();
-        ctx.arc(props.x, props.y, props.r, props.startAngle, props.endAngle, props.counterclockwise);
-        ctx.closePath();
-        ctx.fill();
-        continue;
-
-      case 'moveTo':
-        ctx.moveTo(props.x, props.y);
-        continue;
-
-      case 'lineTo':
-        ctx.lineTo(props.x, props.y);
-        continue;
-
-      case 'bezierCurveTo':
-        ctx.bezierCurveTo(props.cp1x, props.cp1y, props.cp2x, props.cp2y, props.x, props.y);
-        continue;
-
-      case 'quadraticCurveTo':
-        ctx.quadraticCurveTo(props.cpx, props.cpy, props.x, props.y);
-        continue;
-
-      case 'arc':
-        ctx.arc(props.x, props.y, props.r, props.startAngle, props.endAngle, props.counterclockwise);
-        continue;
-
-      case 'arcTo':
-        ctx.arcTo(props.x1, props.y1, props.x2, props.y2, props.r);
-        continue;
-
-      case 'ellipse':
-        if (supportsEllipse) {
-          ctx.ellipse(
-            props.x,
-            props.y,
-            props.radiusX,
-            props.radiusY,
-            props.rotation,
-            props.startAngle,
-            props.endAngle,
-            props.anticlockwise
-          );
-          continue;
-        }
-        ctx.save();
-        ctx.translate(props.x, props.y);
-        ctx.rotate(props.rotation);
-        ctx.scale(props.radiusX, props.radiusY);
-        ctx.arc(0, 0, 1, props.startAngle, props.endAngle, props.anticlockwise);
-        ctx.restore();
-        continue;
-
-      case 'globalCompositeOperation':
-        globalCompositeOperationStack.push(ctx.globalCompositeOperation);
-        ctx.globalCompositeOperation = props.value;
-        continue;
-
-      case 'endGlobalCompositeOperation':
-        ctx.globalCompositeOperation = globalCompositeOperationStack.pop();
-        continue;
-
-      case 'fill':
-        ctx.fill();
-        continue;
-
-      case 'stroke':
-        ctx.stroke();
-        continue;
-
-      case 'beginClip':
-       ctx.save();
-       ctx.beginPath();
-       continue;
-
-      case 'clip':
-        ctx.clip();
-        continue;
-
-      case 'endClip':
-        ctx.restore();
-        continue;
-
-      case 'beginPath':
-        ctx.beginPath();
-        continue;
-
-      case 'closePath':
-        ctx.closePath();
-        continue;
-
-      case 'globalAlpha':
-        globalAlphaStack.push(ctx.globalAlpha);
-        ctx.globalAlpha *= props.value;
-        continue;
-
-      case 'endGlobalAlpha':
-        ctx.globalAlpha = globalAlphaStack.pop();
-        continue;
-
-      case 'hitRect':
-        if (regions) {
-          cache = [
-            transformStack[transformStackIndex - 6],
-            transformStack[transformStackIndex - 5],
-            transformStack[transformStackIndex - 4],
-            transformStack[transformStackIndex - 3],
-            transformStack[transformStackIndex - 2],
-            transformStack[transformStackIndex - 1]
-          ];
-
-          regions.push({
-            id: props.id,
-            points: props.points,
-            matrix: cache,
-            //rectangle!
-            polygon: false,
-            hover: false,
-            touched: false,
-            clicked: false
-          });
-        }
-        continue;
-
-      case 'hitRegion':
-        if (regions) {
-          cache = [
-            transformStack[transformStackIndex - 6],
-            transformStack[transformStackIndex - 5],
-            transformStack[transformStackIndex - 4],
-            transformStack[transformStackIndex - 3],
-            transformStack[transformStackIndex - 2],
-            transformStack[transformStackIndex - 1]
-          ];
-
-          regions.push({
-            id: props.id,
-            points: props.points,
-            matrix: cache,
-            polygon: true,
-            hover: false,
-            touched: false,
-            clicked: false
-          });
-        }
-        continue;
-
-      case 'imageSmoothingEnabled':
-        imageSmoothingEnabledStack.push(ctx.imageSmoothingEnabled);
-        ctx.imageSmoothingEnabled = props.value;
-        continue;
-
-      case 'endImageSmoothingEnabled':
-        ctx.imageSmoothingEnabled = imageSmoothingEnabledStack.pop();
-        continue;
-
-      default:
-        if (extensions && extensions[type]) {
-          extensions[type](props, ctx);
-        }
-        continue;
-    }
-  }
-};
-
-/***/ },
+/***/ }),
 /* 41 */
-/***/ function(module, exports, __webpack_require__) {
-
-let setTransform = __webpack_require__(9);
-
-let resetTransform = (...children) => setTransform([1, 0, 0, 1, 0, 0], children);
-
-module.exports = resetTransform;
-
-/***/ },
-/* 42 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-let end = new Instruction('restore');
-
-let rotate = (r, ...children) => [
-  new Instruction('rotate', { cos: Math.cos(r), sin: Math.sin(r) }),
-  children,
-  end
-];
-
-module.exports = rotate;
-
-
-/***/ },
-/* 43 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-let end = new Instruction('restore');
-
-let scale = (x, y, ...children) => {
-  if (typeof y !== 'number') {
-    children = [y].concat(children);
-    y = x;
-  }
-
-  return [
-    new Instruction('scale', { x, y }),
-    children,
-    end
-  ];
-};
-
-module.exports = scale;
-
-
-/***/ },
-/* 44 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-let end = new Instruction('endShadowStyle');
-
-let shadowStyle = (value, ...children) => {
-  value = value || {};
-  var result = {
-    shadowBlur: null,
-    shadowColor: null,
-    shadowOffsetX: null,
-    shadowOffsetY: null
-  };
-
-  if (typeof value.shadowBlur !== 'undefined') {
-    result.shadowBlur = value.shadowBlur;
-  }
-  if (typeof value.shadowColor !== 'undefined') {
-    result.shadowColor = value.shadowColor;
-  }
-  if (typeof value.shadowOffsetX !== 'undefined') {
-    result.shadowOffsetX = value.shadowOffsetX;
-  }
-  if (typeof value.direction !== 'undefined') {
-    result.shadowOffsetY = value.shadowOffsetY;
-  }
-
-  return [
-    new Instruction('shadowStyle', result),
-    children,
-    end
-  ];
-};
-
-module.exports = shadowStyle;
-
-
-/***/ },
-/* 45 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-let end = new Instruction('restore');
-
-let skewX = (x, ...children) => [
-  new Instruction('skewX', { x: Math.tan(x) }),
-  children,
-  end
-];
-
-module.exports = skewX;
-
-
-/***/ },
-/* 46 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-let end = new Instruction('restore');
-
-let skewY = (y, ...children) => [
-  new Instruction('skewY', { y: Math.tan(y) }),
-  children,
-  end
-];
-
-module.exports = skewY;
-
-
-/***/ },
-/* 47 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-let cache = new Instruction('stroke');
-
-let stroke = () => cache;
-module.exports = stroke;
-
-
-/***/ },
-/* 48 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0),
-    pi2 = Math.PI * 2;
-
-let strokeArc = (...args) => {
-  let [x, y, r, startAngle, endAngle, counterclockwise] = args;
-  let props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2, counterclockwise: false };
-
-
-  if (args.length > 3) {
-    props.startAngle = startAngle;
-    props.endAngle = endAngle;
-    props.counterclockwise = !!counterclockwise;
-  }
-
-  if (args.length > 1){
-    props.x = x;
-    props.y = y;
-    props.r = r;
-  }
-
-  return new Instruction("strokeArc",  props);
-};
-
-module.exports = strokeArc;
-
-
-/***/ },
-/* 49 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-
-let strokeRect = (...args) => new Instruction('strokeRect',
-  args.length > 2 ?
-    { x: args[0], y: args[1], width: args[2], height: args[3] } :
-    { x: 0, y: 0, width: args[0], height: args[1] }
-);
-
-module.exports = strokeRect;
-
-
-/***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-let end = new Instruction('endStrokeStyle');
-
-let strokeStyle = (value, ...children) => [
-  new Instruction('strokeStyle', { value }),
-  children,
-  end
-];
-
-module.exports = strokeStyle;
-
-
-/***/ },
-/* 51 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-
-let strokeText = (...args) => {
-  let [text, x, y, maxWidth] = args;
-
-  if (args.length < 4) {
-    maxWidth = null;
-  }
-  if (args.length < 3) {
-    x = 0;
-    y = 0;
-  }
-  return new Instruction('strokeText', {
-    text,
-    x,
-    y,
-    maxWidth
-  });
-};
-
-module.exports = strokeText;
-
-/***/ },
-/* 52 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-let end = new Instruction('endTextStyle');
-
-let textStyle = (value, ...children) => {
-  value = value || {};
-  var result = {
-    font: null,
-    textAlign: null,
-    textBaseline: null,
-    direction: null
-  };
-
-  if (typeof value.font !== 'undefined') {
-    result.font = value.font;
-  }
-  if (typeof value.textAlign !== 'undefined') {
-    result.textAlign = value.textAlign;
-  }
-  if (typeof value.textBaseline !== 'undefined') {
-    result.textBaseline = value.textBaseline;
-  }
-  if (typeof value.direction !== 'undefined') {
-    result.direction = value.direction;
-  }
-
-  return [
-    new Instruction('textStyle', result),
-    children,
-    end
-  ];
-};
-
-module.exports = textStyle;
-
-
-/***/ },
-/* 53 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-let end = new Instruction('restore');
-
-let transform = (values, ...children) => {
-  return [
-    new Instruction('transform',[
-      values[0],
-      values[1],
-      values[2],
-      values[3],
-      values[4],
-      values[5]
-    ]),
-    children,
-    end
-  ];
-};
-
-
-module.exports = transform;
-
-
-/***/ },
-/* 54 */
-/***/ function(module, exports, __webpack_require__) {
-
-let Instruction = __webpack_require__(0);
-let end = new Instruction('restore');
-
-let translate = (x, y, ...children) => [
-  new Instruction('translate', { x: x, y: y }),
-  children,
-  end
-];
-
-module.exports = translate;
-
-
-/***/ },
-/* 55 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 // Source: http://jsfiddle.net/vWx8V/
 // http://stackoverflow.com/questions/5603195/full-list-of-javascript-keycodes
@@ -1979,92 +968,867 @@ for (var alias in aliases) {
 }
 
 
-/***/ },
-/* 56 */
-/***/ function(module, exports) {
+/***/ }),
+/* 42 */
+/***/ (function(module, exports) {
 
-module.exports = function (point, vs) {
-    // ray-casting algorithm based on
-    // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
-    
-    var x = point[0], y = point[1];
-    
-    var inside = false;
-    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-        var xi = vs[i][0], yi = vs[i][1];
-        var xj = vs[j][0], yj = vs[j][1];
-        
-        var intersect = ((yi > y) != (yj > y))
-            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-        if (intersect) inside = !inside;
+const keyData = (ctx) => ctx.canvas[Symbol.for('keyData')];
+
+module.exports = keyData;
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0),
+  end = new Instruction('endLineStyle');
+
+const lineStyle = (value, ...children) => {
+  value = value || {};
+  
+  var result = {
+    lineWidth: null,
+    lineCap: null,
+    lineJoin: null,
+    miterLimit: null,
+    lineDash: null,
+    lineDashOffset: null
+  };
+
+  if (typeof value.lineWidth !== 'undefined') {
+    result.lineWidth = value.lineWidth;
+  }
+  if (typeof value.lineCap !== 'undefined') {
+    result.lineCap = value.lineCap;
+  }
+  if (typeof value.lineJoin !== 'undefined') {
+    result.lineJoin = value.lineJoin;
+  }
+  if (typeof value.miterLimit !== 'undefined') {
+    result.miterLimit = value.miterLimit;
+  }
+  if (typeof value.lineDash !== 'undefined') {
+    result.lineDash = value.lineDash || [];
+  }
+  if (typeof value.lineDashOffset !== 'undefined') {
+    result.lineDashOffset = value.lineDashOffset;
+  }
+  return [
+    new Instruction('lineStyle', result),
+    children,
+    end
+  ];
+};
+
+module.exports = lineStyle;
+
+
+/***/ }),
+/* 44 */
+/***/ (function(module, exports) {
+
+const mouseData = (ctx) => ctx.canvas[Symbol.for('mouseData')];
+
+module.exports = mouseData;
+
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const moveTo = __webpack_require__(12), lineTo = __webpack_require__(10);
+
+const moveToLineTo = (point, index) => index === 0 ?
+  moveTo(point[0], point[1]) :
+  lineTo(point[0], point[1]);
+
+module.exports = moveToLineTo;
+
+
+/***/ }),
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const beginPath = __webpack_require__(7)(),
+    closePath = __webpack_require__(8)();
+
+const path = (...children) => [
+  beginPath,
+  children,
+  closePath
+];
+
+module.exports = path;
+
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0);
+
+const quadraticCurveTo = (cpx, cpy, x, y) => new Instruction('call', { name: 'quadraticCurveTo', args: [cpx, cpy, x, y], count: 4 });
+
+module.exports = quadraticCurveTo;
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports) {
+
+const raf = (func) => {
+  const funcCaller = function() {
+    requestAnimationFrame(funcCaller);
+    return func();
+  };
+
+  requestAnimationFrame(funcCaller);
+};
+
+module.exports = raf;
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const rectInstruction = __webpack_require__(2);
+
+module.exports = rectInstruction('rect');
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+//initialize all the properties
+const identity = [1, 0, 0, 1, 0, 0],
+  concat = [].concat;
+
+//transform points function
+const transformPoints = __webpack_require__(4);
+const cycleMouseData = __webpack_require__(51);
+
+const PI2 = Math.PI * 2;
+
+const relativeTransforms = {
+  transform: true,
+  scale: true,
+  rotate: true,
+  translate: true,
+  skewX: true,
+  skewY: true
+};
+
+const upTransforms = {
+  transform: true,
+  scale: true,
+  rotate: true,
+  translate: true,
+  skewX: true,
+  skewY: true,
+  setTransform: true
+};
+
+module.exports = (...args) => {
+  let children = args.slice(0, -1),
+    isTransformDirty = true,
+    transformStackIndex = 6,
+    transformStack = new Float64Array(501 * 6),
+    cache;
+
+  transformStack.set(identity);
+
+  const ctx = args[args.length - 1];
+
+  cycleMouseData(ctx);
+
+  const matrix = new Float64Array(identity),
+    regions = ctx.canvas[Symbol.for('regions')] = [],
+    mousePoints = ctx.canvas[Symbol.for('mousePoints')] = [],
+    extensions = ctx.canvas[Symbol.for('extensions')];
+
+  const stack = {
+    fillStyle: [],
+    strokeStyle: [],
+    globalCompositeOperation: [],
+    imageSmoothingEnabled: [],
+  };
+
+  const lineStyleStack = [],
+    textStyleStack = [],
+    shadowStyleStack = [],
+    globalAlphaStack = [];
+
+  transformStack[0] = identity[0];
+  transformStack[1] = identity[1];
+  transformStack[2] = identity[2];
+  transformStack[3] = identity[3];
+  transformStack[4] = identity[4];
+  transformStack[5] = identity[5];
+
+  const increaseTransformStackSize = () => {
+    cache = transformStack;
+    transformStack = new Float64Array(transformStack.length + 600); //add 100 more
+    transformStack.set(cache);
+  };
+
+  
+
+  let len = children.length;
+
+  //flatten children during the loop process to save cpu
+  for (let i = 0; i < len; i++) {
+    let child = children[i];
+
+    //flatten as you go algorithm
+    if (child && child.constructor === Array) {
+      children = concat.apply([], children);
+      child = children[i];
+
+      //repeat as necessary
+      while (child && child.constructor === Array) {
+        children = concat.apply([], children);
+        child = children[i];
+      }
+
+      len = children.length;
     }
-    
-    return inside;
+
+    //child must be truthy
+    if (!child) {
+      continue;
+    }
+
+    const { props, type } = child;
+
+    if (relativeTransforms[type]) {
+      matrix[0] = transformStack[transformStackIndex - 6];
+      matrix[1] = transformStack[transformStackIndex - 5];
+      matrix[2] = transformStack[transformStackIndex - 4];
+      matrix[3] = transformStack[transformStackIndex - 3];
+      matrix[4] = transformStack[transformStackIndex - 2];
+      matrix[5] = transformStack[transformStackIndex - 1];
+    }
+
+    if (upTransforms[type]) {
+      //increase the index
+      transformStackIndex += 6;
+      if (transformStackIndex >= transformStack.length) {
+        increaseTransformStackSize();
+      }
+    }
+
+    switch (type) {
+      case 'transform':
+        //perform the transform math
+        transformStack[transformStackIndex - 6] = //d
+          matrix[0] * props[0] + matrix[2] * props[1];
+        transformStack[transformStackIndex - 5] = //b
+          matrix[1] * props[0] + matrix[3] * props[1];
+        transformStack[transformStackIndex - 4] = //c
+          matrix[0] * props[2] + matrix[2] * props[3];
+        transformStack[transformStackIndex - 3] = //d
+          matrix[1] * props[2] + matrix[3] * props[3];
+        transformStack[transformStackIndex - 2] = //e
+          matrix[0] * props[4] + matrix[2] * props[5] + matrix[4];
+        transformStack[transformStackIndex - 1] = //f
+          matrix[1] * props[4] + matrix[3] * props[5] + matrix[5];
+
+        isTransformDirty = true;
+        continue;
+
+      case "setTransform":
+        transformStack[transformStackIndex - 6] = props[0];//a
+        transformStack[transformStackIndex - 5] = props[1];//b
+        transformStack[transformStackIndex - 4] = props[2];//c
+        transformStack[transformStackIndex - 3] = props[3];//d
+        transformStack[transformStackIndex - 2] = props[4];//e
+        transformStack[transformStackIndex - 1] = props[5];//f
+
+        isTransformDirty = true;
+        continue;
+
+      case "scale":
+        transformStack[transformStackIndex - 6] = matrix[0] * props.x; //a
+        transformStack[transformStackIndex - 5] = matrix[1] * props.x; //b
+        transformStack[transformStackIndex - 4] = matrix[2] * props.y; //c
+        transformStack[transformStackIndex - 3] = matrix[3] * props.y; //d
+        transformStack[transformStackIndex - 2] = matrix[4]; //e
+        transformStack[transformStackIndex - 1] = matrix[5]; //f
+
+        isTransformDirty = true;
+        continue;
+
+      case "translate":
+        transformStack[transformStackIndex - 6] = matrix[0]; //a
+        transformStack[transformStackIndex - 5] = matrix[1]; //b
+        transformStack[transformStackIndex - 4] = matrix[2]; //c
+        transformStack[transformStackIndex - 3] = matrix[3]; //d
+        transformStack[transformStackIndex - 2] = matrix[4] + matrix[0] * props.x + matrix[2] * props.y; //e
+        transformStack[transformStackIndex - 1] = matrix[5] + matrix[1] * props.x + matrix[3] * props.y; //f
+
+        isTransformDirty = true;
+        continue;
+
+      case "rotate":
+        transformStack[transformStackIndex - 6] =
+          matrix[0] * props.cos + matrix[2] * props.sin; //a
+        transformStack[transformStackIndex - 5] =
+          matrix[1] * props.cos + matrix[3] * props.sin; //b
+        transformStack[transformStackIndex - 4] =
+          matrix[0] * -props.sin + matrix[2] * props.cos; //c
+        transformStack[transformStackIndex - 3] =
+          matrix[1] * -props.sin + matrix[3] * props.cos; //d
+        transformStack[transformStackIndex - 2] = matrix[4]; //e
+        transformStack[transformStackIndex - 1] = matrix[5];//f
+
+        isTransformDirty = true;
+        continue;
+
+      case "skewX":
+        transformStack[transformStackIndex - 6] = matrix[0]; //a
+        transformStack[transformStackIndex - 5] = matrix[1]; //b
+        transformStack[transformStackIndex - 4] = //c
+          matrix[0] * props.x + matrix[2];
+        transformStack[transformStackIndex - 3] = //d
+          matrix[1] * props.x + matrix[3];
+        transformStack[transformStackIndex - 2] = matrix[4]; //e
+        transformStack[transformStackIndex - 1] = matrix[5]; //f
+
+        isTransformDirty = true;
+        continue;
+
+      case "skewY":
+        transformStack[transformStackIndex - 6] =
+          matrix[0] * 1 + matrix[2] * props.y; //a
+        transformStack[transformStackIndex - 5] =
+          matrix[1] * 1 + matrix[3] * props.y; //b
+        transformStack[transformStackIndex - 4] = matrix[2]; //c
+        transformStack[transformStackIndex - 3] = matrix[3]; //d
+        transformStack[transformStackIndex - 2] = matrix[4]; //e
+        transformStack[transformStackIndex - 1] = matrix[5]; //f
+
+        isTransformDirty = true;
+        continue;
+
+      case "restore":
+        transformStackIndex -= 6;
+        isTransformDirty = true;
+        continue;
+    }
+
+    if (isTransformDirty) {
+      isTransformDirty = false;
+      ctx.setTransform(
+        transformStack[transformStackIndex - 6],
+        transformStack[transformStackIndex - 5],
+        transformStack[transformStackIndex - 4],
+        transformStack[transformStackIndex - 3],
+        transformStack[transformStackIndex - 2],
+        transformStack[transformStackIndex - 1]
+      );
+    }
+
+
+    switch (type) {
+      case 'push':
+        stack[props.stack].push(ctx[props.stack]);
+        ctx[props.stack] = props.value;
+        continue;
+
+      case 'pop':
+        ctx[props.stack] = stack[props.stack].pop();
+        continue;
+
+
+      case 'call':
+        const { name, args, count } = props;
+        switch (count) {
+          case 0:
+            ctx[name]();
+            continue;
+          case 1:
+            ctx[name](args[0]);
+            continue;
+          case 2:
+            ctx[name](args[0], args[1]);
+            continue;
+          case 3:
+            ctx[name](args[0], args[1], args[2]);
+            continue;
+          case 4:
+            ctx[name](args[0], args[1], args[2], args[3]);
+            continue;
+          case 5:
+            ctx[name](args[0], args[1], args[2], args[3], args[4]);
+            continue;
+          case 6:
+            ctx[name](args[0], args[1], args[2], args[3], args[4], args[5]);
+            continue;
+          case 7:
+            ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+            continue;
+          case 8:
+            ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+            continue;
+          case 9:
+            ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
+            continue;
+        }
+
+      case 'lineStyle':
+        lineStyleStack.push({
+          lineWidth: ctx.lineWidth,
+          lineCap: ctx.lineCap,
+          lineJoin: ctx.lineJoin,
+          miterLimit: ctx.miterLimit,
+          lineDash: ctx.getLineDash(),
+          lineDashOffset: ctx.lineDashOffset
+        });
+
+        if (props.lineWidth !== null) {
+          ctx.lineWidth = props.lineWidth;
+        }
+        if (props.lineCap !== null) {
+          ctx.lineCap = props.lineCap;
+        }
+        if (props.lineJoin !== null) {
+          ctx.lineJoin = props.lineJoin;
+        }
+        if (props.miterLimit !== null) {
+          ctx.miterLimit = props.miterLimit;
+        }
+        if (props.lineDash !== null) {
+          ctx.setLineDash(props.lineDash);
+        }
+
+        if (props.lineDashOffset !== null) {
+          ctx.lineDashOffset = props.lineDashOffset;
+        }
+        continue;
+
+      case 'endLineStyle':
+        cache = lineStyleStack.pop();
+        ctx.lineWidth = cache.lineWidth;
+        ctx.lineCap = cache.lineCap;
+        ctx.lineJoin = cache.lineJoin;
+        ctx.miterLimit = cache.miterLimit;
+        ctx.setLineDash(cache.lineDash);
+        ctx.lineDashOffset = cache.lineDashOffset;
+
+        continue;
+
+      case 'textStyle':
+        textStyleStack.push({
+          font: ctx.font,
+          textAlign: ctx.textAlign,
+          textBaseline: ctx.textBaseline,
+          direction: ctx.direction
+        });
+        if (props.font !== null) {
+          ctx.font = props.font;
+        }
+        if (props.textAlign !== null) {
+          ctx.textAlign = props.textAlign;
+        }
+        if (props.textBaseline !== null) {
+          ctx.textBaseline = props.textBaseline;
+        }
+        if (props.direction !== null) {
+          ctx.direction = props.direction;
+        }
+        continue;
+
+      case 'endTextStyle':
+        cache = textStyleStack.pop();
+        ctx.font = cache.font;
+        ctx.textAlign = cache.textAlign;
+        ctx.textBaseline = cache.textBaseline;
+        ctx.direction = cache.direction;
+        continue;
+
+      case 'shadowStyle':
+        shadowStyleStack.push({
+          shadowBlur: ctx.shadowBlur,
+          shadowColor: ctx.shadowColor,
+          shadowOffsetX: ctx.shadowOffsetX,
+          shadowOffsetY: ctx.shadowOffsetY
+        });
+        if (props.shadowBlur !== null) {
+          ctx.shadowBlur = props.shadowBlur;
+        }
+        if (props.shadowColor !== null) {
+          ctx.shadowColor = props.shadowColor;
+        }
+        if (props.shadowOffsetX !== null) {
+          ctx.shadowOffsetX = props.shadowOffsetX;
+        }
+        if (props.shadowOffsetY !== null) {
+          ctx.shadowOffsetY = props.shadowOffsetY;
+        }
+        continue;
+
+      case 'endShadowStyle':
+        cache = shadowStyleStack.pop();
+        ctx.shadowBlur = cache.shadowBlur;
+        ctx.shadowColor = cache.shadowColor;
+        ctx.shadowOffsetX = cache.shadowOffsetX;
+        ctx.shadowOffsetY = cache.shadowOffsetY;
+        continue;
+
+      case 'strokeArc':
+        ctx.beginPath();
+        ctx.arc(props.x, props.y, props.r, props.startAngle, props.endAngle, props.counterclockwise);
+        ctx.closePath();
+        ctx.stroke();
+        continue;
+
+      case 'fillArc':
+        ctx.beginPath();
+        ctx.arc(props.x, props.y, props.r, props.startAngle, props.endAngle, props.counterclockwise);
+        ctx.closePath();
+        ctx.fill();
+        continue;
+
+      case 'globalAlpha':
+        globalAlphaStack.push(ctx.globalAlpha);
+        ctx.globalAlpha *= props.value;
+        continue;
+
+      case 'endGlobalAlpha':
+        ctx.globalAlpha = globalAlphaStack.pop();
+        continue;
+
+      case 'hitRect':
+      case 'hitRegion':
+      case 'hitCircle':
+        if (regions) {
+          regions.push({
+            id: props.id,
+            points: props.points,
+            matrix: [
+              transformStack[transformStackIndex - 6],
+              transformStack[transformStackIndex - 5],
+              transformStack[transformStackIndex - 4],
+              transformStack[transformStackIndex - 3],
+              transformStack[transformStackIndex - 2],
+              transformStack[transformStackIndex - 1]
+            ],
+            //rectangle!
+            type,
+            hover: false,
+            touched: false,
+            clicked: false
+          });
+        }
+        continue;
+
+      default:
+        if (extensions && extensions[type]) {
+          extensions[type](props, ctx);
+        }
+        continue;
+    }
+  }
 };
 
+/***/ }),
+/* 51 */
+/***/ (function(module, exports) {
 
-/***/ },
+
+const cycleMouseData = (ctx) => {
+  const mouseData = ctx.canvas[Symbol.for('mouseData')];
+  if (mouseData) {
+    mouseData.dx = mouseData.x - mouseData.previousX;
+    mouseData.dy = mouseData.y - mouseData.previousY;
+
+    mouseData.previousX = mouseData.x;
+    mouseData.previousY = mouseData.y;
+
+    mouseData.clicked = 0;
+  }
+};
+
+module.exports = cycleMouseData;
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const setTransform = __webpack_require__(13);
+
+const resetTransform = (...children) => setTransform([1, 0, 0, 1, 0, 0], children);
+
+module.exports = resetTransform;
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0),
+  end = new Instruction('restore');
+
+const rotate = (r, ...children) => [
+  new Instruction('rotate', { cos: Math.cos(r), sin: Math.sin(r) }),
+  children,
+  end
+];
+
+module.exports = rotate;
+
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0),
+  end = new Instruction('restore');
+
+const scale = (x, y, ...children) => {
+  if (typeof y !== 'number') {
+    children = [y].concat(children);
+    y = x;
+  }
+
+  return [
+    new Instruction('scale', { x, y }),
+    children,
+    end
+  ];
+};
+
+module.exports = scale;
+
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0),
+  end = new Instruction('endShadowStyle');
+
+let shadowStyle = (value, ...children) => {
+  value = value || {};
+  const result = {
+    shadowBlur: null,
+    shadowColor: null,
+    shadowOffsetX: null,
+    shadowOffsetY: null
+  };
+
+  if (typeof value.shadowBlur !== 'undefined') {
+    result.shadowBlur = value.shadowBlur;
+  }
+  if (typeof value.shadowColor !== 'undefined') {
+    result.shadowColor = value.shadowColor;
+  }
+  if (typeof value.shadowOffsetX !== 'undefined') {
+    result.shadowOffsetX = value.shadowOffsetX;
+  }
+  if (typeof value.direction !== 'undefined') {
+    result.shadowOffsetY = value.shadowOffsetY;
+  }
+
+  return [
+    new Instruction('shadowStyle', result),
+    children,
+    end
+  ];
+};
+
+module.exports = shadowStyle;
+
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0),
+   end = new Instruction('restore');
+
+const skewX = (x, ...children) => [
+  new Instruction('skewX', { x: Math.tan(x) }),
+  children,
+  end
+];
+
+module.exports = skewX;
+
+
+/***/ }),
 /* 57 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = {
-  'activeRegions': __webpack_require__(10),
-  'arc': __webpack_require__(11),
-  'arcTo': __webpack_require__(12),
-  'beginPath': __webpack_require__(2),
-  'bezierCurveTo': __webpack_require__(13),
-  'clearRect': __webpack_require__(14),
-  'clip': __webpack_require__(15),
-  'clipPath': __webpack_require__(16),
-  'closePath': __webpack_require__(3),
-  'createRegularPolygon': __webpack_require__(17),
-  'cycleMouseData': __webpack_require__(4),
-  'drawImage': __webpack_require__(18),
-  'ellipse': __webpack_require__(19),
-  'extend': __webpack_require__(20),
-  'fill': __webpack_require__(21),
-  'fillArc': __webpack_require__(22),
-  'fillRect': __webpack_require__(23),
-  'fillStyle': __webpack_require__(24),
-  'fillText': __webpack_require__(25),
-  'globalAlpha': __webpack_require__(26),
-  'globalCompositeOperation': __webpack_require__(27),
-  'hitRect': __webpack_require__(28),
-  'hitRegion': __webpack_require__(29),
-  'imageSmoothingEnabled': __webpack_require__(30),
-  'initialize': __webpack_require__(31),
-  'Instruction': __webpack_require__(0),
-  'invertMatrix': __webpack_require__(5),
-  'keyData': __webpack_require__(32),
-  'lineStyle': __webpack_require__(33),
-  'lineTo': __webpack_require__(6),
-  'mouseData': __webpack_require__(34),
-  'moveTo': __webpack_require__(7),
-  'moveToLineTo': __webpack_require__(35),
-  'path': __webpack_require__(36),
-  'pointInRect': __webpack_require__(8),
-  'quadraticCurveTo': __webpack_require__(37),
-  'raf': __webpack_require__(38),
-  'rect': __webpack_require__(39),
-  'render': __webpack_require__(40),
-  'resetTransform': __webpack_require__(41),
-  'rotate': __webpack_require__(42),
-  'scale': __webpack_require__(43),
-  'setTransform': __webpack_require__(9),
-  'shadowStyle': __webpack_require__(44),
-  'skewX': __webpack_require__(45),
-  'skewY': __webpack_require__(46),
-  'stroke': __webpack_require__(47),
-  'strokeArc': __webpack_require__(48),
-  'strokeRect': __webpack_require__(49),
-  'strokeStyle': __webpack_require__(50),
-  'strokeText': __webpack_require__(51),
-  'textStyle': __webpack_require__(52),
-  'transform': __webpack_require__(53),
-  'transformPoints': __webpack_require__(1),
-  'translate': __webpack_require__(54)
+const Instruction = __webpack_require__(0),
+   end = new Instruction('restore');
+
+const skewY = (y, ...children) => [
+  new Instruction('skewY', { y: Math.tan(y) }),
+  children,
+  end
+];
+
+module.exports = skewY;
+
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const emptyCall = __webpack_require__(1);
+
+module.exports = emptyCall('stroke');
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0),
+    pi2 = Math.PI * 2;
+
+const strokeArc = (...args) => {
+  const [x, y, r, startAngle, endAngle, counterclockwise] = args;
+  const props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2, counterclockwise: false };
+
+
+  if (args.length > 3) {
+    props.startAngle = startAngle;
+    props.endAngle = endAngle;
+    props.counterclockwise = !!counterclockwise;
+  }
+
+  if (args.length > 1){
+    props.x = x;
+    props.y = y;
+    props.r = r;
+  }
+
+  return new Instruction("strokeArc",  props);
 };
 
-/***/ }
+module.exports = strokeArc;
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const rectInstruction = __webpack_require__(2);
+
+module.exports = rectInstruction('strokeRect');
+
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(3)('strokeStyle');
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0);
+
+const textInstruction = __webpack_require__(9);
+
+module.exports = textInstruction('strokeText');
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0),
+   end = new Instruction('endTextStyle');
+
+const textStyle = (value, ...children) => {
+  value = value || {};
+  const result = {
+    font: null,
+    textAlign: null,
+    textBaseline: null,
+    direction: null
+  };
+
+  if (typeof value.font !== 'undefined') {
+    result.font = value.font;
+  }
+  if (typeof value.textAlign !== 'undefined') {
+    result.textAlign = value.textAlign;
+  }
+  if (typeof value.textBaseline !== 'undefined') {
+    result.textBaseline = value.textBaseline;
+  }
+  if (typeof value.direction !== 'undefined') {
+    result.direction = value.direction;
+  }
+
+  return [
+    new Instruction('textStyle', result),
+    children,
+    end
+  ];
+};
+
+module.exports = textStyle;
+
+
+/***/ }),
+/* 64 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0),
+  end = new Instruction('restore');
+
+const transform = (values, ...children) => {
+  return [
+    new Instruction('transform', [
+      values[0],
+      values[1],
+      values[2],
+      values[3],
+      values[4],
+      values[5]
+    ]),
+    children,
+    end
+  ];
+};
+
+
+module.exports = transform;
+
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0),
+  end = new Instruction('restore');
+
+const translate = (x, y, ...children) => [
+  new Instruction('translate', { x, y }),
+  children,
+  end
+];
+
+module.exports = translate;
+
+
+/***/ }),
+/* 66 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Instruction = __webpack_require__(0);
+
+const pointInstruction = (name) => (x, y) => new Instruction("call", {
+  name,
+  args: [x, y],
+  count: 2
+});
+
+module.exports = pointInstruction;
+
+/***/ })
 /******/ ]);
 });

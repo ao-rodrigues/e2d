@@ -1,8 +1,7 @@
 var path = require('path'),
     pkg = require('./package.json'),
     webpack = require('webpack'),
-    Babili = require('babili-webpack-plugin'),
-    LibrarySourcePlugin = require('library-src-plugin');
+    Babili = require('babili-webpack-plugin');
 
 let buildConfig = (useBabel, minify, name) => ({
   context: __dirname,
@@ -24,11 +23,7 @@ let buildConfig = (useBabel, minify, name) => ({
     ] : []
   },
   plugins: [
-    minify ? new Babili() : null,
-    new LibrarySourcePlugin({
-      entry: pkg.name,
-      folder: './src/'
-    })
+    minify ? new Babili() : null
   ].filter(Boolean),
   externals: [
     'e2d'

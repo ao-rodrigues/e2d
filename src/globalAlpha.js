@@ -1,9 +1,7 @@
+const Instruction = require('./Instruction'),
+  end = new Instruction('endGlobalAlpha');
 
-
-let Instruction = require('./Instruction');
-let end = new Instruction('endGlobalAlpha');
-
-let globalAlpha = (value, ...children) => [
+const globalAlpha = (value, ...children) => [
   new Instruction('globalAlpha', { value }),
   children,
   end

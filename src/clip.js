@@ -1,10 +1,12 @@
-let Instruction = require('./Instruction');
+const emptyCall = require('./emptyCall');
 
-let begin = new Instruction('beginClip'),
-  performClip = new Instruction('clip'),
-  end = new Instruction('endClip');
+const Instruction = require('./Instruction');
 
-let clip = (path, ...children) => [
+const begin = [emptyCall('save'), emptyCall('beginPath')],
+  performClip = emptyCall('clip'),
+  end = emptyCall('restore');
+
+const clip = (path, ...children) => [
   begin,
   path,
   performClip,

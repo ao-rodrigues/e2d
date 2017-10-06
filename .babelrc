@@ -1,6 +1,14 @@
 {
-  "plugins": ["closure-elimination", "nofn"],
+  "plugins": [],
   "presets": [
-    ["es2015", { "loose": true, "module": true }]
+    ["env", {
+      "targets": {
+        "browsers": [
+          "last 2 versions",
+          "not ie <= 8"
+        ],
+        "node": "6"
+      }
+    }]
   ]
 }

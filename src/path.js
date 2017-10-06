@@ -1,7 +1,7 @@
-let beginPath = require('./beginPath')(),
+const beginPath = require('./beginPath')(),
     closePath = require('./closePath')();
 
-let path = (...children) => [
+const path = (...children) => [
   beginPath,
   children,
   closePath
