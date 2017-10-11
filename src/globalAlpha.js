@@ -1,9 +1,9 @@
-import Instruction from './Instruction';
+import Instruction from "./Instruction";
 
-const end = new Instruction('endGlobalAlpha');
+const end = new Instruction( "endGlobalAlpha" );
 
-const globalAlpha = (value, ...children) => [
-  new Instruction('globalAlpha', { value }),
+const globalAlpha = ( value, ...children ) => [
+  new Instruction( "globalAlpha", { value } ),
   children,
   end
 ];

@@ -1,33 +1,13 @@
-import Instruction from './Instruction';
-const end = new Instruction('endTextStyle');
+import fontCall from "./font";
+import textAlignCall from "./textAlign";
+import textBaselineCall from "./textBaseline";
+import directionCall from "./direction";
 
-const textStyle = (value, ...children) => {
-  value = value || {};
-  const result = {
-    font: null,
-    textAlign: null,
-    textBaseline: null,
-    direction: null
-  };
-
-  if (typeof value.font !== 'undefined') {
-    result.font = value.font;
-  }
-  if (typeof value.textAlign !== 'undefined') {
-    result.textAlign = value.textAlign;
-  }
-  if (typeof value.textBaseline !== 'undefined') {
-    result.textBaseline = value.textBaseline;
-  }
-  if (typeof value.direction !== 'undefined') {
-    result.direction = value.direction;
-  }
-
-  return [
-    new Instruction('textStyle', result),
-    children,
-    end
-  ];
+const textStyle = ( { font, textAlign, textBaseline, direction }, ...children ) => {
+  children = font ? fontCall( children ) : children;
+  children = textAlign ? textAlignCall( children ) : children;
+  children = textBaseline ? textBaselineCall( children ) : children;
+  return direction ? directionCall( children ) : children;
 };
 
 export default textStyle;

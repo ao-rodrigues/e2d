@@ -1,42 +1,25 @@
-import Instruction from './Instruction';
 
-const end = new Instruction('endLineStyle');
+import lineCapCall from "./lineCap";
+import lineDashCall from "./lineDash";
+import lineDashOffsetCall from "./lineDashOffset";
+import lineJoinCall from "./lineJoin";
+import lineWidthCall from "./lineWidth";
+import miterLimitCall from "./miterLimit";
 
-const lineStyle = (value, ...children) => {
-  value = value || {};
-  
-  var result = {
-    lineWidth: null,
-    lineCap: null,
-    lineJoin: null,
-    miterLimit: null,
-    lineDash: null,
-    lineDashOffset: null
-  };
-
-  if (typeof value.lineWidth !== 'undefined') {
-    result.lineWidth = value.lineWidth;
-  }
-  if (typeof value.lineCap !== 'undefined') {
-    result.lineCap = value.lineCap;
-  }
-  if (typeof value.lineJoin !== 'undefined') {
-    result.lineJoin = value.lineJoin;
-  }
-  if (typeof value.miterLimit !== 'undefined') {
-    result.miterLimit = value.miterLimit;
-  }
-  if (typeof value.lineDash !== 'undefined') {
-    result.lineDash = value.lineDash || [];
-  }
-  if (typeof value.lineDashOffset !== 'undefined') {
-    result.lineDashOffset = value.lineDashOffset;
-  }
-  return [
-    new Instruction('lineStyle', result),
-    children,
-    end
-  ];
+const lineStyle = ( {
+  lineCap,
+  lineDash,
+  lineDashOffset,
+  lineJoin,
+  lineWidth,
+  miterLimit
+}, ...children ) => {
+  children = lineCap ? lineCapCall( children ) : children;
+  children = lineDash ? lineDashCall( children ) : children;
+  children = lineDashOffset == null ? children : lineDashOffsetCall( children );
+  children = lineJoin ? lineJoinCall( children ) : children;
+  children = lineWidth == null ? children : lineWidthCall( children );
+  return miterLimit == null ? children : miterLimitCall( children );
 };
 
 export default lineStyle;

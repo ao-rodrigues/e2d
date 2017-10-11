@@ -1,3 +1,3 @@
-import textInstruction from './textInstruction';
+import textInstruction from "./textInstruction";
 
-export default textInstruction('strokeText');
+export default textInstruction( "strokeText" );

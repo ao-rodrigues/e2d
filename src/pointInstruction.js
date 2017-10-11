@@ -1,9 +1,9 @@
-import Instruction from './Instruction';
+import Instruction from "./Instruction";
 
-const pointInstruction = (name) => (x, y) => new Instruction("call", {
+const pointInstruction = ( name ) => ( x, y ) => new Instruction( "call", {
   name,
-  args: [x, y],
+  args: [ x, y ],
   count: 2
-});
+} );
 
 export default pointInstruction;

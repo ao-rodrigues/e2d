@@ -1,5 +1,5 @@
-import Instruction from './Instruction';
+import Instruction from "./Instruction";
 
-const hitRegion = (id, points) => new Instruction('hitRegion', { id, points });
+const hitRegion = ( id, points ) => new Instruction( "hitRegion", { id, points } );
 
 export default hitRegion;

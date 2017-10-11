@@ -1,3 +1,3 @@
-import emptyCall from './emptyCall';
+import emptyCall from "./emptyCall";
 
-export default emptyCall('restore');
+export default emptyCall( "restore" );

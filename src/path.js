@@ -1,7 +1,7 @@
-import beginPath from './beginPath';
-import closePath from './closePath';
+import beginPath from "./beginPath";
+import closePath from "./closePath";
 
-const path = (...children) => [
+const path = ( ...children ) => [
   beginPath(),
   children,
   closePath()
