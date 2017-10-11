@@ -5,8 +5,7 @@ const identity = [ 1, 0, 0, 1, 0, 0 ],
 //Transform points function
 import transformPoints from "./transformPoints";
 import cycleMouseData from "./cycleMouseData";
-
-const PI2 = Math.PI * 2;
+import Pi2 from "./Pi2";
 
 const relativeTransforms = {
   transform: true,
@@ -63,10 +62,9 @@ const render = ( ...args ) => {
     lineDashOffset: [],
     lineJoin: [],
     miterLimit: [],
-    lineWidth: []
+    lineWidth: [],
+    globalAlpha: []
   };
-
-  const globalAlphaStack = [];
 
   transformStack[ 0 ] = identity[ 0 ];
   transformStack[ 1 ] = identity[ 1 ];
@@ -128,9 +126,7 @@ const render = ( ...args ) => {
 
     switch ( type ) {
       case "transform":
-
-        //Perform the transform math
-        transformStack[ transformStackIndex - 6 ] = //D
+        transformStack[ transformStackIndex - 6 ] = //A
           matrix[ 0 ] * props[ 0 ] + matrix[ 2 ] * props[ 1 ];
         transformStack[ transformStackIndex - 5 ] = //B
           matrix[ 1 ] * props[ 0 ] + matrix[ 3 ] * props[ 1 ];
@@ -139,8 +135,7 @@ const render = ( ...args ) => {
         transformStack[ transformStackIndex - 3 ] = //D
           matrix[ 1 ] * props[ 2 ] + matrix[ 3 ] * props[ 3 ];
         transformStack[ transformStackIndex - 2 ] = //E
-          matrix[ 0 ] * props[ 4 ] + matrix[ 2 ] * props[ 5 ] +
-          matrix[ 4 ];
+          matrix[ 0 ] * props[ 4 ] + matrix[ 2 ] * props[ 5 ] + matrix[ 4 ];
         transformStack[ transformStackIndex - 1 ] = //F
           matrix[ 1 ] * props[ 4 ] + matrix[ 3 ] * props[ 5 ] +
           matrix[ 5 ];
@@ -244,14 +239,17 @@ const render = ( ...args ) => {
 
     switch ( type ) {
       case "push":
-        if ( props.stack === "lineDash" ) {
-          stack.lineDash.push( ctx.getLineDash() );
-          ctx.setLineDash( props.value );
-          continue;
-        }
+        stack[ props.stack ].push(
+          props.stack === "lineDash" ? ctx.getLineDash() : ctx[ props.stack ]
+        );
 
-        stack[ props.stack ].push( ctx[ props.stack ] );
-        ctx[ props.stack ] = props.value;
+        if ( props.stack === "globalAlpha" ) {
+          ctx[ props.stack ] *= props.value;
+        } else if ( props.stack === "lineDash" ) {
+          ctx.setLineDash( props.value ) ;
+        } else {
+          ctx[ props.stack ] = props.value;
+        }
         continue;
 
       case "pop":
@@ -327,28 +325,14 @@ const render = ( ...args ) => {
 
       case "strokeArc":
         ctx.beginPath();
-        ctx.arc(
-          props.x,
-          props.y,
-          props.r,
-          props.startAngle,
-          props.endAngle,
-          props.counterclockwise
-        );
+        ctx.arc( props[ 0 ], props[ 1 ], props[ 2 ], props[ 3 ], props[ 4 ], props[ 5 ] );
         ctx.closePath();
         ctx.stroke();
         continue;
 
       case "fillArc":
         ctx.beginPath();
-        ctx.arc(
-          props.x,
-          props.y,
-          props.r,
-          props.startAngle,
-          props.endAngle,
-          props.counterclockwise
-        );
+        ctx.arc( props[ 0 ], props[ 1 ], props[ 2 ], props[ 3 ], props[ 4 ], props[ 5 ] );
         ctx.closePath();
         ctx.fill();
         continue;

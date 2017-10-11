@@ -1,20 +1,19 @@
 import Instruction from "./Instruction";
-const pi2 = Math.PI * 2;
+import Pi2 from "./Pi2";
 
 const fillArc = ( ...args ) => {
-  const [ x, y, r, startAngle, endAngle, counterclockwise ] = args;
-  const props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2, counterclockwise: false };
+  const props = [ 0, 0, args[ 0 ], 0, Pi2, false ];
 
   if ( args.length > 3 ) {
-    props.startAngle = startAngle;
-    props.endAngle = endAngle;
-    props.counterclockwise = !!counterclockwise;
+    props[ 3 ] = args[ 3 ];
+    props[ 4 ] = args[ 4 ];
+    props[ 5 ] = !!args[ 5 ];
   }
 
   if ( args.length >= 2 ) {
-    props.x = x;
-    props.y = y;
-    props.r = r;
+    props[ 0 ] = args[ 0 ];
+    props[ 1 ] = args[ 1 ];
+    props[ 2 ] = args[ 2 ];
   }
 
   return new Instruction( "fillArc",  props );

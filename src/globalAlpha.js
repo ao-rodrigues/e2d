@@ -1,11 +1,3 @@
-import Instruction from "./Instruction";
+import stackable from "./stackable";
 
-const end = new Instruction( "endGlobalAlpha" );
-
-const globalAlpha = ( value, ...children ) => [
-  new Instruction( "globalAlpha", { value } ),
-  children,
-  end
-];
-
-export default globalAlpha;
+export default stackable( "globalAlpha" );

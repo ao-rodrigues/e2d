@@ -102,7 +102,7 @@ class Instruction {
 Object.seal( Instruction );
 Object.seal( Instruction.prototype );
 
-const pi2 = Math.PI * 2;
+const pi2$1 = Math.PI * 2;
 
 const arc = ( ...args ) => {
   if ( args.length > 3 ) {
@@ -111,13 +111,13 @@ const arc = ( ...args ) => {
   if ( args.length > 1 ) {
     return new Instruction( "call", {
       name: "arc",
-      args: [ args[ 0 ], args[ 1 ], args[ 2 ], 0, pi2, false ], count: 6 }
+      args: [ args[ 0 ], args[ 1 ], args[ 2 ], 0, pi2$1, false ], count: 6 }
     );
   }
 
   return new Instruction( "call",  {
     name: "arc",
-    args: [ 0, 0, args[ 0 ], 0, pi2, false ], count: 6
+    args: [ 0, 0, args[ 0 ], 0, pi2$1, false ], count: 6
   } );
 };
 
@@ -211,7 +211,7 @@ const drawImage = ( ...args ) => {
   } );
 };
 
-const pi2$1 = Math.PI * 2;
+var Pi2 = Math.PI * 2;
 
 const ellipse = ( ...args ) => {
   const [ x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise ] = args;
@@ -220,8 +220,8 @@ const ellipse = ( ...args ) => {
     name: "ellipse",
     args: args.length > 5 ? args :
       args.length > 4 ? [ x, y, radiusX, radiusY, rotation, startAngle, false ] :
-      args.length > 2 ? [ x, y, radiusX, radiusY, 0, pi2$1, false ] :
-      [ 0, 0, x, y, 0, pi2$1, false ],
+      args.length > 2 ? [ x, y, radiusX, radiusY, 0, pi2, false ] :
+      [ 0, 0, x, y, 0, Pi2, false ],
     count: 7
   } );
 };
@@ -236,22 +236,19 @@ const extend = ( ctx, ...methods ) => {
 
 var fill = emptyCall( "fill" );
 
-const pi2$2 = Math.PI * 2;
-
 const fillArc = ( ...args ) => {
-  const [ x, y, r, startAngle, endAngle, counterclockwise ] = args;
-  const props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2$2, counterclockwise: false };
+  const props = [ 0, 0, args[ 0 ], 0, Pi2, false ];
 
   if ( args.length > 3 ) {
-    props.startAngle = startAngle;
-    props.endAngle = endAngle;
-    props.counterclockwise = !!counterclockwise;
+    props[ 3 ] = args[ 3 ];
+    props[ 4 ] = args[ 4 ];
+    props[ 5 ] = !!args[ 5 ];
   }
 
   if ( args.length >= 2 ) {
-    props.x = x;
-    props.y = y;
-    props.r = r;
+    props[ 0 ] = args[ 0 ];
+    props[ 1 ] = args[ 1 ];
+    props[ 2 ] = args[ 2 ];
   }
 
   return new Instruction( "fillArc",  props );
@@ -271,13 +268,7 @@ var fillText = textInstruction( "fillText" );
 
 var fontCall = stackable( "font" );
 
-const end$1 = new Instruction( "endGlobalAlpha" );
-
-const globalAlpha = ( value, ...children ) => [
-  new Instruction( "globalAlpha", { value } ),
-  children,
-  end$1
-];
+var globalAlpha = stackable( "globalAlpha" );
 
 var globalCompositeOperation = stackable( "globalCompositeOperation" );
 
@@ -694,10 +685,9 @@ const render = ( ...args ) => {
     lineDashOffset: [],
     lineJoin: [],
     miterLimit: [],
-    lineWidth: []
+    lineWidth: [],
+    globalAlpha: []
   };
-
-  const globalAlphaStack = [];
 
   transformStack[ 0 ] = identity[ 0 ];
   transformStack[ 1 ] = identity[ 1 ];
@@ -759,9 +749,7 @@ const render = ( ...args ) => {
 
     switch ( type ) {
       case "transform":
-
-        //Perform the transform math
-        transformStack[ transformStackIndex - 6 ] = //D
+        transformStack[ transformStackIndex - 6 ] = //A
           matrix[ 0 ] * props[ 0 ] + matrix[ 2 ] * props[ 1 ];
         transformStack[ transformStackIndex - 5 ] = //B
           matrix[ 1 ] * props[ 0 ] + matrix[ 3 ] * props[ 1 ];
@@ -770,8 +758,7 @@ const render = ( ...args ) => {
         transformStack[ transformStackIndex - 3 ] = //D
           matrix[ 1 ] * props[ 2 ] + matrix[ 3 ] * props[ 3 ];
         transformStack[ transformStackIndex - 2 ] = //E
-          matrix[ 0 ] * props[ 4 ] + matrix[ 2 ] * props[ 5 ] +
-          matrix[ 4 ];
+          matrix[ 0 ] * props[ 4 ] + matrix[ 2 ] * props[ 5 ] + matrix[ 4 ];
         transformStack[ transformStackIndex - 1 ] = //F
           matrix[ 1 ] * props[ 4 ] + matrix[ 3 ] * props[ 5 ] +
           matrix[ 5 ];
@@ -875,14 +862,17 @@ const render = ( ...args ) => {
 
     switch ( type ) {
       case "push":
-        if ( props.stack === "lineDash" ) {
-          stack.lineDash.push( ctx.getLineDash() );
-          ctx.setLineDash( props.value );
-          continue;
-        }
+        stack[ props.stack ].push(
+          props.stack === "lineDash" ? ctx.getLineDash() : ctx[ props.stack ]
+        );
 
-        stack[ props.stack ].push( ctx[ props.stack ] );
-        ctx[ props.stack ] = props.value;
+        if ( props.stack === "globalAlpha" ) {
+          ctx[ props.stack ] *= props.value;
+        } else if ( props.stack === "lineDash" ) {
+          ctx.setLineDash( props.value ) ;
+        } else {
+          ctx[ props.stack ] = props.value;
+        }
         continue;
 
       case "pop":
@@ -958,28 +948,14 @@ const render = ( ...args ) => {
 
       case "strokeArc":
         ctx.beginPath();
-        ctx.arc(
-          props.x,
-          props.y,
-          props.r,
-          props.startAngle,
-          props.endAngle,
-          props.counterclockwise
-        );
+        ctx.arc( props[ 0 ], props[ 1 ], props[ 2 ], props[ 3 ], props[ 4 ], props[ 5 ] );
         ctx.closePath();
         ctx.stroke();
         continue;
 
       case "fillArc":
         ctx.beginPath();
-        ctx.arc(
-          props.x,
-          props.y,
-          props.r,
-          props.startAngle,
-          props.endAngle,
-          props.counterclockwise
-        );
+        ctx.arc( props[ 0 ], props[ 1 ], props[ 2 ], props[ 3 ], props[ 4 ], props[ 5 ] );
         ctx.closePath();
         ctx.fill();
         continue;
@@ -1025,7 +1001,7 @@ const render = ( ...args ) => {
   }
 };
 
-const end$2 = new Instruction( "restore" );
+const end$1 = new Instruction( "restore" );
 
 const setTransform = ( matrix, ...children ) => [
   new Instruction( "setTransform", [
@@ -1037,20 +1013,20 @@ const setTransform = ( matrix, ...children ) => [
     matrix[ 5 ]
   ] ),
   children,
-  end$2
+  end$1
 ];
 
 const resetTransform = ( ...children ) => setTransform( [ 1, 0, 0, 1, 0, 0 ], children );
 
-const end$3 = new Instruction( "restore" );
+const end$2 = new Instruction( "restore" );
 
 const rotate = ( r, ...children ) => [
   new Instruction( "rotate", { cos: Math.cos( r ), sin: Math.sin( r ) } ),
   children,
-  end$3
+  end$2
 ];
 
-const end$4 = new Instruction( "restore" );
+const end$3 = new Instruction( "restore" );
 
 const scale = ( x, y, ...children ) => {
   if ( typeof y !== "number" ) {
@@ -1061,7 +1037,7 @@ const scale = ( x, y, ...children ) => {
   return [
     new Instruction( "scale", { x, y } ),
     children,
-    end$4
+    end$3
   ];
 };
 
@@ -1080,40 +1056,39 @@ const shadowStyle = ( { shadowBlur, shadowColor, shadowOffsetX, shadowOffsetY },
   return shadowOffsetY ? shadowOffsetYCall( children ) : children;
 };
 
-const end$5 = new Instruction( "restore" );
+const end$4 = new Instruction( "restore" );
 
 const skewX = ( x, ...children ) => [
   new Instruction( "skewX", { x: Math.tan( x ) } ),
   children,
-  end$5
+  end$4
 ];
 
-const end$6 = new Instruction( "restore" );
+const end$5 = new Instruction( "restore" );
 
 const skewY = ( y, ...children ) => [
   new Instruction( "skewY", { y: Math.tan( y ) } ),
   children,
-  end$6
+  end$5
 ];
 
 var stroke = emptyCall( "stroke" );
 
-const pi2$3 = Math.PI * 2;
+const pi2$2 = Math.PI * 2;
 
-const strokeArc = ( ...args ) => {
-  const [ x, y, r, startAngle, endAngle, counterclockwise ] = args;
-  const props = { x: 0, y: 0, r: x, startAngle: 0, endAngle: pi2$3, counterclockwise: false };
+const fillArc$2 = ( ...args ) => {
+  const props = [ 0, 0, args[ 0 ], 0, pi2$2, false ];
 
   if ( args.length > 3 ) {
-    props.startAngle = startAngle;
-    props.endAngle = endAngle;
-    props.counterclockwise = !!counterclockwise;
+    props[ 3 ] = args[ 3 ];
+    props[ 4 ] = args[ 4 ];
+    props[ 5 ] = !!args[ 5 ];
   }
 
-  if ( args.length > 1 ) {
-    props.x = x;
-    props.y = y;
-    props.r = r;
+  if ( args.length >= 2 ) {
+    props[ 0 ] = args[ 0 ];
+    props[ 1 ] = args[ 1 ];
+    props[ 2 ] = args[ 2 ];
   }
 
   return new Instruction( "strokeArc",  props );
@@ -1136,7 +1111,7 @@ const textStyle = ( { font, textAlign, textBaseline, direction }, ...children ) 
   return direction ? directionCall( children ) : children;
 };
 
-const end$7 = new Instruction( "restore" );
+const end$6 = new Instruction( "restore" );
 
 const transform = ( values, ...children ) => {
   return [
@@ -1149,16 +1124,16 @@ const transform = ( values, ...children ) => {
       values[ 5 ]
     ] ),
     children,
-    end$7
+    end$6
   ];
 };
 
-const end$8 = new Instruction( "restore" );
+const end$7 = new Instruction( "restore" );
 
 const translate = ( x, y, ...children ) => [
   new Instruction( "translate", { x, y } ),
   children,
-  end$8
+  end$7
 ];
 
 var index = {
@@ -1216,7 +1191,7 @@ var index = {
   skewX,
   skewY,
   stroke,
-  strokeArc,
+  strokeArc: fillArc$2,
   strokeRect,
   strokeStyle,
   strokeText,
