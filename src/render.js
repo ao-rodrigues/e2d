@@ -337,15 +337,6 @@ const render = ( ...args ) => {
         ctx.fill();
         continue;
 
-      case "globalAlpha":
-        globalAlphaStack.push( ctx.globalAlpha );
-        ctx.globalAlpha *= props.value;
-        continue;
-
-      case "endGlobalAlpha":
-        ctx.globalAlpha = globalAlphaStack.pop();
-        continue;
-
       case "hitRect":
       case "hitRegion":
       case "hitCircle":

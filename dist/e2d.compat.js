@@ -1088,15 +1088,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           ctx.fill();
           continue;
 
-        case "globalAlpha":
-          globalAlphaStack.push(ctx.globalAlpha);
-          ctx.globalAlpha *= props.value;
-          continue;
-
-        case "endGlobalAlpha":
-          ctx.globalAlpha = globalAlphaStack.pop();
-          continue;
-
         case "hitRect":
         case "hitRegion":
         case "hitCircle":
