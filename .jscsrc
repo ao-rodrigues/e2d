@@ -1,4 +1,5 @@
 {
+	"excludeFiles": ["dist/**"],
 	"preset": "jquery",
 	"validateLineBreaks": null
 }

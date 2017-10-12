@@ -790,6 +790,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   //Initialize all the properties
   var identity = [1, 0, 0, 1, 0, 0];
+  var empty = [];
   var concat = [].concat;
 
   //Transform points function
@@ -871,21 +872,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     var len = children.length;
 
-    //Flatten children during the loop process to save cpu
+    //Flatten children during the loop process to save time
     for (var i = 0; i < len; i++) {
       var child = children[i];
 
-      //Flatten as you go algorithm
+      //Used to detect if item is an array. Array.isArray is too slow
       if (child && child.constructor === Array) {
-        children = concat.apply([], children);
+        children = concat.apply(empty, children);
         child = children[i];
 
         //Repeat as necessary
         while (child && child.constructor === Array) {
-          children = concat.apply([], children);
+          children = concat.apply(empty, children);
           child = children[i];
         }
 
+        //Used to reset the length.
         len = children.length;
       }
 
@@ -894,10 +896,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         continue;
       }
 
+      //Child is an instruction at this point, retrieve the props.
       var _child = child,
           props = _child.props,
           type = _child.type;
 
+      //If the transform is relative, then we store the current transform state in matrix.
 
       if (relativeTransforms[type]) {
         matrix[0] = transformStack[transformStackIndex - 6];

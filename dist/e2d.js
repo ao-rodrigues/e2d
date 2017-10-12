@@ -627,6 +627,7 @@ const cycleMouseData = ( ctx ) => {
 
 //Initialize all the properties
 const identity = [ 1, 0, 0, 1, 0, 0 ];
+const empty = [];
 const concat = [].concat;
 
 //Transform points function
@@ -704,21 +705,22 @@ const render = ( ...args ) => {
 
   let len = children.length;
 
-  //Flatten children during the loop process to save cpu
+  //Flatten children during the loop process to save time
   for ( let i = 0; i < len; i++ ) {
     let child = children[ i ];
 
-    //Flatten as you go algorithm
+    //Used to detect if item is an array. Array.isArray is too slow
     if ( child && child.constructor === Array ) {
-      children = concat.apply( [], children );
+      children = concat.apply( empty, children );
       child = children[ i ];
 
       //Repeat as necessary
       while ( child && child.constructor === Array ) {
-        children = concat.apply( [], children );
+        children = concat.apply( empty, children );
         child = children[ i ];
       }
 
+      //Used to reset the length.
       len = children.length;
     }
 
@@ -727,8 +729,10 @@ const render = ( ...args ) => {
       continue;
     }
 
+    //Child is an instruction at this point, retrieve the props.
     const { props, type } = child;
 
+    //If the transform is relative, then we store the current transform state in matrix.
     if ( relativeTransforms[ type ] ) {
       matrix[ 0 ] = transformStack[ transformStackIndex - 6 ];
       matrix[ 1 ] = transformStack[ transformStackIndex - 5 ];
