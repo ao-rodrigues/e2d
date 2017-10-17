@@ -1,12 +1,22 @@
-//Initialize all the properties
-const identity = [ 1, 0, 0, 1, 0, 0 ],
-  empty = [],
-  concat = [].concat;
+
 
 //Transform points function
 import transformPoints from "./transformPoints";
 import cycleMouseData from "./cycleMouseData";
 import Pi2 from "./Pi2";
+import transformOperation from "./transformOperation";
+import setTransformOperation from "./setTransformOperation";
+import scaleOperation from "./scaleOperation";
+import translateOperation from "./translateOperation";
+import rotateOperation from "./rotateOperation";
+import skewXOperation from  "./skewXOperation";
+import skewYOperation from "./skewYOperation";
+import createVirtualStack from "./createVirtualStack";
+
+//Initialize all the properties
+const identity = [ 1, 0, 0, 1, 0, 0 ],
+  empty = [],
+  concat = [].concat;
 
 const relativeTransforms = {
   transform: true,
@@ -45,27 +55,7 @@ const render = ( ...args ) => {
     mousePoints = ctx.canvas[ Symbol.for( "mousePoints" ) ] = [],
     extensions = ctx.canvas[ Symbol.for( "extensions" ) ];
 
-  const stack = {
-    fillStyle: [],
-    strokeStyle: [],
-    globalCompositeOperation: [],
-    imageSmoothingEnabled: [],
-    font: [],
-    textAlign: [],
-    textBaseline: [],
-    direction: [],
-    shadowBlur: [],
-    shadowColor: [],
-    shadowOffsetX: [],
-    shadowOffsetY: [],
-    lineCap: [],
-    lineDash: [],
-    lineDashOffset: [],
-    lineJoin: [],
-    miterLimit: [],
-    lineWidth: [],
-    globalAlpha: []
-  };
+  const stack = createVirtualStack();
 
   transformStack[ 0 ] = identity[ 0 ];
   transformStack[ 1 ] = identity[ 1 ];
@@ -123,6 +113,9 @@ const render = ( ...args ) => {
 
       //Increase the index
       transformStackIndex += 6;
+
+      //We are changing the state of the stack, set the dirty flag
+      isTransformDirty = true;
       if ( transformStackIndex >= transformStack.length ) {
         increaseTransformStackSize();
       }
@@ -130,97 +123,31 @@ const render = ( ...args ) => {
 
     switch ( type ) {
       case "transform":
-        transformStack[ transformStackIndex - 6 ] = //A
-          matrix[ 0 ] * props[ 0 ] + matrix[ 2 ] * props[ 1 ];
-        transformStack[ transformStackIndex - 5 ] = //B
-          matrix[ 1 ] * props[ 0 ] + matrix[ 3 ] * props[ 1 ];
-        transformStack[ transformStackIndex - 4 ] = //C
-          matrix[ 0 ] * props[ 2 ] + matrix[ 2 ] * props[ 3 ];
-        transformStack[ transformStackIndex - 3 ] = //D
-          matrix[ 1 ] * props[ 2 ] + matrix[ 3 ] * props[ 3 ];
-        transformStack[ transformStackIndex - 2 ] = //E
-          matrix[ 0 ] * props[ 4 ] + matrix[ 2 ] * props[ 5 ] + matrix[ 4 ];
-        transformStack[ transformStackIndex - 1 ] = //F
-          matrix[ 1 ] * props[ 4 ] + matrix[ 3 ] * props[ 5 ] +
-          matrix[ 5 ];
-
-        isTransformDirty = true;
+        transformOperation( transformStack, transformStackIndex, matrix, props );
         continue;
 
       case "setTransform":
-        transformStack[ transformStackIndex - 6 ] = props[ 0 ];//A
-        transformStack[ transformStackIndex - 5 ] = props[ 1 ];//B
-        transformStack[ transformStackIndex - 4 ] = props[ 2 ];//C
-        transformStack[ transformStackIndex - 3 ] = props[ 3 ];//D
-        transformStack[ transformStackIndex - 2 ] = props[ 4 ];//E
-        transformStack[ transformStackIndex - 1 ] = props[ 5 ];//F
-
-        isTransformDirty = true;
+        setTransformOperation( transformStack, transformStackIndex, props );
         continue;
 
       case "scale":
-        transformStack[ transformStackIndex - 6 ] = matrix[ 0 ] * props.x; //A
-        transformStack[ transformStackIndex - 5 ] = matrix[ 1 ] * props.x; //B
-        transformStack[ transformStackIndex - 4 ] = matrix[ 2 ] * props.y; //C
-        transformStack[ transformStackIndex - 3 ] = matrix[ 3 ] * props.y; //D
-        transformStack[ transformStackIndex - 2 ] = matrix[ 4 ]; //E
-        transformStack[ transformStackIndex - 1 ] = matrix[ 5 ]; //F
-
-        isTransformDirty = true;
+        scaleOperation( transformStack, transformStackIndex, matrix, props );
         continue;
 
       case "translate":
-        transformStack[ transformStackIndex - 6 ] = matrix[ 0 ]; //A
-        transformStack[ transformStackIndex - 5 ] = matrix[ 1 ]; //B
-        transformStack[ transformStackIndex - 4 ] = matrix[ 2 ]; //C
-        transformStack[ transformStackIndex - 3 ] = matrix[ 3 ]; //D
-        transformStack[ transformStackIndex - 2 ] = matrix[ 4 ] + matrix[ 0 ] * props.x +
-          matrix[ 2 ] * props.y; //E
-        transformStack[ transformStackIndex - 1 ] = matrix[ 5 ] + matrix[ 1 ] * props.x +
-          matrix[ 3 ] * props.y; //F
-
-        isTransformDirty = true;
+        translateOperation( transformStack, transformStackIndex, matrix, props );
         continue;
 
       case "rotate":
-        transformStack[ transformStackIndex - 6 ] =
-          matrix[ 0 ] * props.cos + matrix[ 2 ] * props.sin; //A
-        transformStack[ transformStackIndex - 5 ] =
-          matrix[ 1 ] * props.cos + matrix[ 3 ] * props.sin; //B
-        transformStack[ transformStackIndex - 4 ] =
-          matrix[ 0 ] * -props.sin + matrix[ 2 ] * props.cos; //C
-        transformStack[ transformStackIndex - 3 ] =
-          matrix[ 1 ] * -props.sin + matrix[ 3 ] * props.cos; //D
-        transformStack[ transformStackIndex - 2 ] = matrix[ 4 ]; //E
-        transformStack[ transformStackIndex - 1 ] = matrix[ 5 ];//F
-
-        isTransformDirty = true;
+        rotateOperation( transformStack, transformStackIndex, matrix, props );
         continue;
 
       case "skewX":
-        transformStack[ transformStackIndex - 6 ] = matrix[ 0 ]; //A
-        transformStack[ transformStackIndex - 5 ] = matrix[ 1 ]; //B
-        transformStack[ transformStackIndex - 4 ] = //C
-          matrix[ 0 ] * props.x + matrix[ 2 ];
-        transformStack[ transformStackIndex - 3 ] = //D
-          matrix[ 1 ] * props.x + matrix[ 3 ];
-        transformStack[ transformStackIndex - 2 ] = matrix[ 4 ]; //E
-        transformStack[ transformStackIndex - 1 ] = matrix[ 5 ]; //F
-
-        isTransformDirty = true;
+        skewXOperation( transformStack, transformStackIndex, matrix, props );
         continue;
 
       case "skewY":
-        transformStack[ transformStackIndex - 6 ] =
-          matrix[ 0 ] * 1 + matrix[ 2 ] * props.y; //A
-        transformStack[ transformStackIndex - 5 ] =
-          matrix[ 1 ] * 1 + matrix[ 3 ] * props.y; //B
-        transformStack[ transformStackIndex - 4 ] = matrix[ 2 ]; //C
-        transformStack[ transformStackIndex - 3 ] = matrix[ 3 ]; //D
-        transformStack[ transformStackIndex - 2 ] = matrix[ 4 ]; //E
-        transformStack[ transformStackIndex - 1 ] = matrix[ 5 ]; //F
-
-        isTransformDirty = true;
+        skewYOperation( transformStack, transformStackIndex, matrix, props );
         continue;
 
       case "restore":
@@ -330,14 +257,12 @@ const render = ( ...args ) => {
       case "strokeArc":
         ctx.beginPath();
         ctx.arc( props[ 0 ], props[ 1 ], props[ 2 ], props[ 3 ], props[ 4 ], props[ 5 ] );
-        ctx.closePath();
         ctx.stroke();
         continue;
 
       case "fillArc":
         ctx.beginPath();
         ctx.arc( props[ 0 ], props[ 1 ], props[ 2 ], props[ 3 ], props[ 4 ], props[ 5 ] );
-        ctx.closePath();
         ctx.fill();
         continue;
 

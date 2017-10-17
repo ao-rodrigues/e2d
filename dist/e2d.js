@@ -102,7 +102,7 @@ class Instruction {
 Object.seal( Instruction );
 Object.seal( Instruction.prototype );
 
-const pi2$1 = Math.PI * 2;
+var Pi2 = Math.PI * 2;
 
 const arc = ( ...args ) => {
   if ( args.length > 3 ) {
@@ -111,13 +111,13 @@ const arc = ( ...args ) => {
   if ( args.length > 1 ) {
     return new Instruction( "call", {
       name: "arc",
-      args: [ args[ 0 ], args[ 1 ], args[ 2 ], 0, pi2$1, false ], count: 6 }
+      args: [ args[ 0 ], args[ 1 ], args[ 2 ], 0, Pi2, false ], count: 6 }
     );
   }
 
   return new Instruction( "call",  {
     name: "arc",
-    args: [ 0, 0, args[ 0 ], 0, pi2$1, false ], count: 6
+    args: [ 0, 0, args[ 0 ], 0, Pi2, false ], count: 6
   } );
 };
 
@@ -159,10 +159,9 @@ const clipPath = () => new Instruction( "call", { name: "clip", args: [], count:
 
 var closePath = emptyCall( "closePath" );
 
-const PI2 = Math.PI * 2;
 const createRegularPolygon = ( radius = 0, position = [ 0, 0 ], sides = 3 ) => {
   const polygon = [];
-  const factor = PI2 / sides;
+  const factor = Pi2 / sides;
   for ( let i = 0; i < sides; i++ ) {
     polygon.push( [
       position[ 0 ] + radius * Math.cos( factor * i ),
@@ -210,8 +209,6 @@ const drawImage = ( ...args ) => {
     count: 3
   } );
 };
-
-var Pi2 = Math.PI * 2;
 
 const ellipse = ( ...args ) => {
   const [ x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise ] = args;
@@ -625,12 +622,103 @@ const cycleMouseData = ( ctx ) => {
   }
 };
 
+const setTransformOperation =  ( transformStack, transformStackIndex, [ a, b, c, d, e, f ] ) => {
+  transformStack[ transformStackIndex - 6 ] = a;
+  transformStack[ transformStackIndex - 5 ] = b;
+  transformStack[ transformStackIndex - 4 ] = c;
+  transformStack[ transformStackIndex - 3 ] = d;
+  transformStack[ transformStackIndex - 2 ] = e;
+  transformStack[ transformStackIndex - 1 ] = f;
+};
+
+const scaleOperation = (
+  transformStack,
+  transformStackIndex,
+  [ a, b, c, d, e, f ],
+  { x, y }
+) => {
+  transformStack[ transformStackIndex - 6 ] = a * x;
+  transformStack[ transformStackIndex - 5 ] = b * x;
+  transformStack[ transformStackIndex - 4 ] = c * y;
+  transformStack[ transformStackIndex - 3 ] = d * y;
+  transformStack[ transformStackIndex - 2 ] = e;
+  transformStack[ transformStackIndex - 1 ] = f;
+};
+
+const translateOperation = (
+  transformStack,
+  transformStackIndex,
+  [ a, b, c, d, e, f ],
+  { x, y }
+) => {
+  transformStack[ transformStackIndex - 6 ] = a;
+  transformStack[ transformStackIndex - 5 ] = b;
+  transformStack[ transformStackIndex - 4 ] = c;
+  transformStack[ transformStackIndex - 3 ] = d;
+  transformStack[ transformStackIndex - 2 ] = e + a * props.x + c * props.y;
+  transformStack[ transformStackIndex - 1 ] = f + b * props.x + d * props.y;
+};
+
+const rotateOperation = (
+  transformStack,
+  transformStackIndex,
+  [ a, b, c, d, e, f ],
+  { sin, cos }
+) => {
+  transformStack[ transformStackIndex - 6 ] = a * cos + c * sin;
+  transformStack[ transformStackIndex - 5 ] = b * cos + d * sin;
+  transformStack[ transformStackIndex - 4 ] = a * -sin + c * cos;
+  transformStack[ transformStackIndex - 3 ] = b * -sin + d * cos;
+  transformStack[ transformStackIndex - 2 ] = e;
+  transformStack[ transformStackIndex - 1 ] = f;
+};
+
+const skewXOperation = ( transformStack, transformStackIndex, [ a, b, c, d, e, f ], { x } ) => {
+  transformStack[ transformStackIndex - 6 ] = a;
+  transformStack[ transformStackIndex - 5 ] = b;
+  transformStack[ transformStackIndex - 4 ] = a * x + c;
+  transformStack[ transformStackIndex - 3 ] = b * x + d;
+  transformStack[ transformStackIndex - 2 ] = e;
+  transformStack[ transformStackIndex - 1 ] = f;
+};
+
+const skewYOperation = ( transformStack, transformStackIndex, [ a, b, c, d, e, f ], { y } ) => {
+  transformStack[ transformStackIndex - 6 ] = c * y + a;
+  transformStack[ transformStackIndex - 5 ] = d * y + b;
+  transformStack[ transformStackIndex - 4 ] = c;
+  transformStack[ transformStackIndex - 3 ] = d;
+  transformStack[ transformStackIndex - 2 ] = e;
+  transformStack[ transformStackIndex - 1 ] = f;
+};
+
+const createVirtualStack = () => ( {
+  fillStyle: [],
+  strokeStyle: [],
+  globalCompositeOperation: [],
+  imageSmoothingEnabled: [],
+  font: [],
+  textAlign: [],
+  textBaseline: [],
+  direction: [],
+  shadowBlur: [],
+  shadowColor: [],
+  shadowOffsetX: [],
+  shadowOffsetY: [],
+  lineCap: [],
+  lineDash: [],
+  lineDashOffset: [],
+  lineJoin: [],
+  miterLimit: [],
+  lineWidth: [],
+  globalAlpha: []
+} );
+
+//Transform points function
 //Initialize all the properties
 const identity = [ 1, 0, 0, 1, 0, 0 ];
 const empty = [];
 const concat = [].concat;
 
-//Transform points function
 const relativeTransforms = {
   transform: true,
   scale: true,
@@ -668,27 +756,7 @@ const render = ( ...args ) => {
     mousePoints = ctx.canvas[ Symbol.for( "mousePoints" ) ] = [],
     extensions = ctx.canvas[ Symbol.for( "extensions" ) ];
 
-  const stack = {
-    fillStyle: [],
-    strokeStyle: [],
-    globalCompositeOperation: [],
-    imageSmoothingEnabled: [],
-    font: [],
-    textAlign: [],
-    textBaseline: [],
-    direction: [],
-    shadowBlur: [],
-    shadowColor: [],
-    shadowOffsetX: [],
-    shadowOffsetY: [],
-    lineCap: [],
-    lineDash: [],
-    lineDashOffset: [],
-    lineJoin: [],
-    miterLimit: [],
-    lineWidth: [],
-    globalAlpha: []
-  };
+  const stack = createVirtualStack();
 
   transformStack[ 0 ] = identity[ 0 ];
   transformStack[ 1 ] = identity[ 1 ];
@@ -746,6 +814,9 @@ const render = ( ...args ) => {
 
       //Increase the index
       transformStackIndex += 6;
+
+      //We are changing the state of the stack, set the dirty flag
+      isTransformDirty = true;
       if ( transformStackIndex >= transformStack.length ) {
         increaseTransformStackSize();
       }
@@ -753,97 +824,31 @@ const render = ( ...args ) => {
 
     switch ( type ) {
       case "transform":
-        transformStack[ transformStackIndex - 6 ] = //A
-          matrix[ 0 ] * props[ 0 ] + matrix[ 2 ] * props[ 1 ];
-        transformStack[ transformStackIndex - 5 ] = //B
-          matrix[ 1 ] * props[ 0 ] + matrix[ 3 ] * props[ 1 ];
-        transformStack[ transformStackIndex - 4 ] = //C
-          matrix[ 0 ] * props[ 2 ] + matrix[ 2 ] * props[ 3 ];
-        transformStack[ transformStackIndex - 3 ] = //D
-          matrix[ 1 ] * props[ 2 ] + matrix[ 3 ] * props[ 3 ];
-        transformStack[ transformStackIndex - 2 ] = //E
-          matrix[ 0 ] * props[ 4 ] + matrix[ 2 ] * props[ 5 ] + matrix[ 4 ];
-        transformStack[ transformStackIndex - 1 ] = //F
-          matrix[ 1 ] * props[ 4 ] + matrix[ 3 ] * props[ 5 ] +
-          matrix[ 5 ];
-
-        isTransformDirty = true;
+        transform( transformStack, transformStackIndex, matrix, props );
         continue;
 
       case "setTransform":
-        transformStack[ transformStackIndex - 6 ] = props[ 0 ];//A
-        transformStack[ transformStackIndex - 5 ] = props[ 1 ];//B
-        transformStack[ transformStackIndex - 4 ] = props[ 2 ];//C
-        transformStack[ transformStackIndex - 3 ] = props[ 3 ];//D
-        transformStack[ transformStackIndex - 2 ] = props[ 4 ];//E
-        transformStack[ transformStackIndex - 1 ] = props[ 5 ];//F
-
-        isTransformDirty = true;
+        setTransformOperation( transformStack, transformStackIndex, props );
         continue;
 
       case "scale":
-        transformStack[ transformStackIndex - 6 ] = matrix[ 0 ] * props.x; //A
-        transformStack[ transformStackIndex - 5 ] = matrix[ 1 ] * props.x; //B
-        transformStack[ transformStackIndex - 4 ] = matrix[ 2 ] * props.y; //C
-        transformStack[ transformStackIndex - 3 ] = matrix[ 3 ] * props.y; //D
-        transformStack[ transformStackIndex - 2 ] = matrix[ 4 ]; //E
-        transformStack[ transformStackIndex - 1 ] = matrix[ 5 ]; //F
-
-        isTransformDirty = true;
+        scaleOperation( transformStack, transformStackIndex, matrix, props );
         continue;
 
       case "translate":
-        transformStack[ transformStackIndex - 6 ] = matrix[ 0 ]; //A
-        transformStack[ transformStackIndex - 5 ] = matrix[ 1 ]; //B
-        transformStack[ transformStackIndex - 4 ] = matrix[ 2 ]; //C
-        transformStack[ transformStackIndex - 3 ] = matrix[ 3 ]; //D
-        transformStack[ transformStackIndex - 2 ] = matrix[ 4 ] + matrix[ 0 ] * props.x +
-          matrix[ 2 ] * props.y; //E
-        transformStack[ transformStackIndex - 1 ] = matrix[ 5 ] + matrix[ 1 ] * props.x +
-          matrix[ 3 ] * props.y; //F
-
-        isTransformDirty = true;
+        translateOperation( transformStack, transformStackIndex, matrix, props );
         continue;
 
       case "rotate":
-        transformStack[ transformStackIndex - 6 ] =
-          matrix[ 0 ] * props.cos + matrix[ 2 ] * props.sin; //A
-        transformStack[ transformStackIndex - 5 ] =
-          matrix[ 1 ] * props.cos + matrix[ 3 ] * props.sin; //B
-        transformStack[ transformStackIndex - 4 ] =
-          matrix[ 0 ] * -props.sin + matrix[ 2 ] * props.cos; //C
-        transformStack[ transformStackIndex - 3 ] =
-          matrix[ 1 ] * -props.sin + matrix[ 3 ] * props.cos; //D
-        transformStack[ transformStackIndex - 2 ] = matrix[ 4 ]; //E
-        transformStack[ transformStackIndex - 1 ] = matrix[ 5 ];//F
-
-        isTransformDirty = true;
+        rotateOperation( transformStack, transformStackIndex, matrix, props );
         continue;
 
       case "skewX":
-        transformStack[ transformStackIndex - 6 ] = matrix[ 0 ]; //A
-        transformStack[ transformStackIndex - 5 ] = matrix[ 1 ]; //B
-        transformStack[ transformStackIndex - 4 ] = //C
-          matrix[ 0 ] * props.x + matrix[ 2 ];
-        transformStack[ transformStackIndex - 3 ] = //D
-          matrix[ 1 ] * props.x + matrix[ 3 ];
-        transformStack[ transformStackIndex - 2 ] = matrix[ 4 ]; //E
-        transformStack[ transformStackIndex - 1 ] = matrix[ 5 ]; //F
-
-        isTransformDirty = true;
+        skewXOperation( transformStack, transformStackIndex, matrix, props );
         continue;
 
       case "skewY":
-        transformStack[ transformStackIndex - 6 ] =
-          matrix[ 0 ] * 1 + matrix[ 2 ] * props.y; //A
-        transformStack[ transformStackIndex - 5 ] =
-          matrix[ 1 ] * 1 + matrix[ 3 ] * props.y; //B
-        transformStack[ transformStackIndex - 4 ] = matrix[ 2 ]; //C
-        transformStack[ transformStackIndex - 3 ] = matrix[ 3 ]; //D
-        transformStack[ transformStackIndex - 2 ] = matrix[ 4 ]; //E
-        transformStack[ transformStackIndex - 1 ] = matrix[ 5 ]; //F
-
-        isTransformDirty = true;
+        skewYOperation( transformStack, transformStackIndex, matrix, props );
         continue;
 
       case "restore":
@@ -953,14 +958,12 @@ const render = ( ...args ) => {
       case "strokeArc":
         ctx.beginPath();
         ctx.arc( props[ 0 ], props[ 1 ], props[ 2 ], props[ 3 ], props[ 4 ], props[ 5 ] );
-        ctx.closePath();
         ctx.stroke();
         continue;
 
       case "fillArc":
         ctx.beginPath();
         ctx.arc( props[ 0 ], props[ 1 ], props[ 2 ], props[ 3 ], props[ 4 ], props[ 5 ] );
-        ctx.closePath();
         ctx.fill();
         continue;
 
@@ -1069,10 +1072,10 @@ const skewY = ( y, ...children ) => [
 
 var stroke = emptyCall( "stroke" );
 
-const pi2$2 = Math.PI * 2;
+const pi2$1 = Math.PI * 2;
 
 const fillArc$2 = ( ...args ) => {
-  const props = [ 0, 0, args[ 0 ], 0, pi2$2, false ];
+  const props = [ 0, 0, args[ 0 ], 0, pi2$1, false ];
 
   if ( args.length > 3 ) {
     props[ 3 ] = args[ 3 ];
@@ -1108,7 +1111,7 @@ const textStyle = ( { font, textAlign, textBaseline, direction }, ...children ) 
 
 const end$6 = new Instruction( "restore" );
 
-const transform = ( values, ...children ) => {
+const transform$1 = ( values, ...children ) => {
   return [
     new Instruction( "transform", [
       values[ 0 ],
@@ -1193,7 +1196,7 @@ var index = {
   textAlign: textAlignCall,
   textBaseline: textBaselineCall,
   textStyle,
-  transform,
+  transform: transform$1,
   transformPoints,
   translate,
 };

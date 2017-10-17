@@ -1,5 +1,5 @@
 import Instruction from "./Instruction";
-const pi2 = Math.PI * 2;
+import Pi2 from "./Pi2";
 
 const arc = ( ...args ) => {
   if ( args.length > 3 ) {
@@ -8,13 +8,13 @@ const arc = ( ...args ) => {
   if ( args.length > 1 ) {
     return new Instruction( "call", {
       name: "arc",
-      args: [ args[ 0 ], args[ 1 ], args[ 2 ], 0, pi2, false ], count: 6 }
+      args: [ args[ 0 ], args[ 1 ], args[ 2 ], 0, Pi2, false ], count: 6 }
     );
   }
 
   return new Instruction( "call",  {
     name: "arc",
-    args: [ 0, 0, args[ 0 ], 0, pi2, false ], count: 6
+    args: [ 0, 0, args[ 0 ], 0, Pi2, false ], count: 6
   } );
 };
 

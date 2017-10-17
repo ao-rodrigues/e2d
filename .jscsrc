@@ -1,5 +1,5 @@
 {
 	"excludeFiles": ["dist/**/*.js"],
 	"preset": "jquery",
-	"validateLineBreaks": null
+	"validateLineBreaks": "CRLF"
 }
