@@ -1,12 +1,12 @@
 class Instruction {
-  constructor( type, props ) {
+  constructor(type, props) {
     this.type = type;
     this.props = props;
-    return Object.seal( this );
+    return Object.seal(this);
   }
 }
 
-Object.seal( Instruction );
-Object.seal( Instruction.prototype );
+Object.seal(Instruction);
+Object.seal(Instruction.prototype);
 
 export default Instruction;

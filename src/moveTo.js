@@ -1,3 +1,3 @@
 import pointInstruction from "./pointInstruction";
 
-export default pointInstruction( "moveTo" );
+export default pointInstruction("moveTo");

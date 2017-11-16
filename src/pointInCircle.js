@@ -1,4 +1,4 @@
-const pointInCircle =
-  ( [ x, y ], [ cx, cy, cr ] ) => ( ( cx - x ) ** 2 + ( cy - y ) ** 2 ) < cr ** 2;
+const pointInCircle = ([x, y], [cx, cy, cr]) =>
+  (cx - x) ** 2 + (cy - y) ** 2 < cr ** 2;
 
 export default pointInCircle;

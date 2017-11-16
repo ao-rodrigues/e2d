@@ -1,6 +1,5 @@
-
-
 //Transform points function
+import Instruction from "./Instruction";
 import transformPoints from "./transformPoints";
 import cycleMouseData from "./cycleMouseData";
 import Pi2 from "./Pi2";
@@ -9,12 +8,13 @@ import setTransformOperation from "./setTransformOperation";
 import scaleOperation from "./scaleOperation";
 import translateOperation from "./translateOperation";
 import rotateOperation from "./rotateOperation";
-import skewXOperation from  "./skewXOperation";
+import skewXOperation from "./skewXOperation";
 import skewYOperation from "./skewYOperation";
 import createVirtualStack from "./createVirtualStack";
+import call from "./call";
 
 //Initialize all the properties
-const identity = [ 1, 0, 0, 1, 0, 0 ],
+const identity = [1, 0, 0, 1, 0, 0],
   empty = [],
   concat = [].concat;
 
@@ -37,54 +37,55 @@ const upTransforms = {
   setTransform: true
 };
 
-const render = ( ...args ) => {
-  let children = args.slice( 0, -1 ),
+const render = (...args) => {
+  let children = args.slice(0, -1),
     isTransformDirty = true,
     transformStackIndex = 6,
-    transformStack = new Float64Array( 501 * 6 ),
+    transformStack = new Float64Array(501 * 6),
     cache;
 
-  transformStack.set( identity );
+  transformStack.set(identity);
 
-  const ctx = args[ args.length - 1 ];
+  const ctx = args[args.length - 1];
 
-  cycleMouseData( ctx );
+  cycleMouseData(ctx);
 
-  const matrix = new Float64Array( identity ),
-    regions = ctx.canvas[ Symbol.for( "regions" ) ] = [],
-    mousePoints = ctx.canvas[ Symbol.for( "mousePoints" ) ] = [],
-    extensions = ctx.canvas[ Symbol.for( "extensions" ) ];
+  const matrix = new Float64Array(identity),
+    regions = ctx.canvas[Symbol.for("regions")],
+    mousePoints = (ctx.canvas[Symbol.for("mousePoints")] = []),
+    extensions = ctx.canvas[Symbol.for("extensions")];
 
   const stack = createVirtualStack();
+  let currentPath = [];
 
-  transformStack[ 0 ] = identity[ 0 ];
-  transformStack[ 1 ] = identity[ 1 ];
-  transformStack[ 2 ] = identity[ 2 ];
-  transformStack[ 3 ] = identity[ 3 ];
-  transformStack[ 4 ] = identity[ 4 ];
-  transformStack[ 5 ] = identity[ 5 ];
+  transformStack[0] = identity[0];
+  transformStack[1] = identity[1];
+  transformStack[2] = identity[2];
+  transformStack[3] = identity[3];
+  transformStack[4] = identity[4];
+  transformStack[5] = identity[5];
 
   const increaseTransformStackSize = () => {
     cache = transformStack;
-    transformStack = new Float64Array( transformStack.length + 600 ); //Add 100 more
-    transformStack.set( cache );
+    transformStack = new Float64Array(transformStack.length + 600); //Add 100 more
+    transformStack.set(cache);
   };
 
   let len = children.length;
 
   //Flatten children during the loop process to save time
-  for ( let i = 0; i < len; i++ ) {
-    let child = children[ i ];
+  for (let i = 0; i < len; i++) {
+    let child = children[i];
 
     //Used to detect if item is an array. Array.isArray is too slow
-    if ( child && child.constructor === Array ) {
-      children = concat.apply( empty, children );
-      child = children[ i ];
+    if (child && child.constructor === Array) {
+      children = concat.apply(empty, children);
+      child = children[i];
 
       //Repeat as necessary
-      while ( child && child.constructor === Array ) {
-        children = concat.apply( empty, children );
-        child = children[ i ];
+      while (child && child.constructor === Array) {
+        children = concat.apply(empty, children);
+        child = children[i];
       }
 
       //Used to reset the length.
@@ -92,7 +93,7 @@ const render = ( ...args ) => {
     }
 
     //Child must be truthy
-    if ( !child ) {
+    if (!child) {
       continue;
     }
 
@@ -100,54 +101,53 @@ const render = ( ...args ) => {
     const { props, type } = child;
 
     //If the transform is relative, then we store the current transform state in matrix.
-    if ( relativeTransforms[ type ] ) {
-      matrix[ 0 ] = transformStack[ transformStackIndex - 6 ];
-      matrix[ 1 ] = transformStack[ transformStackIndex - 5 ];
-      matrix[ 2 ] = transformStack[ transformStackIndex - 4 ];
-      matrix[ 3 ] = transformStack[ transformStackIndex - 3 ];
-      matrix[ 4 ] = transformStack[ transformStackIndex - 2 ];
-      matrix[ 5 ] = transformStack[ transformStackIndex - 1 ];
+    if (relativeTransforms[type]) {
+      matrix[0] = transformStack[transformStackIndex - 6];
+      matrix[1] = transformStack[transformStackIndex - 5];
+      matrix[2] = transformStack[transformStackIndex - 4];
+      matrix[3] = transformStack[transformStackIndex - 3];
+      matrix[4] = transformStack[transformStackIndex - 2];
+      matrix[5] = transformStack[transformStackIndex - 1];
     }
 
-    if ( upTransforms[ type ] ) {
-
+    if (upTransforms[type]) {
       //Increase the index
       transformStackIndex += 6;
 
       //We are changing the state of the stack, set the dirty flag
       isTransformDirty = true;
-      if ( transformStackIndex >= transformStack.length ) {
+      if (transformStackIndex >= transformStack.length) {
         increaseTransformStackSize();
       }
     }
 
-    switch ( type ) {
+    switch (type) {
       case "transform":
-        transformOperation( transformStack, transformStackIndex, matrix, props );
+        transformOperation(transformStack, transformStackIndex, matrix, props);
         continue;
 
       case "setTransform":
-        setTransformOperation( transformStack, transformStackIndex, props );
+        setTransformOperation(transformStack, transformStackIndex, props);
         continue;
 
       case "scale":
-        scaleOperation( transformStack, transformStackIndex, matrix, props );
+        scaleOperation(transformStack, transformStackIndex, matrix, props);
         continue;
 
       case "translate":
-        translateOperation( transformStack, transformStackIndex, matrix, props );
+        translateOperation(transformStack, transformStackIndex, matrix, props);
         continue;
 
       case "rotate":
-        rotateOperation( transformStack, transformStackIndex, matrix, props );
+        rotateOperation(transformStack, transformStackIndex, matrix, props);
         continue;
 
       case "skewX":
-        skewXOperation( transformStack, transformStackIndex, matrix, props );
+        skewXOperation(transformStack, transformStackIndex, matrix, props);
         continue;
 
       case "skewY":
-        skewYOperation( transformStack, transformStackIndex, matrix, props );
+        skewYOperation(transformStack, transformStackIndex, matrix, props);
         continue;
 
       case "restore":
@@ -156,144 +156,127 @@ const render = ( ...args ) => {
         continue;
     }
 
-    if ( isTransformDirty ) {
+    if (isTransformDirty) {
       isTransformDirty = false;
       ctx.setTransform(
-        transformStack[ transformStackIndex - 6 ],
-        transformStack[ transformStackIndex - 5 ],
-        transformStack[ transformStackIndex - 4 ],
-        transformStack[ transformStackIndex - 3 ],
-        transformStack[ transformStackIndex - 2 ],
-        transformStack[ transformStackIndex - 1 ]
+        transformStack[transformStackIndex - 6],
+        transformStack[transformStackIndex - 5],
+        transformStack[transformStackIndex - 4],
+        transformStack[transformStackIndex - 3],
+        transformStack[transformStackIndex - 2],
+        transformStack[transformStackIndex - 1]
+      );
+      currentPath.push(
+        new Instruction("call", {
+          name: "setTransform",
+          args: [
+            transformStack[transformStackIndex - 6],
+            transformStack[transformStackIndex - 5],
+            transformStack[transformStackIndex - 4],
+            transformStack[transformStackIndex - 3],
+            transformStack[transformStackIndex - 2],
+            transformStack[transformStackIndex - 1]
+          ],
+          count: 6
+        })
       );
     }
 
-    switch ( type ) {
+    switch (type) {
       case "push":
-        stack[ props.stack ].push(
-          props.stack === "lineDash" ? ctx.getLineDash() : ctx[ props.stack ]
+        stack[props.stack].push(
+          props.stack === "lineDash" ? ctx.getLineDash() : ctx[props.stack]
         );
 
-        if ( props.stack === "globalAlpha" ) {
-          ctx[ props.stack ] *= props.value;
-        } else if ( props.stack === "lineDash" ) {
-          ctx.setLineDash( props.value ) ;
+        if (props.stack === "globalAlpha") {
+          ctx[props.stack] *= props.value;
+        } else if (props.stack === "lineDash") {
+          ctx.setLineDash(props.value);
         } else {
-          ctx[ props.stack ] = props.value;
+          ctx[props.stack] = props.value;
         }
         continue;
 
       case "pop":
-        if ( props.stack === "lineDash" ) {
-          ctx.setLineDash( stack.lineDash.pop() );
+        if (props.stack === "lineDash") {
+          ctx.setLineDash(stack.lineDash.pop());
           continue;
         }
 
-        ctx[ props.stack ] = stack[ props.stack ].pop();
+        ctx[props.stack] = stack[props.stack].pop();
         continue;
 
       case "call":
-        const { name, args, count } = props;
-        switch ( count ) {
-          case 0:
-            ctx[ name ]();
-            continue;
-          case 1:
-            ctx[ name ]( args[ 0 ] );
-            continue;
-          case 2:
-            ctx[ name ]( args[ 0 ], args[ 1 ] );
-            continue;
-          case 3:
-            ctx[ name ]( args[ 0 ], args[ 1 ], args[ 2 ] );
-            continue;
-          case 4:
-            ctx[ name ]( args[ 0 ], args[ 1 ], args[ 2 ], args[ 3 ] );
-            continue;
-          case 5:
-            ctx[ name ]( args[ 0 ], args[ 1 ], args[ 2 ], args[ 3 ], args[ 4 ] );
-            continue;
-          case 6:
-            ctx[ name ]( args[ 0 ], args[ 1 ], args[ 2 ], args[ 3 ], args[ 4 ], args[ 5 ] );
-            continue;
-          case 7:
-            ctx[ name ](
-              args[ 0 ],
-              args[ 1 ],
-              args[ 2 ],
-              args[ 3 ],
-              args[ 4 ],
-              args[ 5 ],
-              args[ 6 ]
-            );
-            continue;
-          case 8:
-            ctx[ name ](
-              args[ 0 ],
-              args[ 1 ],
-              args[ 2 ],
-              args[ 3 ],
-              args[ 4 ],
-              args[ 5 ],
-              args[ 6 ],
-              args[ 7 ]
-            );
-            continue;
-          case 9:
-            ctx[ name ](
-              args[ 0 ],
-              args[ 1 ],
-              args[ 2 ],
-              args[ 3 ],
-              args[ 4 ],
-              args[ 5 ],
-              args[ 6 ],
-              args[ 7 ],
-              args[ 8 ]
-            );
-            continue;
+        if (name === "beginPath") {
+          currentPath = [];
+        } else {
+          currentPath.push(child);
         }
+        call(ctx, child);
+        continue;
 
       case "strokeArc":
         ctx.beginPath();
-        ctx.arc( props[ 0 ], props[ 1 ], props[ 2 ], props[ 3 ], props[ 4 ], props[ 5 ] );
+        ctx.arc(props[0], props[1], props[2], props[3], props[4], props[5]);
         ctx.stroke();
         continue;
 
       case "fillArc":
         ctx.beginPath();
-        ctx.arc( props[ 0 ], props[ 1 ], props[ 2 ], props[ 3 ], props[ 4 ], props[ 5 ] );
+        ctx.arc(props[0], props[1], props[2], props[3], props[4], props[5]);
         ctx.fill();
         continue;
 
+      case "removeRegion":
+        regions[props.id] = null;
+        continue;
+
+      case "clearRegions":
+        for (const region of Object.values(regions)) {
+          regions[region.id] = null;
+        }
+        continue;
+
       case "hitRect":
-      case "hitRegion":
+      case "hitPolygon":
       case "hitCircle":
-        if ( regions ) {
-          regions.push( {
+      case "hitRegion":
+        if (regions) {
+          regions[props.id] = {
             id: props.id,
-            points: props.points,
+            points:
+              type === "hitRegion"
+                ? props.path || currentPath.slice()
+                : props.points,
             matrix: [
-              transformStack[ transformStackIndex - 6 ],
-              transformStack[ transformStackIndex - 5 ],
-              transformStack[ transformStackIndex - 4 ],
-              transformStack[ transformStackIndex - 3 ],
-              transformStack[ transformStackIndex - 2 ],
-              transformStack[ transformStackIndex - 1 ]
+              transformStack[transformStackIndex - 6],
+              transformStack[transformStackIndex - 5],
+              transformStack[transformStackIndex - 4],
+              transformStack[transformStackIndex - 3],
+              transformStack[transformStackIndex - 2],
+              transformStack[transformStackIndex - 1]
             ],
             type, //Hit type goes here
+            fillRule: props.fillRule,
             hover: false,
             touched: false,
             clicked: false
-          } );
+          };
         }
         continue;
 
       default:
-        if ( extensions && extensions[ type ] ) {
-          extensions[ type ]( props, ctx );
+        if (extensions && extensions[type]) {
+          extensions[type](props, ctx);
         }
         continue;
+    }
+  }
+
+  const newRegions = (ctx.canvas[Symbol.for("regions")] = {});
+  for (const region of Object.values(regions)) {
+    if (region) {
+      newRegions[region.id] = region;
     }
   }
 };

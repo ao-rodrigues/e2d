@@ -23,6 +23,7 @@ import globalAlpha from './src/globalAlpha';
 import globalCompositeOperation from './src/globalCompositeOperation';
 import hitCircle from './src/hitCircle';
 import hitRect from './src/hitRect';
+import hitPolygon from './src/hitPolygon';
 import hitRegion from './src/hitRegion';
 import imageSmoothingEnabled from './src/imageSmoothingEnabled';
 import initialize from './src/initialize';
@@ -39,6 +40,7 @@ import pointInRect from './src/pointInRect';
 import quadraticCurveTo from './src/quadraticCurveTo';
 import raf from './src/raf';
 import rect from './src/rect';
+import removeRegion from './src/removeRegion';
 import render from './src/render';
 import resetTransform from './src/resetTransform';
 import rotate from './src/rotate';
@@ -89,6 +91,7 @@ export default {
   globalCompositeOperation,
   hitCircle,
   hitRect,
+  hitPolygon,
   hitRegion,
   imageSmoothingEnabled,
   initialize,
@@ -105,6 +108,7 @@ export default {
   quadraticCurveTo,
   raf,
   rect,
+  removeRegion,
   render,
   resetTransform,
   rotate,

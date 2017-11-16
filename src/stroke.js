@@ -1,3 +1,3 @@
 import emptyCall from "./emptyCall";
 
-export default emptyCall( "stroke" );
+export default emptyCall("stroke");

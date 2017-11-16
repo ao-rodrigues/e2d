@@ -1,3 +1,3 @@
 import emptyCall from "./emptyCall";
 
-export default emptyCall( "beginPath" );
+export default emptyCall("beginPath");

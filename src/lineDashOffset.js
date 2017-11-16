@@ -1,3 +1,3 @@
 import stackable from "./stackable";
 
-export default stackable( "lineDashOffset" );
+export default stackable("lineDashOffset");

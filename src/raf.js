@@ -1,9 +1,9 @@
-const raf = ( func ) => {
+const raf = func => {
   const funcCaller = function() {
-    requestAnimationFrame( funcCaller );
+    requestAnimationFrame(funcCaller);
     return func();
   };
 
-  requestAnimationFrame( funcCaller );
+  requestAnimationFrame(funcCaller);
 };
 export default raf;

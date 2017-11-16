@@ -1,4 +1,4 @@
-const createVirtualStack = () => ( {
+const createVirtualStack = () => ({
   fillStyle: [],
   strokeStyle: [],
   globalCompositeOperation: [],
@@ -18,6 +18,6 @@ const createVirtualStack = () => ( {
   miterLimit: [],
   lineWidth: [],
   globalAlpha: []
-} );
+});
 
 export default createVirtualStack;

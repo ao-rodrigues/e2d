@@ -1,3 +1,3 @@
 import stackable from "./stackable";
 
-export default stackable( "imageSmoothingEnabled" );
+export default stackable("imageSmoothingEnabled");

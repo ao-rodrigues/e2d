@@ -1,3 +1,3 @@
 import stackable from "./stackable";
 
-export default stackable( "textBaseline" );
+export default stackable("textBaseline");

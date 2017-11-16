@@ -1,3 +1,3 @@
 import stackable from "./stackable";
 
-export default stackable( "globalCompositeOperation" );
+export default stackable("globalCompositeOperation");

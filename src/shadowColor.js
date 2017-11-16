@@ -1,3 +1,3 @@
 import stackable from "./stackable";
 
-export default stackable( "shadowColor" );
+export default stackable("shadowColor");
