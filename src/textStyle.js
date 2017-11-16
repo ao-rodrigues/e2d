@@ -1,12 +1,9 @@
-import fontCall from "./font";
-import textAlignCall from "./textAlign";
-import textBaselineCall from "./textBaseline";
-import directionCall from "./direction";
+import fontCall from './font';
+import textAlignCall from './textAlign';
+import textBaselineCall from './textBaseline';
+import directionCall from './direction';
 
-const textStyle = (
-  { font, textAlign, textBaseline, direction },
-  ...children
-) => {
+const textStyle = ({ font, textAlign, textBaseline, direction }, ...children) => {
   children = font ? fontCall(children) : children;
   children = textAlign ? textAlignCall(children) : children;
   children = textBaseline ? textBaselineCall(children) : children;

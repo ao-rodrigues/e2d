@@ -1,9 +1,9 @@
-import call from "./call";
+import call from './call';
 const empty = [];
 const concat = empty.concat;
 
 export default ([x, y], instructions) => {
-  const ctx = document.createElement("canvas").getContext("2d");
+  const ctx = document.createElement('canvas').getContext('2d');
   ctx.canvas.width = 1;
   ctx.canvas.height = 1;
 

@@ -1,4 +1,4 @@
-import Instruction from "./Instruction";
+import Instruction from './Instruction';
 const pi2 = Math.PI * 2;
 
 const fillArc = (...args) => {
@@ -16,7 +16,7 @@ const fillArc = (...args) => {
     props[2] = args[2];
   }
 
-  return new Instruction("strokeArc", props);
+  return new Instruction('strokeArc', props);
 };
 
 export default fillArc;

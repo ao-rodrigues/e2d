@@ -1,10 +1,10 @@
-import keycode from "keycode";
+import keycode from 'keycode';
 
 const initialize = ctx => {
   const { canvas } = ctx;
 
   //MouseData
-  canvas[Symbol.for("mouseData")] = {
+  canvas[Symbol.for('mouseData')] = {
     x: 0,
     y: 0,
     dx: 0,
@@ -12,10 +12,10 @@ const initialize = ctx => {
     previousX: 0,
     previousY: 0,
     state: false,
-    clicked: 0
+    clicked: 0,
   };
 
-  const keys = (canvas[Symbol.for("keyData")] = {});
+  const keys = (canvas[Symbol.for('keyData')] = {});
 
   for (const name in keycode.code) {
     if (keycode.code.hasOwnProperty(name)) {
@@ -24,8 +24,8 @@ const initialize = ctx => {
   }
 
   //Mouse regions
-  canvas[Symbol.for("regions")] = {};
-  canvas[Symbol.for("mousePoints")] = [];
+  canvas[Symbol.for('regions')] = {};
+  canvas[Symbol.for('mousePoints')] = [];
 
   //Make the canvas receive touch and mouse events
   canvas.tabIndex = 1;
@@ -36,14 +36,14 @@ const initialize = ctx => {
     //Get left and top coordinates
     const { left, top } = canvas.getBoundingClientRect();
 
-    const mouseData = canvas[Symbol.for("mouseData")];
+    const mouseData = canvas[Symbol.for('mouseData')];
 
     const point = [clientX - left, clientY - top, mouseData.state];
 
     mouseData.x = point[0];
     mouseData.y = point[1];
 
-    const points = canvas[Symbol.for("mousePoints")];
+    const points = canvas[Symbol.for('mousePoints')];
 
     points.push(point);
 
@@ -57,13 +57,13 @@ const initialize = ctx => {
   };
 
   //Up target needs to detect mouse up and keyup events if the mouse leaves the canvas
-  const upTarget = typeof window !== "undefined" ? window : canvas;
+  const upTarget = typeof window !== 'undefined' ? window : canvas;
 
-  canvas.addEventListener("mousemove", mouseMove);
-  canvas.addEventListener("mousedown", evt => {
+  canvas.addEventListener('mousemove', mouseMove);
+  canvas.addEventListener('mousedown', evt => {
     const { target } = evt;
     if (target === canvas) {
-      const mouseData = canvas[Symbol.for("mouseData")];
+      const mouseData = canvas[Symbol.for('mouseData')];
 
       if (!mouseData.state) {
         mouseData.clicked += 1;
@@ -74,20 +74,20 @@ const initialize = ctx => {
     }
   });
 
-  canvas.addEventListener("keydown", evt => {
-    canvas[Symbol.for("keyData")][keycode(evt.keyCode)] = true;
+  canvas.addEventListener('keydown', evt => {
+    canvas[Symbol.for('keyData')][keycode(evt.keyCode)] = true;
     evt.preventDefault();
     return false;
   });
 
-  upTarget.addEventListener("mouseup", evt => {
-    const mouseData = canvas[Symbol.for("mouseData")];
+  upTarget.addEventListener('mouseup', evt => {
+    const mouseData = canvas[Symbol.for('mouseData')];
     mouseData.state = false;
     mouseMove(evt);
   });
 
-  upTarget.addEventListener("keyup", evt => {
-    canvas[Symbol.for("keyData")][keycode(evt.keyCode)] = false;
+  upTarget.addEventListener('keyup', evt => {
+    canvas[Symbol.for('keyData')][keycode(evt.keyCode)] = false;
     evt.preventDefault();
   });
 };

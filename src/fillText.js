@@ -1,3 +1,3 @@
-import textInstruction from "./textInstruction";
+import textInstruction from './textInstruction';
 
-export default textInstruction("fillText");
+export default textInstruction('fillText');

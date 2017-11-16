@@ -12,7 +12,7 @@ const transformPoints = (points, matrix) => {
     [x, y] = points[i];
     result.push([
       matrix[0] * x + matrix[2] * y + matrix[4],
-      matrix[1] * x + matrix[3] * y + matrix[5]
+      matrix[1] * x + matrix[3] * y + matrix[5],
     ]);
   }
   return result;
@@ -21,21 +21,13 @@ const transformPoints = (points, matrix) => {
 let det = 0;
 const invertMatrix = ([a, b, c, d, e, f]) => (
   (det = 1 / (a * d - c * b)),
-  [
-    d * det,
-    -c * det,
-    -b * det,
-    a * det,
-    (b * f - e * d) * det,
-    (e * b - a * f) * det
-  ]
+  [d * det, -c * det, -b * det, a * det, (b * f - e * d) * det, (e * b - a * f) * det]
 );
 
 const pointInRect = ([px, py], [[x, y], [width, height]]) =>
   px > x && py > y && px < width && py < height;
 
-const pointInCircle = ([x, y], [cx, cy, cr]) =>
-  (cx - x) ** 2 + (cy - y) ** 2 < cr ** 2;
+const pointInCircle = ([x, y], [cx, cy, cr]) => (cx - x) ** 2 + (cy - y) ** 2 < cr ** 2;
 
 var pointInPolygon = function (point, vs) {
     // ray-casting algorithm based on
@@ -83,29 +75,10 @@ const call = (ctx, { props: { name, args, count } }) => {
       ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
       break;
     case 8:
-      ctx[name](
-        args[0],
-        args[1],
-        args[2],
-        args[3],
-        args[4],
-        args[5],
-        args[6],
-        args[7]
-      );
+      ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
       break;
     case 9:
-      ctx[name](
-        args[0],
-        args[1],
-        args[2],
-        args[3],
-        args[4],
-        args[5],
-        args[6],
-        args[7],
-        args[8]
-      );
+      ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
       break;
   }
 };
@@ -114,7 +87,7 @@ const empty = [];
 const concat = empty.concat;
 
 var pointInPath = ([x, y], instructions) => {
-  const ctx = document.createElement("canvas").getContext("2d");
+  const ctx = document.createElement('canvas').getContext('2d');
   ctx.canvas.width = 1;
   ctx.canvas.height = 1;
 
@@ -134,9 +107,9 @@ var pointInPath = ([x, y], instructions) => {
 const alwaysFalse = () => false;
 
 const activeRegions = ctx => {
-  const regions = ctx.canvas[Symbol.for("regions")],
-    mousePoints = ctx.canvas[Symbol.for("mousePoints")],
-    mouseData = ctx.canvas[Symbol.for("mouseData")],
+  const regions = ctx.canvas[Symbol.for('regions')],
+    mousePoints = ctx.canvas[Symbol.for('mousePoints')],
+    mouseData = ctx.canvas[Symbol.for('mouseData')],
     results = {};
 
   //The mouse might have held still, add the current mouse position to make the data consistent
@@ -147,19 +120,19 @@ const activeRegions = ctx => {
   for (const region of Object.values(regions)) {
     //Invert the region matrix and transform the mouse points
     const transformedMousePoints =
-      region.type === "hitRegion"
+      region.type === 'hitRegion'
         ? mousePoints
         : transformPoints(mousePoints, invertMatrix(region.matrix));
 
     //The mouse points are now relative to the mouse region, use the appropriate test
     const test =
-      region.type === "hitRegion"
+      region.type === 'hitRegion'
         ? pointInPath
-        : region.type === "hitRect"
+        : region.type === 'hitRect'
           ? pointInRect
-          : region.type === "hitPolygon"
+          : region.type === 'hitPolygon'
             ? pointInPolygon
-            : region.type === "hitCircle" ? pointInCircle : alwaysFalse;
+            : region.type === 'hitCircle' ? pointInCircle : alwaysFalse;
     for (const mousePoint of transformedMousePoints) {
       if (test(mousePoint, region.points)) {
         region.hover = true;
@@ -187,61 +160,59 @@ var Pi2 = Math.PI * 2;
 
 const arc = (...args) => {
   if (args.length > 3) {
-    return new Instruction("call", { name: "arc", args, count: 6 });
+    return new Instruction('call', { name: 'arc', args, count: 6 });
   }
   if (args.length > 1) {
-    return new Instruction("call", {
-      name: "arc",
+    return new Instruction('call', {
+      name: 'arc',
       args: [args[0], args[1], args[2], 0, Pi2, false],
-      count: 6
+      count: 6,
     });
   }
 
-  return new Instruction("call", {
-    name: "arc",
+  return new Instruction('call', {
+    name: 'arc',
     args: [0, 0, args[0], 0, Pi2, false],
-    count: 6
+    count: 6,
   });
 };
 
 const arcTo = (x1, y1, x2, y2, r) =>
-  new Instruction("call", {
-    name: "arcTo",
+  new Instruction('call', {
+    name: 'arcTo',
     args: [x1, y1, x2, y2, r],
-    count: 5
+    count: 5,
   });
 
-const emptyCall = name => () =>
-  new Instruction("call", { name, args: [], count: 0 });
+const emptyCall = name => () => new Instruction('call', { name, args: [], count: 0 });
 
-var beginPath = emptyCall("beginPath");
+var beginPath = emptyCall('beginPath');
 
 const bezierCurveTo = (cp1x, cp1y, cp2x, cp2y, x, y) =>
-  new Instruction("call", {
-    name: "bezierCurveTo",
+  new Instruction('call', {
+    name: 'bezierCurveTo',
     args: [cp1x, cp1y, cp2x, cp2y, x, y],
-    count: 5
+    count: 5,
   });
 
 const rectInstruction = name => (...args) =>
-  new Instruction("call", {
+  new Instruction('call', {
     name,
     args: args.length > 2 ? args : [0, 0, args[0], args[1]],
-    count: 4
+    count: 4,
   });
 
-var clearRect = rectInstruction("clearRect");
+var clearRect = rectInstruction('clearRect');
 
-const begin = [emptyCall("save"), emptyCall("beginPath")];
-const performClip = emptyCall("clip");
-const end = emptyCall("restore");
+const begin = [emptyCall('save'), emptyCall('beginPath')];
+const performClip = emptyCall('clip');
+const end = emptyCall('restore');
 
 const clip = (path, ...children) => [begin, path, performClip, children, end];
 
-const clipPath = () =>
-  new Instruction("call", { name: "clip", args: [], count: 0 });
+const clipPath = () => new Instruction('call', { name: 'clip', args: [], count: 0 });
 
-var closePath = emptyCall("closePath");
+var closePath = emptyCall('closePath');
 
 const createRegularPolygon = (radius = 0, position = [0, 0], sides = 3) => {
   const polygon = [];
@@ -249,86 +220,74 @@ const createRegularPolygon = (radius = 0, position = [0, 0], sides = 3) => {
   for (let i = 0; i < sides; i++) {
     polygon.push([
       position[0] + radius * Math.cos(factor * i),
-      position[1] + radius * Math.sin(factor * i)
+      position[1] + radius * Math.sin(factor * i),
     ]);
   }
   return polygon;
 };
 
 const stackable = stack => {
-  const end = new Instruction("pop", { stack });
+  const end = new Instruction('pop', { stack });
   const stackableFunc = (value, ...children) => [
-    new Instruction("push", { stack, value }),
+    new Instruction('push', { stack, value }),
     ...children,
-    end
+    end,
   ];
 
   return stackableFunc;
 };
 
-var directionCall = stackable("direction");
+var directionCall = stackable('direction');
 
 const drawImage = (...args) => {
   if (args.length >= 9) {
-    return new Instruction("call", {
-      name: "drawImage",
+    return new Instruction('call', {
+      name: 'drawImage',
       args,
-      count: 9
+      count: 9,
     });
   }
 
   const [img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight] = args;
 
   if (args.length >= 5) {
-    return new Instruction("call", {
-      name: "drawImage",
+    return new Instruction('call', {
+      name: 'drawImage',
       args: [img, sx, sy, sWidth, sHeight],
-      count: 5
+      count: 5,
     });
   }
 
-  return new Instruction("call", {
-    name: "drawImage",
+  return new Instruction('call', {
+    name: 'drawImage',
     args: args.length >= 3 ? [img, sx, sy] : [img, 0, 0],
-    count: 3
+    count: 3,
   });
 };
 
 const ellipse = (...args) => {
-  const [
-    x,
-    y,
-    radiusX,
-    radiusY,
-    rotation,
-    startAngle,
-    endAngle,
-    anticlockwise
-  ] = args;
+  const [x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise] = args;
 
-  return new Instruction("call", {
-    name: "ellipse",
+  return new Instruction('call', {
+    name: 'ellipse',
     args:
       args.length > 5
         ? args
         : args.length > 4
           ? [x, y, radiusX, radiusY, rotation, startAngle, false]
-          : args.length > 2
-            ? [x, y, radiusX, radiusY, 0, pi2, false]
-            : [0, 0, x, y, 0, Pi2, false],
-    count: 7
+          : args.length > 2 ? [x, y, radiusX, radiusY, 0, pi2, false] : [0, 0, x, y, 0, Pi2, false],
+    count: 7,
   });
 };
 
-var endClip = emptyCall("restore");
+var endClip = emptyCall('restore');
 
 const extend = (ctx, ...methods) => {
-  const extensions =
-    ctx[Symbol.for("extensions")] || (ctx[Symbol.for("extensions")] = {});
+  const extensions = ctx[Symbol.for('extensions')] || (ctx[Symbol.for('extensions')] = {});
   Object.assign(extensions, ...methods);
 };
 
-var fill = emptyCall("fill");
+var fill = emptyCall('fill');
 
 const fillArc = (...args) => {
   const props = [0, 0, args[0], 0, Pi2, false];
@@ -345,32 +304,32 @@ const fillArc = (...args) => {
     props[2] = args[2];
   }
 
-  return new Instruction("fillArc", props);
+  return new Instruction('fillArc', props);
 };
 
-var fillRect = rectInstruction("fillRect");
+var fillRect = rectInstruction('fillRect');
 
-var fillStyle = stackable("fillStyle");
+var fillStyle = stackable('fillStyle');
 
 const textInstruction = name => (...args) =>
-  new Instruction("call", {
+  new Instruction('call', {
     name,
     args: args.length >= 3 ? args : [args[0], 0, 0],
-    count: args.length >= 4 ? 4 : 3
+    count: args.length >= 4 ? 4 : 3,
   });
 
-var fillText = textInstruction("fillText");
+var fillText = textInstruction('fillText');
 
-var fontCall = stackable("font");
+var fontCall = stackable('font');
 
-var globalAlpha = stackable("globalAlpha");
+var globalAlpha = stackable('globalAlpha');
 
-var globalCompositeOperation = stackable("globalCompositeOperation");
+var globalCompositeOperation = stackable('globalCompositeOperation');
 
 const hitCircle = (id, ...args) =>
-  new Instruction("hitCircle", {
+  new Instruction('hitCircle', {
     id,
-    points: args.length === 1 ? [0, 0, args[0]] : [args[0], args[1], args[2]]
+    points: args.length === 1 ? [0, 0, args[0]] : [args[0], args[1], args[2]],
   });
 
 const hitRect = (id, ...args) => {
@@ -381,29 +340,28 @@ const hitRect = (id, ...args) => {
     x = 0;
     y = 0;
   }
-  return new Instruction("hitRect", {
+  return new Instruction('hitRect', {
     id,
-    points: [[x, y], [x + width, y + height]]
+    points: [[x, y], [x + width, y + height]],
   });
 };
 
-const hitPolygon = (id, points) =>
-  new Instruction("hitPolygon", { id, points });
+const hitPolygon = (id, points) => new Instruction('hitPolygon', { id, points });
 
 const hitRegion = (id, path, fillRule) => {
   if (Array.isArray(path)) {
-    return new Instruction("hitRegion", { id, path, fillRule });
+    return new Instruction('hitRegion', { id, path, fillRule });
   }
 
   if (path && path.constructor === String) {
     fillRule = path;
-    return new Instruction("hitRegion", { id, path: null, fillRule });
+    return new Instruction('hitRegion', { id, path: null, fillRule });
   }
 
-  return new Instruction("hitRegion", { id, path: null, fillRule: null });
+  return new Instruction('hitRegion', { id, path: null, fillRule: null });
 };
 
-var imageSmoothingEnabled = stackable("imageSmoothingEnabled");
+var imageSmoothingEnabled = stackable('imageSmoothingEnabled');
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
@@ -562,7 +520,7 @@ const initialize = ctx => {
   const { canvas } = ctx;
 
   //MouseData
-  canvas[Symbol.for("mouseData")] = {
+  canvas[Symbol.for('mouseData')] = {
     x: 0,
     y: 0,
     dx: 0,
@@ -570,10 +528,10 @@ const initialize = ctx => {
     previousX: 0,
     previousY: 0,
     state: false,
-    clicked: 0
+    clicked: 0,
   };
 
-  const keys = (canvas[Symbol.for("keyData")] = {});
+  const keys = (canvas[Symbol.for('keyData')] = {});
 
   for (const name in keycode.code) {
     if (keycode.code.hasOwnProperty(name)) {
@@ -582,8 +540,8 @@ const initialize = ctx => {
   }
 
   //Mouse regions
-  canvas[Symbol.for("regions")] = {};
-  canvas[Symbol.for("mousePoints")] = [];
+  canvas[Symbol.for('regions')] = {};
+  canvas[Symbol.for('mousePoints')] = [];
 
   //Make the canvas receive touch and mouse events
   canvas.tabIndex = 1;
@@ -594,14 +552,14 @@ const initialize = ctx => {
     //Get left and top coordinates
     const { left, top } = canvas.getBoundingClientRect();
 
-    const mouseData = canvas[Symbol.for("mouseData")];
+    const mouseData = canvas[Symbol.for('mouseData')];
 
     const point = [clientX - left, clientY - top, mouseData.state];
 
     mouseData.x = point[0];
     mouseData.y = point[1];
 
-    const points = canvas[Symbol.for("mousePoints")];
+    const points = canvas[Symbol.for('mousePoints')];
 
     points.push(point);
 
@@ -615,13 +573,13 @@ const initialize = ctx => {
   };
 
   //Up target needs to detect mouse up and keyup events if the mouse leaves the canvas
-  const upTarget = typeof window !== "undefined" ? window : canvas;
+  const upTarget = typeof window !== 'undefined' ? window : canvas;
 
-  canvas.addEventListener("mousemove", mouseMove);
-  canvas.addEventListener("mousedown", evt => {
+  canvas.addEventListener('mousemove', mouseMove);
+  canvas.addEventListener('mousedown', evt => {
     const { target } = evt;
     if (target === canvas) {
-      const mouseData = canvas[Symbol.for("mouseData")];
+      const mouseData = canvas[Symbol.for('mouseData')];
 
       if (!mouseData.state) {
         mouseData.clicked += 1;
@@ -632,37 +590,37 @@ const initialize = ctx => {
     }
   });
 
-  canvas.addEventListener("keydown", evt => {
-    canvas[Symbol.for("keyData")][keycode(evt.keyCode)] = true;
+  canvas.addEventListener('keydown', evt => {
+    canvas[Symbol.for('keyData')][keycode(evt.keyCode)] = true;
     evt.preventDefault();
     return false;
   });
 
-  upTarget.addEventListener("mouseup", evt => {
-    const mouseData = canvas[Symbol.for("mouseData")];
+  upTarget.addEventListener('mouseup', evt => {
+    const mouseData = canvas[Symbol.for('mouseData')];
     mouseData.state = false;
     mouseMove(evt);
   });
 
-  upTarget.addEventListener("keyup", evt => {
-    canvas[Symbol.for("keyData")][keycode(evt.keyCode)] = false;
+  upTarget.addEventListener('keyup', evt => {
+    canvas[Symbol.for('keyData')][keycode(evt.keyCode)] = false;
     evt.preventDefault();
   });
 };
 
-const keyData = ctx => ctx.canvas[Symbol.for("keyData")];
+const keyData = ctx => ctx.canvas[Symbol.for('keyData')];
 
-var lineCapCall = stackable("lineCap");
+var lineCapCall = stackable('lineCap');
 
-var lineDashCall = stackable("lineDash");
+var lineDashCall = stackable('lineDash');
 
-var lineDashOffsetCall = stackable("lineDashOffset");
+var lineDashOffsetCall = stackable('lineDashOffset');
 
-var lineJoinCall = stackable("lineJoin");
+var lineJoinCall = stackable('lineJoin');
 
-var lineWidthCall = stackable("lineWidth");
+var lineWidthCall = stackable('lineWidth');
 
-var miterLimitCall = stackable("miterLimit");
+var miterLimitCall = stackable('miterLimit');
 
 const lineStyle = (
   { lineCap, lineDash, lineDashOffset, lineJoin, lineWidth, miterLimit },
@@ -677,17 +635,17 @@ const lineStyle = (
 };
 
 const pointInstruction = name => (x, y) =>
-  new Instruction("call", {
+  new Instruction('call', {
     name,
     args: [x, y],
-    count: 2
+    count: 2,
   });
 
-var lineTo = pointInstruction("lineTo");
+var lineTo = pointInstruction('lineTo');
 
-const mouseData = ctx => ctx.canvas[Symbol.for("mouseData")];
+const mouseData = ctx => ctx.canvas[Symbol.for('mouseData')];
 
-var moveTo = pointInstruction("moveTo");
+var moveTo = pointInstruction('moveTo');
 
 const moveToLineTo = (point, index) =>
   index === 0 ? moveTo(point[0], point[1]) : lineTo(point[0], point[1]);
@@ -695,10 +653,10 @@ const moveToLineTo = (point, index) =>
 const path = (...children) => [beginPath(), children, closePath()];
 
 const quadraticCurveTo = (cpx, cpy, x, y) =>
-  new Instruction("call", {
-    name: "quadraticCurveTo",
+  new Instruction('call', {
+    name: 'quadraticCurveTo',
     args: [cpx, cpy, x, y],
-    count: 4
+    count: 4,
   });
 
 const raf = func => {
@@ -710,12 +668,12 @@ const raf = func => {
   requestAnimationFrame(funcCaller);
 };
 
-var rect = rectInstruction("rect");
+var rect = rectInstruction('rect');
 
-const removeRegion = id => new Instruction("removeRegion", { id });
+const removeRegion = id => new Instruction('removeRegion', { id });
 
 const cycleMouseData = ctx => {
-  const mouseData = ctx.canvas[Symbol.for("mouseData")];
+  const mouseData = ctx.canvas[Symbol.for('mouseData')];
   if (mouseData) {
     mouseData.dx = mouseData.x - mouseData.previousX;
     mouseData.dy = mouseData.y - mouseData.previousY;
@@ -727,11 +685,7 @@ const cycleMouseData = ctx => {
   }
 };
 
-const setTransformOperation = (
-  transformStack,
-  transformStackIndex,
-  [a, b, c, d, e, f]
-) => {
+const setTransformOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f]) => {
   transformStack[transformStackIndex - 6] = a;
   transformStack[transformStackIndex - 5] = b;
   transformStack[transformStackIndex - 4] = c;
@@ -740,12 +694,7 @@ const setTransformOperation = (
   transformStack[transformStackIndex - 1] = f;
 };
 
-const scaleOperation = (
-  transformStack,
-  transformStackIndex,
-  [a, b, c, d, e, f],
-  { x, y }
-) => {
+const scaleOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f], { x, y }) => {
   transformStack[transformStackIndex - 6] = a * x;
   transformStack[transformStackIndex - 5] = b * x;
   transformStack[transformStackIndex - 4] = c * y;
@@ -754,12 +703,7 @@ const scaleOperation = (
   transformStack[transformStackIndex - 1] = f;
 };
 
-const translateOperation = (
-  transformStack,
-  transformStackIndex,
-  [a, b, c, d, e, f],
-  { x, y }
-) => {
+const translateOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f], { x, y }) => {
   transformStack[transformStackIndex - 6] = a;
   transformStack[transformStackIndex - 5] = b;
   transformStack[transformStackIndex - 4] = c;
@@ -768,12 +712,7 @@ const translateOperation = (
   transformStack[transformStackIndex - 1] = f + b * x + d * y;
 };
 
-const rotateOperation = (
-  transformStack,
-  transformStackIndex,
-  [a, b, c, d, e, f],
-  { sin, cos }
-) => {
+const rotateOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f], { sin, cos }) => {
   transformStack[transformStackIndex - 6] = a * cos + c * sin;
   transformStack[transformStackIndex - 5] = b * cos + d * sin;
   transformStack[transformStackIndex - 4] = a * -sin + c * cos;
@@ -782,12 +721,7 @@ const rotateOperation = (
   transformStack[transformStackIndex - 1] = f;
 };
 
-const skewXOperation = (
-  transformStack,
-  transformStackIndex,
-  [a, b, c, d, e, f],
-  { x }
-) => {
+const skewXOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f], { x }) => {
   transformStack[transformStackIndex - 6] = a;
   transformStack[transformStackIndex - 5] = b;
   transformStack[transformStackIndex - 4] = a * x + c;
@@ -796,12 +730,7 @@ const skewXOperation = (
   transformStack[transformStackIndex - 1] = f;
 };
 
-const skewYOperation = (
-  transformStack,
-  transformStackIndex,
-  [a, b, c, d, e, f],
-  { y }
-) => {
+const skewYOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f], { y }) => {
   transformStack[transformStackIndex - 6] = c * y + a;
   transformStack[transformStackIndex - 5] = d * y + b;
   transformStack[transformStackIndex - 4] = c;
@@ -829,7 +758,7 @@ const createVirtualStack = () => ({
   lineJoin: [],
   miterLimit: [],
   lineWidth: [],
-  globalAlpha: []
+  globalAlpha: [],
 });
 
 //Transform points function
@@ -844,7 +773,7 @@ const relativeTransforms = {
   rotate: true,
   translate: true,
   skewX: true,
-  skewY: true
+  skewY: true,
 };
 
 const upTransforms = {
@@ -854,7 +783,7 @@ const upTransforms = {
   translate: true,
   skewX: true,
   skewY: true,
-  setTransform: true
+  setTransform: true,
 };
 
 const render = (...args) => {
@@ -871,9 +800,9 @@ const render = (...args) => {
   cycleMouseData(ctx);
 
   const matrix = new Float64Array(identity),
-    regions = ctx.canvas[Symbol.for("regions")],
-    mousePoints = (ctx.canvas[Symbol.for("mousePoints")] = []),
-    extensions = ctx.canvas[Symbol.for("extensions")];
+    regions = ctx.canvas[Symbol.for('regions')],
+    mousePoints = (ctx.canvas[Symbol.for('mousePoints')] = []),
+    extensions = ctx.canvas[Symbol.for('extensions')];
 
   const stack = createVirtualStack();
   let currentPath = [];
@@ -884,12 +813,6 @@ const render = (...args) => {
   transformStack[3] = identity[3];
   transformStack[4] = identity[4];
   transformStack[5] = identity[5];
-
-  const increaseTransformStackSize = () => {
-    cache = transformStack;
-    transformStack = new Float64Array(transformStack.length + 600); //Add 100 more
-    transformStack.set(cache);
-  };
 
   let len = children.length;
 
@@ -937,40 +860,42 @@ const render = (...args) => {
       //We are changing the state of the stack, set the dirty flag
       isTransformDirty = true;
       if (transformStackIndex >= transformStack.length) {
-        increaseTransformStackSize();
+        cache = transformStack;
+        transformStack = new Float64Array(transformStack.length + 600); //Add 100 more
+        transformStack.set(cache);
       }
     }
 
     switch (type) {
-      case "transform":
+      case 'transform':
         transform(transformStack, transformStackIndex, matrix, props);
         continue;
 
-      case "setTransform":
+      case 'setTransform':
         setTransformOperation(transformStack, transformStackIndex, props);
         continue;
 
-      case "scale":
+      case 'scale':
         scaleOperation(transformStack, transformStackIndex, matrix, props);
         continue;
 
-      case "translate":
+      case 'translate':
         translateOperation(transformStack, transformStackIndex, matrix, props);
         continue;
 
-      case "rotate":
+      case 'rotate':
         rotateOperation(transformStack, transformStackIndex, matrix, props);
         continue;
 
-      case "skewX":
+      case 'skewX':
         skewXOperation(transformStack, transformStackIndex, matrix, props);
         continue;
 
-      case "skewY":
+      case 'skewY':
         skewYOperation(transformStack, transformStackIndex, matrix, props);
         continue;
 
-      case "restore":
+      case 'restore':
         transformStackIndex -= 6;
         isTransformDirty = true;
         continue;
@@ -984,41 +909,39 @@ const render = (...args) => {
         transformStack[transformStackIndex - 4],
         transformStack[transformStackIndex - 3],
         transformStack[transformStackIndex - 2],
-        transformStack[transformStackIndex - 1]
+        transformStack[transformStackIndex - 1],
       );
       currentPath.push(
-        new Instruction("call", {
-          name: "setTransform",
+        new Instruction('call', {
+          name: 'setTransform',
           args: [
             transformStack[transformStackIndex - 6],
             transformStack[transformStackIndex - 5],
             transformStack[transformStackIndex - 4],
             transformStack[transformStackIndex - 3],
             transformStack[transformStackIndex - 2],
-            transformStack[transformStackIndex - 1]
+            transformStack[transformStackIndex - 1],
           ],
-          count: 6
-        })
+          count: 6,
+        }),
       );
     }
 
     switch (type) {
-      case "push":
-        stack[props.stack].push(
-          props.stack === "lineDash" ? ctx.getLineDash() : ctx[props.stack]
-        );
+      case 'push':
+        stack[props.stack].push(props.stack === 'lineDash' ? ctx.getLineDash() : ctx[props.stack]);
 
-        if (props.stack === "globalAlpha") {
+        if (props.stack === 'globalAlpha') {
           ctx[props.stack] *= props.value;
-        } else if (props.stack === "lineDash") {
+        } else if (props.stack === 'lineDash') {
           ctx.setLineDash(props.value);
         } else {
           ctx[props.stack] = props.value;
         }
         continue;
 
-      case "pop":
-        if (props.stack === "lineDash") {
+      case 'pop':
+        if (props.stack === 'lineDash') {
           ctx.setLineDash(stack.lineDash.pop());
           continue;
         }
@@ -1026,8 +949,8 @@ const render = (...args) => {
         ctx[props.stack] = stack[props.stack].pop();
         continue;
 
-      case "call":
-        if (name === "beginPath") {
+      case 'call':
+        if (name === 'beginPath') {
           currentPath = [];
         } else {
           currentPath.push(child);
@@ -1035,52 +958,51 @@ const render = (...args) => {
         call(ctx, child);
         continue;
 
-      case "strokeArc":
+      case 'strokeArc':
+        currentPath = [];
         ctx.beginPath();
         ctx.arc(props[0], props[1], props[2], props[3], props[4], props[5]);
         ctx.stroke();
         continue;
 
-      case "fillArc":
+      case 'fillArc':
+        currentPath = [];
         ctx.beginPath();
         ctx.arc(props[0], props[1], props[2], props[3], props[4], props[5]);
         ctx.fill();
         continue;
 
-      case "removeRegion":
+      case 'removeRegion':
         regions[props.id] = null;
         continue;
 
-      case "clearRegions":
+      case 'clearRegions':
         for (const region of Object.values(regions)) {
           regions[region.id] = null;
         }
         continue;
 
-      case "hitRect":
-      case "hitPolygon":
-      case "hitCircle":
-      case "hitRegion":
+      case 'hitRect':
+      case 'hitPolygon':
+      case 'hitCircle':
+      case 'hitRegion':
         if (regions) {
           regions[props.id] = {
             id: props.id,
-            points:
-              type === "hitRegion"
-                ? props.path || currentPath.slice()
-                : props.points,
+            points: type === 'hitRegion' ? props.path || currentPath.slice() : props.points,
             matrix: [
               transformStack[transformStackIndex - 6],
               transformStack[transformStackIndex - 5],
               transformStack[transformStackIndex - 4],
               transformStack[transformStackIndex - 3],
               transformStack[transformStackIndex - 2],
-              transformStack[transformStackIndex - 1]
+              transformStack[transformStackIndex - 1],
             ],
             type, //Hit type goes here
             fillRule: props.fillRule,
             hover: false,
             touched: false,
-            clicked: false
+            clicked: false,
           };
         }
         continue;
@@ -1093,7 +1015,7 @@ const render = (...args) => {
     }
   }
 
-  const newRegions = (ctx.canvas[Symbol.for("regions")] = {});
+  const newRegions = (ctx.canvas[Symbol.for('regions')] = {});
   for (const region of Object.values(regions)) {
     if (region) {
       newRegions[region.id] = region;
@@ -1101,78 +1023,66 @@ const render = (...args) => {
   }
 };
 
-const end$1 = new Instruction("restore");
+const end$1 = new Instruction('restore');
 
 const setTransform = (matrix, ...children) => [
-  new Instruction("setTransform", [
+  new Instruction('setTransform', [
     matrix[0],
     matrix[1],
     matrix[2],
     matrix[3],
     matrix[4],
-    matrix[5]
+    matrix[5],
   ]),
   children,
-  end$1
+  end$1,
 ];
 
-const resetTransform = (...children) =>
-  setTransform([1, 0, 0, 1, 0, 0], children);
+const resetTransform = (...children) => setTransform([1, 0, 0, 1, 0, 0], children);
 
-const end$2 = new Instruction("restore");
+const end$2 = new Instruction('restore');
 
 const rotate = (r, ...children) => [
-  new Instruction("rotate", { cos: Math.cos(r), sin: Math.sin(r) }),
+  new Instruction('rotate', { cos: Math.cos(r), sin: Math.sin(r) }),
   children,
-  end$2
+  end$2,
 ];
 
-const end$3 = new Instruction("restore");
+const end$3 = new Instruction('restore');
 
 const scale = (x, y, ...children) => {
-  if (typeof y !== "number") {
+  if (typeof y !== 'number') {
     children = [y].concat(children);
     y = x;
   }
 
-  return [new Instruction("scale", { x, y }), children, end$3];
+  return [new Instruction('scale', { x, y }), children, end$3];
 };
 
-var shadowBlurCall = stackable("shadowBlur");
+var shadowBlurCall = stackable('shadowBlur');
 
-var shadowColorCall = stackable("shadowColor");
+var shadowColorCall = stackable('shadowColor');
 
-var shadowOffsetXCall = stackable("shadowOffsetX");
+var shadowOffsetXCall = stackable('shadowOffsetX');
 
-var shadowOffsetYCall = stackable("shadowOffsetY");
+var shadowOffsetYCall = stackable('shadowOffsetY');
 
-const shadowStyle = (
-  { shadowBlur, shadowColor, shadowOffsetX, shadowOffsetY },
-  ...children
-) => {
+const shadowStyle = ({ shadowBlur, shadowColor, shadowOffsetX, shadowOffsetY }, ...children) => {
   children = shadowBlur ? shadowBlurCall(children) : children;
   children = shadowColor ? shadowColorCall(children) : children;
   children = shadowOffsetX ? shadowOffsetXCall(children) : children;
   return shadowOffsetY ? shadowOffsetYCall(children) : children;
 };
 
-const end$4 = new Instruction("restore");
+const end$4 = new Instruction('restore');
 
-const skewX = (x, ...children) => [
-  new Instruction("skewX", { x: Math.tan(x) }),
-  children,
-  end$4
-];
+const skewX = (x, ...children) => [new Instruction('skewX', { x: Math.tan(x) }), children, end$4];
 
-const end$5 = new Instruction("restore");
+const end$5 = new Instruction('restore');
 
-const skewY = (y, ...children) => [
-  new Instruction("skewY", { y: Math.tan(y) }),
-  children,
-  end$5
-];
+const skewY = (y, ...children) => [new Instruction('skewY', { y: Math.tan(y) }), children, end$5];
 
-var stroke = emptyCall("stroke");
+var stroke = emptyCall('stroke');
 
 const pi2$1 = Math.PI * 2;
 
@@ -1191,53 +1101,46 @@ const fillArc$2 = (...args) => {
     props[2] = args[2];
   }
 
-  return new Instruction("strokeArc", props);
+  return new Instruction('strokeArc', props);
 };
 
-var strokeRect = rectInstruction("strokeRect");
+var strokeRect = rectInstruction('strokeRect');
 
-var strokeStyle = stackable("strokeStyle");
+var strokeStyle = stackable('strokeStyle');
 
-var strokeText = textInstruction("strokeText");
+var strokeText = textInstruction('strokeText');
 
-var textAlignCall = stackable("textAlign");
+var textAlignCall = stackable('textAlign');
 
-var textBaselineCall = stackable("textBaseline");
+var textBaselineCall = stackable('textBaseline');
 
-const textStyle = (
-  { font, textAlign, textBaseline, direction },
-  ...children
-) => {
+const textStyle = ({ font, textAlign, textBaseline, direction }, ...children) => {
   children = font ? fontCall(children) : children;
   children = textAlign ? textAlignCall(children) : children;
   children = textBaseline ? textBaselineCall(children) : children;
   return direction ? directionCall(children) : children;
 };
 
-const end$6 = new Instruction("restore");
+const end$6 = new Instruction('restore');
 
 const transform$1 = (values, ...children) => {
   return [
-    new Instruction("transform", [
+    new Instruction('transform', [
       values[0],
       values[1],
       values[2],
       values[3],
       values[4],
-      values[5]
+      values[5],
     ]),
     children,
-    end$6
+    end$6,
   ];
 };
 
-const end$7 = new Instruction("restore");
+const end$7 = new Instruction('restore');
 
-const translate = (x, y, ...children) => [
-  new Instruction("translate", { x, y }),
-  children,
-  end$7
-];
+const translate = (x, y, ...children) => [new Instruction('translate', { x, y }), children, end$7];
 
 var index = {
   activeRegions,

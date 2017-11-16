@@ -1,4 +1,4 @@
-import Instruction from "./Instruction";
+import Instruction from './Instruction';
 
 const hitRect = (id, ...args) => {
   let [x, y, width, height] = args;
@@ -8,9 +8,9 @@ const hitRect = (id, ...args) => {
     x = 0;
     y = 0;
   }
-  return new Instruction("hitRect", {
+  return new Instruction('hitRect', {
     id,
-    points: [[x, y], [x + width, y + height]]
+    points: [[x, y], [x + width, y + height]],
   });
 };
 

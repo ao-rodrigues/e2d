@@ -1,5 +1,5 @@
-import Instruction from "./Instruction";
-import Pi2 from "./Pi2";
+import Instruction from './Instruction';
+import Pi2 from './Pi2';
 
 const fillArc = (...args) => {
   const props = [0, 0, args[0], 0, Pi2, false];
@@ -16,7 +16,7 @@ const fillArc = (...args) => {
     props[2] = args[2];
   }
 
-  return new Instruction("fillArc", props);
+  return new Instruction('fillArc', props);
 };
 
 export default fillArc;

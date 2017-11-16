@@ -17,7 +17,7 @@ const createVirtualStack = () => ({
   lineJoin: [],
   miterLimit: [],
   lineWidth: [],
-  globalAlpha: []
+  globalAlpha: [],
 });
 
 export default createVirtualStack;

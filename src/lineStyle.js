@@ -1,9 +1,9 @@
-import lineCapCall from "./lineCap";
-import lineDashCall from "./lineDash";
-import lineDashOffsetCall from "./lineDashOffset";
-import lineJoinCall from "./lineJoin";
-import lineWidthCall from "./lineWidth";
-import miterLimitCall from "./miterLimit";
+import lineCapCall from './lineCap';
+import lineDashCall from './lineDash';
+import lineDashOffsetCall from './lineDashOffset';
+import lineJoinCall from './lineJoin';
+import lineWidthCall from './lineWidth';
+import miterLimitCall from './miterLimit';
 
 const lineStyle = (
   { lineCap, lineDash, lineDashOffset, lineJoin, lineWidth, miterLimit },

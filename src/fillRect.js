@@ -1,3 +1,3 @@
-import rectInstruction from "./rectInstruction";
+import rectInstruction from './rectInstruction';
 
-export default rectInstruction("fillRect");
+export default rectInstruction('fillRect');

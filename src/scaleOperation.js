@@ -1,9 +1,4 @@
-const scaleOperation = (
-  transformStack,
-  transformStackIndex,
-  [a, b, c, d, e, f],
-  { x, y }
-) => {
+const scaleOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f], { x, y }) => {
   transformStack[transformStackIndex - 6] = a * x;
   transformStack[transformStackIndex - 5] = b * x;
   transformStack[transformStackIndex - 4] = c * y;

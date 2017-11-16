@@ -1,3 +1,3 @@
-import stackable from "./stackable";
+import stackable from './stackable';
 
-export default stackable("globalAlpha");
+export default stackable('globalAlpha');

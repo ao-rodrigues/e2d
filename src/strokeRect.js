@@ -1,3 +1,3 @@
-import rectInstruction from "./rectInstruction";
+import rectInstruction from './rectInstruction';
 
-export default rectInstruction("strokeRect");
+export default rectInstruction('strokeRect');

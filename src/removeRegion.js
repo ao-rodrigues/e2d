@@ -1,5 +1,5 @@
-import Instruction from "./Instruction";
+import Instruction from './Instruction';
 
-const removeRegion = id => new Instruction("removeRegion", { id });
+const removeRegion = id => new Instruction('removeRegion', { id });
 
 export default removeRegion;
