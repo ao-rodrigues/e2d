@@ -6,3 +6,4 @@ This collection of methods help developers scale, translate, skew, rotate, and o
 
 - [translate.js](https://github.com/e2d/e2d/blob/master/docs/transforms/translate.md)
 - [scale.js](https://github.com/e2d/e2d/blob/master/docs/transforms/scale.md)
+- [rotate.js](https://github.com/e2d/e2d/blob/master/docs/transforms/rotate.md)

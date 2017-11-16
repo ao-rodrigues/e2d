@@ -4,4 +4,4 @@ Welcome to the `e2d.js` documentation! All of the functions have been grouped by
 
 # Table of Contents
 
-- [Transforms](https://github.com/e2d/e2d/tree/master/docs/transforms/)
+- [Transforms](https://github.com/e2d/e2d/blob/master/docs/transforms/readme.md)
