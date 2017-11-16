@@ -64,7 +64,7 @@ This library has no opinion on *framework*, and it is recomended to use `request
 
 ## The API
 
-This api is comprehensive and has *many* instances where default parameters will apply, so argument order counts! Please check out documentation in the [docs](https://github.com/e2d/e2d/tree/master/docs/) folder.
+This api is comprehensive and has *many* instances where default parameters will apply, so argument order counts! Please check out documentation in the [docs](https://github.com/e2d/e2d/blob/master/docs/readme.md) folder.
 
 
 # License
