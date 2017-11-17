@@ -240,7 +240,7 @@ const render = (...args) => {
         if (regions) {
           regions[props.id] = {
             id: props.id,
-            points: type === 'hitRegion' ? props.path || currentPath.slice() : props.points,
+            points: type === 'hitRegion' ? currentPath.slice() : props.points,
             matrix: [
               transformStack[transformStackIndex - 6],
               transformStack[transformStackIndex - 5],

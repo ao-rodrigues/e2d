@@ -27,8 +27,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return result;
   };
 
+  var ctx = CanvasRenderingContext2D.prototype.currentTransform ? document.createElement('canvas').getContext('2d') : null;
   var det = 0;
-  var invertMatrix = function invertMatrix(_ref) {
+  var invertMatrix = ctx ? function (_ref) {
     var _ref2 = _slicedToArray(_ref, 6),
         a = _ref2[0],
         b = _ref2[1],
@@ -37,34 +38,55 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         e = _ref2[4],
         f = _ref2[5];
 
+    ctx.setTransform(a, b, c, d, e, f);
+
+    var _ctx$currentTransform = ctx.currentTransform.inverse();
+
+    a = _ctx$currentTransform.a;
+    b = _ctx$currentTransform.b;
+    c = _ctx$currentTransform.c;
+    d = _ctx$currentTransform.d;
+    e = _ctx$currentTransform.e;
+    f = _ctx$currentTransform.f;
+
+    return [a, b, c, d, e, f];
+  } : function (_ref3) {
+    var _ref4 = _slicedToArray(_ref3, 6),
+        a = _ref4[0],
+        b = _ref4[1],
+        c = _ref4[2],
+        d = _ref4[3],
+        e = _ref4[4],
+        f = _ref4[5];
+
     return det = 1 / (a * d - c * b), [d * det, -c * det, -b * det, a * det, (b * f - e * d) * det, (e * b - a * f) * det];
   };
 
-  var pointInRect = function pointInRect(_ref3, _ref4) {
-    var _ref6 = _slicedToArray(_ref3, 2),
-        px = _ref6[0],
-        py = _ref6[1];
+  var pointInRect = function pointInRect(_ref5, _ref6) {
+    var _ref8 = _slicedToArray(_ref5, 2),
+        px = _ref8[0],
+        py = _ref8[1];
 
-    var _ref5 = _slicedToArray(_ref4, 2),
-        _ref5$ = _slicedToArray(_ref5[0], 2),
-        x = _ref5$[0],
-        y = _ref5$[1],
-        _ref5$2 = _slicedToArray(_ref5[1], 2),
-        width = _ref5$2[0],
-        height = _ref5$2[1];
+    var _ref7 = _slicedToArray(_ref6, 2),
+        _ref7$ = _slicedToArray(_ref7[0], 2),
+        x = _ref7$[0],
+        y = _ref7$[1],
+        _ref7$2 = _slicedToArray(_ref7[1], 2),
+        width = _ref7$2[0],
+        height = _ref7$2[1];
 
     return px > x && py > y && px < width && py < height;
   };
 
-  var pointInCircle = function pointInCircle(_ref7, _ref8) {
-    var _ref10 = _slicedToArray(_ref7, 2),
-        x = _ref10[0],
-        y = _ref10[1];
+  var pointInCircle = function pointInCircle(_ref9, _ref10) {
+    var _ref12 = _slicedToArray(_ref9, 2),
+        x = _ref12[0],
+        y = _ref12[1];
 
-    var _ref9 = _slicedToArray(_ref8, 3),
-        cx = _ref9[0],
-        cy = _ref9[1],
-        cr = _ref9[2];
+    var _ref11 = _slicedToArray(_ref10, 3),
+        cx = _ref11[0],
+        cy = _ref11[1],
+        cr = _ref11[2];
 
     return Math.pow(cx - x, 2) + Math.pow(cy - y, 2) < Math.pow(cr, 2);
   };
@@ -90,11 +112,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return inside;
   };
 
-  var call = function call(ctx, _ref11) {
-    var _ref11$props = _ref11.props,
-        name = _ref11$props.name,
-        args = _ref11$props.args,
-        count = _ref11$props.count;
+  var call = function call(ctx, _ref13) {
+    var _ref13$props = _ref13.props,
+        name = _ref13$props.name,
+        args = _ref13$props.args,
+        count = _ref13$props.count;
 
     switch (count) {
       case 0:
@@ -133,10 +155,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var empty = [];
   var concat = empty.concat;
 
-  var pointInPath = function pointInPath(_ref12, instructions) {
-    var _ref13 = _slicedToArray(_ref12, 2),
-        x = _ref13[0],
-        y = _ref13[1];
+  var pointInPath = function pointInPath(_ref14, instructions) {
+    var _ref15 = _slicedToArray(_ref14, 2),
+        x = _ref15[0],
+        y = _ref15[1];
 
     var ctx = document.createElement('canvas').getContext('2d');
     ctx.canvas.width = 1;
@@ -504,17 +526,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return new Instruction('hitPolygon', { id: id, points: points });
   };
 
-  var hitRegion = function hitRegion(id, path, fillRule) {
-    if (Array.isArray(path)) {
-      return new Instruction('hitRegion', { id: id, path: path, fillRule: fillRule });
-    }
-
-    if (path && path.constructor === String) {
-      fillRule = path;
-      return new Instruction('hitRegion', { id: id, path: null, fillRule: fillRule });
-    }
-
-    return new Instruction('hitRegion', { id: id, path: null, fillRule: null });
+  var hitRegion = function hitRegion(id) {
+    var fillRule = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    return new Instruction('hitRegion', { id: id, fillRule: fillRule });
   };
 
   var imageSmoothingEnabled = stackable('imageSmoothingEnabled');
@@ -785,17 +799,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var miterLimitCall = stackable('miterLimit');
 
-  var lineStyle = function lineStyle(_ref14) {
+  var lineStyle = function lineStyle(_ref16) {
     for (var _len10 = arguments.length, children = Array(_len10 > 1 ? _len10 - 1 : 0), _key10 = 1; _key10 < _len10; _key10++) {
       children[_key10 - 1] = arguments[_key10];
     }
 
-    var lineCap = _ref14.lineCap,
-        lineDash = _ref14.lineDash,
-        lineDashOffset = _ref14.lineDashOffset,
-        lineJoin = _ref14.lineJoin,
-        lineWidth = _ref14.lineWidth,
-        miterLimit = _ref14.miterLimit;
+    var lineCap = _ref16.lineCap,
+        lineDash = _ref16.lineDash,
+        lineDashOffset = _ref16.lineDashOffset,
+        lineJoin = _ref16.lineJoin,
+        lineWidth = _ref16.lineWidth,
+        miterLimit = _ref16.miterLimit;
 
     children = lineCap ? lineCapCall(children) : children;
     children = lineDash ? lineDashCall(children) : children;
@@ -871,14 +885,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
   };
 
-  var setTransformOperation = function setTransformOperation(transformStack, transformStackIndex, _ref15) {
-    var _ref16 = _slicedToArray(_ref15, 6),
-        a = _ref16[0],
-        b = _ref16[1],
-        c = _ref16[2],
-        d = _ref16[3],
-        e = _ref16[4],
-        f = _ref16[5];
+  var setTransformOperation = function setTransformOperation(transformStack, transformStackIndex, _ref17) {
+    var _ref18 = _slicedToArray(_ref17, 6),
+        a = _ref18[0],
+        b = _ref18[1],
+        c = _ref18[2],
+        d = _ref18[3],
+        e = _ref18[4],
+        f = _ref18[5];
 
     transformStack[transformStackIndex - 6] = a;
     transformStack[transformStackIndex - 5] = b;
@@ -888,17 +902,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     transformStack[transformStackIndex - 1] = f;
   };
 
-  var scaleOperation = function scaleOperation(transformStack, transformStackIndex, _ref17, _ref18) {
-    var _ref19 = _slicedToArray(_ref17, 6),
-        a = _ref19[0],
-        b = _ref19[1],
-        c = _ref19[2],
-        d = _ref19[3],
-        e = _ref19[4],
-        f = _ref19[5];
+  var scaleOperation = function scaleOperation(transformStack, transformStackIndex, _ref19, _ref20) {
+    var _ref21 = _slicedToArray(_ref19, 6),
+        a = _ref21[0],
+        b = _ref21[1],
+        c = _ref21[2],
+        d = _ref21[3],
+        e = _ref21[4],
+        f = _ref21[5];
 
-    var x = _ref18.x,
-        y = _ref18.y;
+    var x = _ref20.x,
+        y = _ref20.y;
 
     transformStack[transformStackIndex - 6] = a * x;
     transformStack[transformStackIndex - 5] = b * x;
@@ -908,17 +922,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     transformStack[transformStackIndex - 1] = f;
   };
 
-  var translateOperation = function translateOperation(transformStack, transformStackIndex, _ref20, _ref21) {
-    var _ref22 = _slicedToArray(_ref20, 6),
-        a = _ref22[0],
-        b = _ref22[1],
-        c = _ref22[2],
-        d = _ref22[3],
-        e = _ref22[4],
-        f = _ref22[5];
+  var translateOperation = function translateOperation(transformStack, transformStackIndex, _ref22, _ref23) {
+    var _ref24 = _slicedToArray(_ref22, 6),
+        a = _ref24[0],
+        b = _ref24[1],
+        c = _ref24[2],
+        d = _ref24[3],
+        e = _ref24[4],
+        f = _ref24[5];
 
-    var x = _ref21.x,
-        y = _ref21.y;
+    var x = _ref23.x,
+        y = _ref23.y;
 
     transformStack[transformStackIndex - 6] = a;
     transformStack[transformStackIndex - 5] = b;
@@ -928,17 +942,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     transformStack[transformStackIndex - 1] = f + b * x + d * y;
   };
 
-  var rotateOperation = function rotateOperation(transformStack, transformStackIndex, _ref23, _ref24) {
-    var _ref25 = _slicedToArray(_ref23, 6),
-        a = _ref25[0],
-        b = _ref25[1],
-        c = _ref25[2],
-        d = _ref25[3],
-        e = _ref25[4],
-        f = _ref25[5];
+  var rotateOperation = function rotateOperation(transformStack, transformStackIndex, _ref25, _ref26) {
+    var _ref27 = _slicedToArray(_ref25, 6),
+        a = _ref27[0],
+        b = _ref27[1],
+        c = _ref27[2],
+        d = _ref27[3],
+        e = _ref27[4],
+        f = _ref27[5];
 
-    var sin = _ref24.sin,
-        cos = _ref24.cos;
+    var sin = _ref26.sin,
+        cos = _ref26.cos;
 
     transformStack[transformStackIndex - 6] = a * cos + c * sin;
     transformStack[transformStackIndex - 5] = b * cos + d * sin;
@@ -948,16 +962,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     transformStack[transformStackIndex - 1] = f;
   };
 
-  var skewXOperation = function skewXOperation(transformStack, transformStackIndex, _ref26, _ref27) {
-    var _ref28 = _slicedToArray(_ref26, 6),
-        a = _ref28[0],
-        b = _ref28[1],
-        c = _ref28[2],
-        d = _ref28[3],
-        e = _ref28[4],
-        f = _ref28[5];
+  var skewXOperation = function skewXOperation(transformStack, transformStackIndex, _ref28, _ref29) {
+    var _ref30 = _slicedToArray(_ref28, 6),
+        a = _ref30[0],
+        b = _ref30[1],
+        c = _ref30[2],
+        d = _ref30[3],
+        e = _ref30[4],
+        f = _ref30[5];
 
-    var x = _ref27.x;
+    var x = _ref29.x;
 
     transformStack[transformStackIndex - 6] = a;
     transformStack[transformStackIndex - 5] = b;
@@ -967,16 +981,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     transformStack[transformStackIndex - 1] = f;
   };
 
-  var skewYOperation = function skewYOperation(transformStack, transformStackIndex, _ref29, _ref30) {
-    var _ref31 = _slicedToArray(_ref29, 6),
-        a = _ref31[0],
-        b = _ref31[1],
-        c = _ref31[2],
-        d = _ref31[3],
-        e = _ref31[4],
-        f = _ref31[5];
+  var skewYOperation = function skewYOperation(transformStack, transformStackIndex, _ref31, _ref32) {
+    var _ref33 = _slicedToArray(_ref31, 6),
+        a = _ref33[0],
+        b = _ref33[1],
+        c = _ref33[2],
+        d = _ref33[3],
+        e = _ref33[4],
+        f = _ref33[5];
 
-    var y = _ref30.y;
+    var y = _ref32.y;
 
     transformStack[transformStackIndex - 6] = c * y + a;
     transformStack[transformStackIndex - 5] = d * y + b;
@@ -1251,7 +1265,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (regions) {
             regions[props.id] = {
               id: props.id,
-              points: type === 'hitRegion' ? props.path || currentPath.slice() : props.points,
+              points: type === 'hitRegion' ? currentPath.slice() : props.points,
               matrix: [transformStack[transformStackIndex - 6], transformStack[transformStackIndex - 5], transformStack[transformStackIndex - 4], transformStack[transformStackIndex - 3], transformStack[transformStackIndex - 2], transformStack[transformStackIndex - 1]],
               type: type, //Hit type goes here
               fillRule: props.fillRule,
@@ -1350,15 +1364,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var shadowOffsetYCall = stackable('shadowOffsetY');
 
-  var shadowStyle = function shadowStyle(_ref32) {
+  var shadowStyle = function shadowStyle(_ref34) {
     for (var _len17 = arguments.length, children = Array(_len17 > 1 ? _len17 - 1 : 0), _key17 = 1; _key17 < _len17; _key17++) {
       children[_key17 - 1] = arguments[_key17];
     }
 
-    var shadowBlur = _ref32.shadowBlur,
-        shadowColor = _ref32.shadowColor,
-        shadowOffsetX = _ref32.shadowOffsetX,
-        shadowOffsetY = _ref32.shadowOffsetY;
+    var shadowBlur = _ref34.shadowBlur,
+        shadowColor = _ref34.shadowColor,
+        shadowOffsetX = _ref34.shadowOffsetX,
+        shadowOffsetY = _ref34.shadowOffsetY;
 
     children = shadowBlur ? shadowBlurCall(children) : children;
     children = shadowColor ? shadowColorCall(children) : children;
@@ -1418,15 +1432,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var textBaselineCall = stackable('textBaseline');
 
-  var textStyle = function textStyle(_ref33) {
+  var textStyle = function textStyle(_ref35) {
     for (var _len20 = arguments.length, children = Array(_len20 > 1 ? _len20 - 1 : 0), _key20 = 1; _key20 < _len20; _key20++) {
       children[_key20 - 1] = arguments[_key20];
     }
 
-    var font = _ref33.font,
-        textAlign = _ref33.textAlign,
-        textBaseline = _ref33.textBaseline,
-        direction = _ref33.direction;
+    var font = _ref35.font,
+        textAlign = _ref35.textAlign,
+        textBaseline = _ref35.textBaseline,
+        direction = _ref35.direction;
 
     children = font ? fontCall(children) : children;
     children = textAlign ? textAlignCall(children) : children;

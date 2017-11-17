@@ -2,7 +2,7 @@
 
 The purpose of the `rotate` function is to rotate the current context around the point of origin by a given rotation value in radians. The `rotate` function has a single form.
 
-It accepts one parameters to specify the magnitude of rotation, and then a set of children which will be rotated. For example:
+It accepts one parameter to specify the magnitude of rotation, and then a set of children which will be rotated. For example:
 
 ```javascript
 const rotatedRectangle = e2d.rotate( Math.PI, e2d.fillRect( 200, 200 ) );

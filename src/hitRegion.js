@@ -1,16 +1,5 @@
 import Instruction from './Instruction';
 
-const hitRegion = (id, path, fillRule) => {
-  if (Array.isArray(path)) {
-    return new Instruction('hitRegion', { id, path, fillRule });
-  }
-
-  if (path && path.constructor === String) {
-    fillRule = path;
-    return new Instruction('hitRegion', { id, path: null, fillRule });
-  }
-
-  return new Instruction('hitRegion', { id, path: null, fillRule: null });
-};
+const hitRegion = (id, fillRule = null) => new Instruction('hitRegion', { id, fillRule });
 
 export default hitRegion;

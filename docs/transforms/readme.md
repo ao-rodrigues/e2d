@@ -4,6 +4,11 @@ This collection of methods help developers scale, translate, skew, rotate, and o
 
 # Transforms Table of Contents
 
-- [translate.js](https://github.com/e2d/e2d/blob/master/docs/transforms/translate.md)
-- [scale.js](https://github.com/e2d/e2d/blob/master/docs/transforms/scale.md)
+- [resetTransform.js](https://github.com/e2d/e2d/blob/master/docs/transforms/resetTransform.md)
 - [rotate.js](https://github.com/e2d/e2d/blob/master/docs/transforms/rotate.md)
+- [scale.js](https://github.com/e2d/e2d/blob/master/docs/transforms/scale.md)
+- [setTransform.js](https://github.com/e2d/e2d/blob/master/docs/transforms/setTransform.md)
+- [skewX.js](https://github.com/e2d/e2d/blob/master/docs/transforms/skewX.md)
+- [skewY.js](https://github.com/e2d/e2d/blob/master/docs/transforms/skewY.md)
+- [transform.js](https://github.com/e2d/e2d/blob/master/docs/transforms/transform.md)
+- [translate.js](https://github.com/e2d/e2d/blob/master/docs/transforms/translate.md)

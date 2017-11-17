@@ -18,11 +18,20 @@ const transformPoints = (points, matrix) => {
   return result;
 };
 
+const ctx = CanvasRenderingContext2D.prototype.currentTransform
+  ? document.createElement('canvas').getContext('2d')
+  : null;
 let det = 0;
-const invertMatrix = ([a, b, c, d, e, f]) => (
-  (det = 1 / (a * d - c * b)),
-  [d * det, -c * det, -b * det, a * det, (b * f - e * d) * det, (e * b - a * f) * det]
-);
+const invertMatrix = ctx
+  ? ([a, b, c, d, e, f]) => {
+      ctx.setTransform(a, b, c, d, e, f);
+      ({ a, b, c, d, e, f } = ctx.currentTransform.inverse());
+      return [a, b, c, d, e, f];
+    }
+  : ([a, b, c, d, e, f]) => (
+      (det = 1 / (a * d - c * b)),
+      [d * det, -c * det, -b * det, a * det, (b * f - e * d) * det, (e * b - a * f) * det]
+    );
 
 const pointInRect = ([px, py], [[x, y], [width, height]]) =>
   px > x && py > y && px < width && py < height;
@@ -348,18 +357,7 @@ const hitRect = (id, ...args) => {
 
 const hitPolygon = (id, points) => new Instruction('hitPolygon', { id, points });
 
-const hitRegion = (id, path, fillRule) => {
-  if (Array.isArray(path)) {
-    return new Instruction('hitRegion', { id, path, fillRule });
-  }
-
-  if (path && path.constructor === String) {
-    fillRule = path;
-    return new Instruction('hitRegion', { id, path: null, fillRule });
-  }
-
-  return new Instruction('hitRegion', { id, path: null, fillRule: null });
-};
+const hitRegion = (id, fillRule = null) => new Instruction('hitRegion', { id, fillRule });
 
 var imageSmoothingEnabled = stackable('imageSmoothingEnabled');
 
@@ -989,7 +987,7 @@ const render = (...args) => {
         if (regions) {
           regions[props.id] = {
             id: props.id,
-            points: type === 'hitRegion' ? props.path || currentPath.slice() : props.points,
+            points: type === 'hitRegion' ? currentPath.slice() : props.points,
             matrix: [
               transformStack[transformStackIndex - 6],
               transformStack[transformStackIndex - 5],

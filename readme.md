@@ -36,18 +36,6 @@ e2d.raf( function loop () {
 
 This will render text to the screen at 60fps at the current mouse position every frame.
 
-## Design Philosophy
-
-The design philosophy behind `e2d` was tweaked and developed over the course of two years of research into how the `CanvasContext2D.prototype` works. As the developer of this project I wanted to do the following things:
-
-1. Mirror the Canvas API (MDN documentation was a huge boon!)
-2. Polyfill useful functions (ellipse, fillArc, strokeArc...)
-3. Add support for mouse, keyboard, touch (coming soon!) and hitDetection, node.js (coming soon!)
-4. Learn and grow in my understanding of how JS works
-5. Put forth something developers can actually use
-
-It was a distinct pleasure to develop this library.
-
 ## Getting Started
 
 `e2d` is hosted on npm and can be accessed here at [the unpkg cdn!](https://unpkg.com/e2d)
@@ -71,7 +59,7 @@ This api is comprehensive and has *many* instances where default parameters will
 
 The MIT License (MIT)
 
-Copyright (c) 2015 Joshua Tenner
+Copyright (c) 2017 Joshua Tenner
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
