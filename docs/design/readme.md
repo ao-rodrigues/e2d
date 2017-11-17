@@ -8,9 +8,9 @@ wanted to do the following things:
 1. Change Function Names where appropriate (ex: setLineDash => lineDash.js)
 1. Change Meaning of Functions where appropriate (ex: clip.js, path.js)
 1. Polyfill useful functions (ellipse, fillArc, strokeArc...)
-1. Add support for mouse, keyboard, touch (coming soon!) and hitDetection, node.js (coming soon!)
+1. Add support for mouse, keyboard, touch (coming soon!) and hitDetection, and node.js (soon!)
 1. Learn and grow in my understanding of how JS works
-1. Put forth something developers can actually use
+1. Put forth something developers can actually use in their projects
 
 ## vStack Importance
 
@@ -71,10 +71,11 @@ export default drawShip;
 
 As a result, we are better protected from function side effects at the cost of pushing and popping
 the whole canvas state. However, this still doesn't exactly solve the problem, because `pushing` and
-`popping` canvas states itself **is a mutable part of the canvas**. If the developer of
-`doSomethinElse` forgets to call `save` or `restore` internally, then this will reuslt in an
-unexpected context state. This is often _very_ undesirable. To this regard, e2d solves the problem
-with a bit more elegance by exposing an API that naturally cleans itself up when rendering a tree.
+`popping` canvas states itself is a **mutable part of the context!** If the developer of
+`doSomethingElse` forgets to call `save` or `restore` internally, then this will reuslt in an
+unexpected context state. This is often _very_ undesirable and will lead to impossible to determine
+side effects. To this regard, e2d solves the problem with a bit more elegance by exposing an API
+that naturally cleans up after itself in the process of rendering.
 
 ```javascript
 import e2d from 'e2d';
@@ -82,6 +83,7 @@ import doSomethingElse from 'do-something-else';
 
 const drawShip = (ship, x, y) => (
   <translate x={x} y={y}>
+    Assume that doSomethingElse returns an e2d tree.
     {doSomethingElse()}
     <drawImage img={ship} />
   </translate>
@@ -92,16 +94,16 @@ export default drawShip;
 
 What does this accomplish?
 
-1. It's a stateless component. (Yay!)
+1. It's a stateless component, devoid of opinion based on state. (Yay!)
 1. View logic is decoupled from draw logic. (Yay!)
-1. Game logic is decoupled from view logic. (Yay!)
-1. No unwanted side effects. (Yay!)
-1. No save/restore needed (Yay!)
+1. Game logic itself is decoupled from view logic. (Yay!)
+1. Garunteed safety from side effects. (Yay!)
+1. No save/restore needed. (Yay!)
 1. Bonus: `e2dx` has a nice XML syntax that looks like JSX (If you like that sort of thing, yay!)
 
 This is better if you need to trade your precious time as a developer for easier and safer results
 at the cost of a small performance hit. `e2d` is a relatively small library and because every
-kilobyte counts when bundling your application, it's always something to considder.
+kilobyte counts when bundling your application. In that regard, it's always something to considder.
 
 ## Stackable State
 
@@ -156,3 +158,10 @@ const centeredTriangle = (
 
 The bigger concept here is instruction reusability, and to the extent that instructions get re-used,
 that will be the extent to which your productivity will increase as a canvas developer.
+
+## Conclusion
+
+e2d has plenty of positives and negatives, and may not fit into your development stack. However,
+developers who find `React` palatable will find themselves at home developing with `e2d`, with the
+exception of the fact that there is no component lifecycle bundled with this library. Solving the
+problem of canvas application structure is out of the scope of this project.
