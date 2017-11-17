@@ -8,3 +8,4 @@ declarative way.
 * [arc.js](https://github.com/e2d/e2d/blob/master/docs/path/arc.md)
 * [arcTo.js](https://github.com/e2d/e2d/blob/master/docs/path/arcTo.md)
 * [beginPath.js](https://github.com/e2d/e2d/blob/master/docs/path/beginPath.md)
+* [bezierCurveTo.js](https://github.com/e2d/e2d/blob/master/docs/path/bezierCurveTo.md)

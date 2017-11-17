@@ -1,8 +1,8 @@
 ## Design Philosophy
 
 The design philosophy behind `e2d` was tweaked and developed over the course of two years of
-research into how the `CanvasContext2D.prototype` works. As the developer of this project I wanted
-to do the following things:
+research into how the `CanvasRenderingContext2D.prototype` works. As the developer of this project I
+wanted to do the following things:
 
 1. Mirror the Canvas API
 1. Change Function Names where appropriate (ex: setLineDash => lineDash.js)
@@ -22,7 +22,7 @@ For instance, when drawing a polygon, it's often beneficial to use the `ctx.save
 `ctx.restore()` fuctions to make some sense of the imperative API provided by the context. However,
 `save` and `restore` will copy and restore the entire canvas context state, which has the potential
 to be undesirable. Instead, an alternative could be to restore a `fillStyle` by simply returning it
-to it's former value. For example:
+to it's former state. For example:
 
 ```javascript
 const redSquare = (ctx, x, y, width, height) => {
@@ -52,7 +52,7 @@ In the large majority of cases, you know exactly what happens in your functions,
 designed them yourself. In the case when you're consuming someone else's library, the problem
 becomes more difficult. What exactly is this function doing with your canvas context? Can you
 garuntee that the changes made to the context within the `doSomethingElse` function won't have side
-effects applied to your canvas context? This is something you must always considder as a canvas
+effects applied to your canvas context? This is something you must always consider as a canvas
 developer. Of course, one way to solve the problem is to do something as follows:
 
 ```javascript
@@ -69,12 +69,12 @@ const drawShip = (ctx, ship, x, y) => {
 export default drawShip;
 ```
 
-Now we are more safe from function side effects at the cost of pushing and popping the whole canvas
-state. However, this still doesn't exactly solve the problem, because `pushing` and `popping` canvas
-states itself **is a mutable part of the canvas**. IF the developer of `doSomethinElse` forgets to
-call `save` or `restore` internally, then this will reuslt in an unexpected context state. This is
-_very_ undesirable. To this regard, E2D solves the problem with a bit more elegance by exposing an
-API that naturally cleans itself up when rendering the tree.
+As a result, we are better protected from function side effects at the cost of pushing and popping
+the whole canvas state. However, this still doesn't exactly solve the problem, because `pushing` and
+`popping` canvas states itself **is a mutable part of the canvas**. If the developer of
+`doSomethinElse` forgets to call `save` or `restore` internally, then this will reuslt in an
+unexpected context state. This is often _very_ undesirable. To this regard, e2d solves the problem
+with a bit more elegance by exposing an API that naturally cleans itself up when rendering a tree.
 
 ```javascript
 import e2d from 'e2d';
@@ -97,9 +97,62 @@ What does this accomplish?
 1. Game logic is decoupled from view logic. (Yay!)
 1. No unwanted side effects. (Yay!)
 1. No save/restore needed (Yay!)
-1. Bonus: E2DX has a nice XML syntax that looks like JSX (If you like that sort of thing, yay!)
+1. Bonus: `e2dx` has a nice XML syntax that looks like JSX (If you like that sort of thing, yay!)
 
-This is better if you want to trade your precious time as a developer for easier and safer results
-at the cost of a small performance hit. Make no mistake, because it always depends on what your team
-is willing to work with. `e2d` is a relatively small library and because every kilobyte counts when
-bundling your application, it's always something to considder.
+This is better if you need to trade your precious time as a developer for easier and safer results
+at the cost of a small performance hit. `e2d` is a relatively small library and because every
+kilobyte counts when bundling your application, it's always something to considder.
+
+## Stackable State
+
+One of the more elegant parts about e2d is the ability to stack immutable states on top of each
+other. Take the following example with some stacked translates:
+
+```javascript
+const transformedRectangle = (
+  <translate x={100} y={100}>
+    <translate x={100} y={100}>
+      <fillRect x={0} y={0} width={100} height={100} />
+    </translate>
+  </translate>
+);
+```
+
+Ultimately, the two translates will stack on top of each other, resuling in the rectangle being
+filled at `[200, 200]`. This is desired behavior. It's even better when dealing with complex radial
+paths. For example:
+
+```javascript
+const equilateralTriangle = <path>
+  Create a path and rotate the context so that the triangle is rotated upward.
+  <rotate angle={-Math.PI / 2}>
+    Start at point 0.
+    <rotate angle={0}><moveTo x={1} y={0}></rotate>
+    Then rotate to the next point and make a line to it.
+    <rotate angle={Math.PI * 2 / 3}><lineTo x={1} y={0}></rotate>
+    Finally rotate to the last point and make a line to it.
+    <rotate angle={Math.PI * 4 / 3}><lineTo x={1} y={0}></rotate>
+  </rotate>
+  Close the path.
+</path>;
+```
+
+This offsets the calculation of the `[x, y]` coordinates of your triangle onto the transform stack.
+Want to make it thirty times bigger? Just scale it.
+
+```javascript
+const thirtyTimesBigger = <scale value={30}>{equilateralTriangle}</scale>;
+```
+
+Want to take that larger triangle and move it to the center of the screen? No problem!
+
+```javascript
+const centeredTriangle = (
+  <translate x={width * 0.5} y={height * 0.5}>
+    {thirtyTimesBigger}
+  </translate>
+);
+```
+
+The bigger concept here is instruction reusability, and to the extent that instructions get re-used,
+that will be the extent to which your productivity will increase as a canvas developer.
