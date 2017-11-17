@@ -1,14 +1,18 @@
 # resetTransform.js
 
-The purpose of the `setTransform` function is to set the canvas context state to the resulting transformation matrix.
+The purpose of the `setTransform` function is to set the canvas context state to the resulting
+transformation matrix.
 
-It accepts a single parameter for the transform matrix and a set of children which will be drawn from the default transform state.
+It accepts a single parameter for the transform matrix and a set of children which will be drawn
+from the default transform state.
 
 ```javascript
 const transformedChildren = e2d.setTransform([2, 0, 0, 2, 100, 100], ...children);
 ```
 
-The `children` instruction will be drawn transformed given the transofrm matrix. Please see [mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform) for more instruction on how to use the `setTransform` function.
+The `children` instruction will be drawn transformed given the transofrm matrix. Please see
+[mdn](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform) for
+more instruction on how to use the `setTransform` function.
 
 ## Source
 

@@ -1,7 +1,8 @@
-
 ## Design Philosophy
 
-The design philosophy behind `e2d` was tweaked and developed over the course of two years of research into how the `CanvasContext2D.prototype` works. As the developer of this project I wanted to do the following things:
+The design philosophy behind `e2d` was tweaked and developed over the course of two years of
+research into how the `CanvasContext2D.prototype` works. As the developer of this project I wanted
+to do the following things:
 
 1. Mirror the Canvas API
 1. Change Function Names where appropriate (ex: setLineDash => lineDash.js)
@@ -13,9 +14,15 @@ The design philosophy behind `e2d` was tweaked and developed over the course of 
 
 ## vStack Importance
 
-The `vStack` is an idea that allows a developer to make the smallest number of changes to a `CanvasRendererContext2D` object when dealing with drawing multiple complex things. It is analagous to the way that a `virtual-dom` works, but lifecycle of canvas instructions is *very* different.
+The `vStack` is an idea that allows a developer to make the smallest number of changes to a
+`CanvasRendererContext2D` object when dealing with drawing multiple complex things. It is analagous
+to the way that a `virtual-dom` works, but lifecycle of canvas instructions is _very_ different.
 
-For instance, when drawing a polygon, it's often beneficial to use the `ctx.save()` and `ctx.restore()` fuctions to make some sense of the imperative API provided by the context. However, `save` and `restore` will copy and restore the entire canvas context state, which has the potential to be undesirable. Instead, an alternative could be to restore a `fillStyle` by simply returning it to it's former value. For example:
+For instance, when drawing a polygon, it's often beneficial to use the `ctx.save()` and
+`ctx.restore()` fuctions to make some sense of the imperative API provided by the context. However,
+`save` and `restore` will copy and restore the entire canvas context state, which has the potential
+to be undesirable. Instead, an alternative could be to restore a `fillStyle` by simply returning it
+to it's former value. For example:
 
 ```javascript
 const redSquare = (ctx, x, y, width, height) => {
@@ -26,7 +33,9 @@ const redSquare = (ctx, x, y, width, height) => {
 };
 ```
 
-Indeed, this is the *fastest* way to restore a `fillStyle` after setting it. This is precisely the functionality encapsulated by the `e2d` library. However, the problem becomes more complex with you mix and match functions that rely on context state together.
+Indeed, this is the _fastest_ way to restore a `fillStyle` after setting it. This is precisely the
+functionality encapsulated by the `e2d` library. However, the problem becomes more complex with you
+mix and match functions that rely on context state together.
 
 ```javascript
 const drawShip = (ctx, ship, x, y) => {
@@ -39,7 +48,12 @@ const drawShip = (ctx, ship, x, y) => {
 export default drawShip;
 ```
 
-In the large majority of cases, you know exactly what happens in your functions, because you designed them yourself. In the case when you're consuming someone else's library, the problem becomes more difficult. What exactly is this function doing with your canvas context? Can you garuntee that the changes made to the context within the `doSomethingElse` function won't have side effects applied to your canvas context? This is something you must always considder as a canvas developer. Of course, one way to solve the problem is to do something as follows:
+In the large majority of cases, you know exactly what happens in your functions, because you
+designed them yourself. In the case when you're consuming someone else's library, the problem
+becomes more difficult. What exactly is this function doing with your canvas context? Can you
+garuntee that the changes made to the context within the `doSomethingElse` function won't have side
+effects applied to your canvas context? This is something you must always considder as a canvas
+developer. Of course, one way to solve the problem is to do something as follows:
 
 ```javascript
 import doSomethingElse from 'do-something-else';
@@ -55,16 +69,23 @@ const drawShip = (ctx, ship, x, y) => {
 export default drawShip;
 ```
 
-Now we are more safe from function side effects at the cost of pushing and popping the whole canvas state. However, this still doesn't exactly solve the problem, because `pushing` and `popping` canvas states itself **is a mutable part of the canvas**. IF the developer of `doSomethinElse` forgets to call `save` or `restore` internally, then this will reuslt in an unexpected context state. This is *very* undesirable. To this regard, E2D solves the problem with a bit more elegance by exposing an API that naturally cleans itself up when rendering the tree.
+Now we are more safe from function side effects at the cost of pushing and popping the whole canvas
+state. However, this still doesn't exactly solve the problem, because `pushing` and `popping` canvas
+states itself **is a mutable part of the canvas**. IF the developer of `doSomethinElse` forgets to
+call `save` or `restore` internally, then this will reuslt in an unexpected context state. This is
+_very_ undesirable. To this regard, E2D solves the problem with a bit more elegance by exposing an
+API that naturally cleans itself up when rendering the tree.
 
 ```javascript
 import e2d from 'e2d';
 import doSomethingElse from 'do-something-else';
 
-const drawShip = (ship, x, y) => <translate x={x} y={y}>
-  {doSomethingElse()}
-  <drawImage img={ship} />
-</translate>;
+const drawShip = (ship, x, y) => (
+  <translate x={x} y={y}>
+    {doSomethingElse()}
+    <drawImage img={ship} />
+  </translate>
+);
 
 export default drawShip;
 ```
@@ -78,4 +99,7 @@ What does this accomplish?
 1. No save/restore needed (Yay!)
 1. Bonus: E2DX has a nice XML syntax that looks like JSX (If you like that sort of thing, yay!)
 
-This is better if you want to trade your precious time as a developer for easier and safer results at the cost of a small performance hit. Make no mistake, because it always depends on what your team is willing to work with. `e2d` is a relatively small library and because every kilobyte counts when bundling your application, it's always something to considder.
+This is better if you want to trade your precious time as a developer for easier and safer results
+at the cost of a small performance hit. Make no mistake, because it always depends on what your team
+is willing to work with. `e2d` is a relatively small library and because every kilobyte counts when
+bundling your application, it's always something to considder.
