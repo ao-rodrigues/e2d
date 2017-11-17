@@ -11,7 +11,7 @@
     "dev-server": "run-p watch sync-test-folder web-server",
     "pretty": "prettier --write \"src/*.js\"",
     "minify": "minify dist/e2d.js > dist/e2d.min.js",
-    "prepublish": "npm run pretty && npm run build-all && git add --all . && git commit -am \"Version 4.0.0-rc.2\" && git push origin master --tags",
+    "prepublish": "npm run pretty && npm run build-all && git add --all . && git commit -am \"Version 4.0.0-rc.3\" && git push origin master --tags",
     "sync-test-folder": "run-s copy-e2d-test watch-e2d-test",
     "copy-e2d-test": "cat ./dist/e2d.js > ./public/e2d.js",
     "watch-e2d-test": "watch -p \"dist/e2d.js\" -c \"npm run copy-e2d-test\"",

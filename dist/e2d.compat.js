@@ -27,9 +27,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return result;
   };
 
-  var ctx = CanvasRenderingContext2D.prototype.currentTransform ? document.createElement('canvas').getContext('2d') : null;
+  var t = CanvasRenderingContext2D.prototype.currentTransform ? document.createElement('canvas').getContext('2d').currentTransform : null;
   var det = 0;
-  var invertMatrix = ctx ? function (_ref) {
+  var invertMatrix = t ? function (_ref) {
+    var _t$inverse;
+
     var _ref2 = _slicedToArray(_ref, 6),
         a = _ref2[0],
         b = _ref2[1],
@@ -38,18 +40,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         e = _ref2[4],
         f = _ref2[5];
 
-    ctx.setTransform(a, b, c, d, e, f);
-
-    var _ctx$currentTransform = ctx.currentTransform.inverse();
-
-    a = _ctx$currentTransform.a;
-    b = _ctx$currentTransform.b;
-    c = _ctx$currentTransform.c;
-    d = _ctx$currentTransform.d;
-    e = _ctx$currentTransform.e;
-    f = _ctx$currentTransform.f;
-
-    return [a, b, c, d, e, f];
+    return t.a = a, t.b = b, t.c = c, t.d = d, t.e = e, t.f = f, (_t$inverse = t.inverse(), a = _t$inverse.a, b = _t$inverse.b, c = _t$inverse.c, d = _t$inverse.d, e = _t$inverse.e, f = _t$inverse.f, _t$inverse), [a, b, c, d, e, f];
   } : function (_ref3) {
     var _ref4 = _slicedToArray(_ref3, 6),
         a = _ref4[0],
