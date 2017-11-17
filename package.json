@@ -5,7 +5,7 @@
   "version": "4.0.0-rc.3",
   "scripts": {
     "build": "rollup -c",
-    "build-all": "npm run build && npm run minify && npm run compat && npm run compat-min",
+    "build-all": "run-s build minify compat compat-min",
     "compat": "babel dist/e2d.js > dist/e2d.compat.js",
     "compat-min": "minify dist/e2d.compat.js > dist/e2d.compat.min.js",
     "dev-server": "run-p watch sync-test-folder web-server",
@@ -22,7 +22,7 @@
     "watch": "npm run watch-substep && watch -p \"src/*.js\" -c \"npm run watch-substep\"",
     "watch-compat": "watch -p \"dist/e2d.js\" -c \"npm run compat\"",
     "watch-compat-min": "watch -p \"dist/e2d.compat.js\" -c \"npm run compat-min\"",
-    "watch-substep": "npm run build && npm run minify && npm run pretty",
+    "watch-substep": "run-s build minify pretty",
     "web-server": "http-server -d false -c-1"
   },
   "author": "Joshua Tenner",
