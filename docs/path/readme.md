@@ -9,3 +9,5 @@ declarative way.
 * [arcTo.js](https://github.com/e2d/e2d/blob/master/docs/path/arcTo.md)
 * [beginPath.js](https://github.com/e2d/e2d/blob/master/docs/path/beginPath.md)
 * [bezierCurveTo.js](https://github.com/e2d/e2d/blob/master/docs/path/bezierCurveTo.md)
+* [clip.js](https://github.com/e2d/e2d/blob/master/docs/path/clip.md)
+* [clipPath.js](https://github.com/e2d/e2d/blob/master/docs/path/clipPath.md)

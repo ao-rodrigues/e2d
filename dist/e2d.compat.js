@@ -334,20 +334,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var clearRect = rectInstruction('clearRect');
 
-  var begin = [emptyCall('save'), emptyCall('beginPath')];
-  var performClip = emptyCall('clip');
-  var end = emptyCall('restore');
+  var clipPath = emptyCall('clip');
+
+  var begin = emptyCall('save');
+  var end = emptyCall('save-restore');
 
   var clip = function clip(path) {
     for (var _len3 = arguments.length, children = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
       children[_key3 - 1] = arguments[_key3];
     }
 
-    return [begin, path, performClip, children, end];
-  };
-
-  var clipPath = function clipPath() {
-    return new Instruction('call', { name: 'clip', args: [], count: 0 });
+    return [begin(), beginPath(), path, clipPath(), children, end()];
   };
 
   var closePath = emptyCall('closePath');
@@ -1279,6 +1276,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               clicked: false
             };
           }
+          continue;
+
+        case 'save':
+          ctx.save();
+          continue;
+
+        case 'clip':
+          ctx.clip();
+          continue;
+
+        case 'save-restore':
+          ctx.restore();
           continue;
 
         default:

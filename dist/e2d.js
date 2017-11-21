@@ -218,13 +218,12 @@ const rectInstruction = name => (...args) =>
 
 var clearRect = rectInstruction('clearRect');
 
-const begin = [emptyCall('save'), emptyCall('beginPath')];
-const performClip = emptyCall('clip');
-const end = emptyCall('restore');
+const clipPath = emptyCall('clip');
 
-const clip = (path, ...children) => [begin, path, performClip, children, end];
+const begin = emptyCall('save');
+const end = emptyCall('save-restore');
 
-const clipPath = () => new Instruction('call', { name: 'clip', args: [], count: 0 });
+const clip = (path, ...children) => [begin(), beginPath(), path, clipPath(), children, end()];
 
 var closePath = emptyCall('closePath');
 
@@ -1008,6 +1007,18 @@ const render = (...args) => {
             clicked: false,
           };
         }
+        continue;
+
+      case 'save':
+        ctx.save();
+        continue;
+
+      case 'clip':
+        ctx.clip();
+        continue;
+
+      case 'save-restore':
+        ctx.restore();
         continue;
 
       default:

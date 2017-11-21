@@ -1,5 +1,5 @@
-import Instruction from './Instruction';
+import emptyCall from './emptyCall';
 
-const clipPath = () => new Instruction('call', { name: 'clip', args: [], count: 0 });
+const clipPath = emptyCall('clip');
 
 export default clipPath;

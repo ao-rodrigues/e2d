@@ -258,6 +258,18 @@ const render = (...args) => {
         }
         continue;
 
+      case 'save':
+        ctx.save();
+        continue;
+
+      case 'clip':
+        ctx.clip();
+        continue;
+
+      case 'save-restore':
+        ctx.restore();
+        continue;
+
       default:
         if (extensions && extensions[type]) {
           extensions[type](props, ctx);
