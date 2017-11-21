@@ -1,13 +1,10 @@
-const transformPoints = (points, matrix) => {
+const transformPoints = (points, [a, b, c, d, e, f]) => {
   const result = [];
   let x, y;
 
-  for (let i = 0; i < points.length; i++) {
-    [x, y] = points[i];
-    result.push([
-      matrix[0] * x + matrix[2] * y + matrix[4],
-      matrix[1] * x + matrix[3] * y + matrix[5],
-    ]);
+  for (const point of points) {
+    [x, y] = point;
+    result.push([a * x + c * y + e, b * x + d * y + f]);
   }
   return result;
 };

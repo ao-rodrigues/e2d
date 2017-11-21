@@ -4,16 +4,13 @@
 	(global.e2d = factory());
 }(this, (function () { 'use strict';
 
-const transformPoints = (points, matrix) => {
+const transformPoints = (points, [a, b, c, d, e, f]) => {
   const result = [];
   let x, y;
 
-  for (let i = 0; i < points.length; i++) {
-    [x, y] = points[i];
-    result.push([
-      matrix[0] * x + matrix[2] * y + matrix[4],
-      matrix[1] * x + matrix[3] * y + matrix[5],
-    ]);
+  for (const point of points) {
+    [x, y] = point;
+    result.push([a * x + c * y + e, b * x + d * y + f]);
   }
   return result;
 };
@@ -221,7 +218,7 @@ var clearRect = rectInstruction('clearRect');
 const clipPath = emptyCall('clip');
 
 const begin = emptyCall('save');
-const end = emptyCall('save-restore');
+const end = emptyCall('restore');
 
 const clip = (path, ...children) => [begin(), beginPath(), path, clipPath(), children, end()];
 
@@ -788,6 +785,8 @@ const upTransforms = {
   setTransform: true,
 };
 
+const hasCurrentTransform = CanvasRenderingContext2D.prototype.hasOwnProperty('currentTransform');
+
 const render = (...args) => {
   let children = args.slice(0, -1),
     isTransformDirty = true,
@@ -795,11 +794,22 @@ const render = (...args) => {
     transformStack = new Float64Array(501 * 6),
     cache;
 
-  transformStack.set(identity);
-
   const ctx = args[args.length - 1];
 
   cycleMouseData(ctx);
+  if (hasCurrentTransform) {
+    const { currentTransform } = ctx;
+    transformStack.set([
+      currentTransform.a,
+      currentTransform.b,
+      currentTransform.c,
+      currentTransform.d,
+      currentTransform.e,
+      currentTransform.f,
+    ]);
+  } else {
+    transformStack.set(identity);
+  }
 
   const matrix = new Float64Array(identity),
     regions = ctx.canvas[Symbol.for('regions')],
@@ -992,14 +1002,17 @@ const render = (...args) => {
           regions[props.id] = {
             id: props.id,
             points: type === 'hitRegion' ? currentPath.slice() : props.points,
-            matrix: [
-              transformStack[transformStackIndex - 6],
-              transformStack[transformStackIndex - 5],
-              transformStack[transformStackIndex - 4],
-              transformStack[transformStackIndex - 3],
-              transformStack[transformStackIndex - 2],
-              transformStack[transformStackIndex - 1],
-            ],
+            matrix:
+              type === 'hitRegion'
+                ? identity
+                : [
+                    transformStack[transformStackIndex - 6],
+                    transformStack[transformStackIndex - 5],
+                    transformStack[transformStackIndex - 4],
+                    transformStack[transformStackIndex - 3],
+                    transformStack[transformStackIndex - 2],
+                    transformStack[transformStackIndex - 1],
+                  ],
             type, //Hit type goes here
             fillRule: props.fillRule,
             hover: false,
@@ -1007,18 +1020,6 @@ const render = (...args) => {
             clicked: false,
           };
         }
-        continue;
-
-      case 'save':
-        ctx.save();
-        continue;
-
-      case 'clip':
-        ctx.clip();
-        continue;
-
-      case 'save-restore':
-        ctx.restore();
         continue;
 
       default:

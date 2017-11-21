@@ -5,7 +5,7 @@ import clipPath from './clipPath';
 import beginPath from './beginPath';
 
 const begin = emptyCall('save'),
-  end = emptyCall('save-restore');
+  end = emptyCall('restore');
 
 const clip = (path, ...children) => [begin(), beginPath(), path, clipPath(), children, end()];
 

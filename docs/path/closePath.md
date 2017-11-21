@@ -1,7 +1,7 @@
 # clipPath.js
 
-The purpose of the `clipPath` function is to call the `closePath()` function directly, and close the
-current subpath.
+The purpose of the `closePath` function is to call the `closePath()` function directly, and close
+the current subpath.
 
 ```javascript
 const clippedChildren = e2d.path(

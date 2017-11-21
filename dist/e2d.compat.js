@@ -11,25 +11,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 })(undefined, function () {
   'use strict';
 
-  var transformPoints = function transformPoints(points, matrix) {
-    var result = [];
-    var x = void 0,
-        y = void 0;
-
-    for (var i = 0; i < points.length; i++) {
-      var _points$i = _slicedToArray(points[i], 2);
-
-      x = _points$i[0];
-      y = _points$i[1];
-
-      result.push([matrix[0] * x + matrix[2] * y + matrix[4], matrix[1] * x + matrix[3] * y + matrix[5]]);
-    }
-    return result;
-  };
-
-  var t = CanvasRenderingContext2D.prototype.currentTransform ? document.createElement('canvas').getContext('2d').currentTransform : null;
-  var det = 0;
-  var invertMatrix = t ? function (_ref) {
+  var transformPoints = function transformPoints(points, _ref) {
     var _ref2 = _slicedToArray(_ref, 6),
         a = _ref2[0],
         b = _ref2[1],
@@ -37,6 +19,54 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         d = _ref2[3],
         e = _ref2[4],
         f = _ref2[5];
+
+    var result = [];
+    var x = void 0,
+        y = void 0;
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var point = _step.value;
+
+        var _point = _slicedToArray(point, 2);
+
+        x = _point[0];
+        y = _point[1];
+
+        result.push([a * x + c * y + e, b * x + d * y + f]);
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    return result;
+  };
+
+  var t = CanvasRenderingContext2D.prototype.currentTransform ? document.createElement('canvas').getContext('2d').currentTransform : null;
+  var det = 0;
+  var invertMatrix = t ? function (_ref3) {
+    var _ref4 = _slicedToArray(_ref3, 6),
+        a = _ref4[0],
+        b = _ref4[1],
+        c = _ref4[2],
+        d = _ref4[3],
+        e = _ref4[4],
+        f = _ref4[5];
 
     t.a = a;
     t.b = b;
@@ -55,43 +85,43 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     f = _t$inverse.f;
 
     return [a, b, c, d, e, f];
-  } : function (_ref3) {
-    var _ref4 = _slicedToArray(_ref3, 6),
-        a = _ref4[0],
-        b = _ref4[1],
-        c = _ref4[2],
-        d = _ref4[3],
-        e = _ref4[4],
-        f = _ref4[5];
+  } : function (_ref5) {
+    var _ref6 = _slicedToArray(_ref5, 6),
+        a = _ref6[0],
+        b = _ref6[1],
+        c = _ref6[2],
+        d = _ref6[3],
+        e = _ref6[4],
+        f = _ref6[5];
 
     return det = 1 / (a * d - c * b), [d * det, -c * det, -b * det, a * det, (b * f - e * d) * det, (e * b - a * f) * det];
   };
 
-  var pointInRect = function pointInRect(_ref5, _ref6) {
-    var _ref8 = _slicedToArray(_ref5, 2),
-        px = _ref8[0],
-        py = _ref8[1];
+  var pointInRect = function pointInRect(_ref7, _ref8) {
+    var _ref10 = _slicedToArray(_ref7, 2),
+        px = _ref10[0],
+        py = _ref10[1];
 
-    var _ref7 = _slicedToArray(_ref6, 2),
-        _ref7$ = _slicedToArray(_ref7[0], 2),
-        x = _ref7$[0],
-        y = _ref7$[1],
-        _ref7$2 = _slicedToArray(_ref7[1], 2),
-        width = _ref7$2[0],
-        height = _ref7$2[1];
+    var _ref9 = _slicedToArray(_ref8, 2),
+        _ref9$ = _slicedToArray(_ref9[0], 2),
+        x = _ref9$[0],
+        y = _ref9$[1],
+        _ref9$2 = _slicedToArray(_ref9[1], 2),
+        width = _ref9$2[0],
+        height = _ref9$2[1];
 
     return px > x && py > y && px < width && py < height;
   };
 
-  var pointInCircle = function pointInCircle(_ref9, _ref10) {
-    var _ref12 = _slicedToArray(_ref9, 2),
-        x = _ref12[0],
-        y = _ref12[1];
+  var pointInCircle = function pointInCircle(_ref11, _ref12) {
+    var _ref14 = _slicedToArray(_ref11, 2),
+        x = _ref14[0],
+        y = _ref14[1];
 
-    var _ref11 = _slicedToArray(_ref10, 3),
-        cx = _ref11[0],
-        cy = _ref11[1],
-        cr = _ref11[2];
+    var _ref13 = _slicedToArray(_ref12, 3),
+        cx = _ref13[0],
+        cy = _ref13[1],
+        cr = _ref13[2];
 
     return Math.pow(cx - x, 2) + Math.pow(cy - y, 2) < Math.pow(cr, 2);
   };
@@ -117,11 +147,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return inside;
   };
 
-  var call = function call(ctx, _ref13) {
-    var _ref13$props = _ref13.props,
-        name = _ref13$props.name,
-        args = _ref13$props.args,
-        count = _ref13$props.count;
+  var call = function call(ctx, _ref15) {
+    var _ref15$props = _ref15.props,
+        name = _ref15$props.name,
+        args = _ref15$props.args,
+        count = _ref15$props.count;
 
     switch (count) {
       case 0:
@@ -160,10 +190,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var empty = [];
   var concat = empty.concat;
 
-  var pointInPath = function pointInPath(_ref14, instructions) {
-    var _ref15 = _slicedToArray(_ref14, 2),
-        x = _ref15[0],
-        y = _ref15[1];
+  var pointInPath = function pointInPath(_ref16, instructions) {
+    var _ref17 = _slicedToArray(_ref16, 2),
+        x = _ref17[0],
+        y = _ref17[1];
 
     var ctx = document.createElement('canvas').getContext('2d');
     ctx.canvas.width = 1;
@@ -197,26 +227,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       mousePoints.push([mouseData.x, mouseData.y, mouseData.state]);
     }
 
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
 
     try {
-      for (var _iterator = Object.values(regions)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var region = _step.value;
+      for (var _iterator2 = Object.values(regions)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var region = _step2.value;
 
         //Invert the region matrix and transform the mouse points
         var transformedMousePoints = region.type === 'hitRegion' ? mousePoints : transformPoints(mousePoints, invertMatrix(region.matrix));
 
         //The mouse points are now relative to the mouse region, use the appropriate test
         var test = region.type === 'hitRegion' ? pointInPath : region.type === 'hitRect' ? pointInRect : region.type === 'hitPolygon' ? pointInPolygon : region.type === 'hitCircle' ? pointInCircle : alwaysFalse;
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
 
         try {
-          for (var _iterator2 = transformedMousePoints[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var mousePoint = _step2.value;
+          for (var _iterator3 = transformedMousePoints[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var mousePoint = _step3.value;
 
             if (test(mousePoint, region.points)) {
               region.hover = true;
@@ -226,31 +256,31 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
           }
         } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-              _iterator2.return();
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
             }
           } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
+            if (_didIteratorError3) {
+              throw _iteratorError3;
             }
           }
         }
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion && _iterator.return) {
-          _iterator.return();
+        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+          _iterator2.return();
         }
       } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
+        if (_didIteratorError2) {
+          throw _iteratorError2;
         }
       }
     }
@@ -337,7 +367,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var clipPath = emptyCall('clip');
 
   var begin = emptyCall('save');
-  var end = emptyCall('save-restore');
+  var end = emptyCall('restore');
 
   var clip = function clip(path) {
     for (var _len3 = arguments.length, children = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
@@ -801,17 +831,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var miterLimitCall = stackable('miterLimit');
 
-  var lineStyle = function lineStyle(_ref16) {
+  var lineStyle = function lineStyle(_ref18) {
     for (var _len10 = arguments.length, children = Array(_len10 > 1 ? _len10 - 1 : 0), _key10 = 1; _key10 < _len10; _key10++) {
       children[_key10 - 1] = arguments[_key10];
     }
 
-    var lineCap = _ref16.lineCap,
-        lineDash = _ref16.lineDash,
-        lineDashOffset = _ref16.lineDashOffset,
-        lineJoin = _ref16.lineJoin,
-        lineWidth = _ref16.lineWidth,
-        miterLimit = _ref16.miterLimit;
+    var lineCap = _ref18.lineCap,
+        lineDash = _ref18.lineDash,
+        lineDashOffset = _ref18.lineDashOffset,
+        lineJoin = _ref18.lineJoin,
+        lineWidth = _ref18.lineWidth,
+        miterLimit = _ref18.miterLimit;
 
     children = lineCap ? lineCapCall(children) : children;
     children = lineDash ? lineDashCall(children) : children;
@@ -887,14 +917,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
   };
 
-  var setTransformOperation = function setTransformOperation(transformStack, transformStackIndex, _ref17) {
-    var _ref18 = _slicedToArray(_ref17, 6),
-        a = _ref18[0],
-        b = _ref18[1],
-        c = _ref18[2],
-        d = _ref18[3],
-        e = _ref18[4],
-        f = _ref18[5];
+  var setTransformOperation = function setTransformOperation(transformStack, transformStackIndex, _ref19) {
+    var _ref20 = _slicedToArray(_ref19, 6),
+        a = _ref20[0],
+        b = _ref20[1],
+        c = _ref20[2],
+        d = _ref20[3],
+        e = _ref20[4],
+        f = _ref20[5];
 
     transformStack[transformStackIndex - 6] = a;
     transformStack[transformStackIndex - 5] = b;
@@ -904,17 +934,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     transformStack[transformStackIndex - 1] = f;
   };
 
-  var scaleOperation = function scaleOperation(transformStack, transformStackIndex, _ref19, _ref20) {
-    var _ref21 = _slicedToArray(_ref19, 6),
-        a = _ref21[0],
-        b = _ref21[1],
-        c = _ref21[2],
-        d = _ref21[3],
-        e = _ref21[4],
-        f = _ref21[5];
+  var scaleOperation = function scaleOperation(transformStack, transformStackIndex, _ref21, _ref22) {
+    var _ref23 = _slicedToArray(_ref21, 6),
+        a = _ref23[0],
+        b = _ref23[1],
+        c = _ref23[2],
+        d = _ref23[3],
+        e = _ref23[4],
+        f = _ref23[5];
 
-    var x = _ref20.x,
-        y = _ref20.y;
+    var x = _ref22.x,
+        y = _ref22.y;
 
     transformStack[transformStackIndex - 6] = a * x;
     transformStack[transformStackIndex - 5] = b * x;
@@ -924,17 +954,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     transformStack[transformStackIndex - 1] = f;
   };
 
-  var translateOperation = function translateOperation(transformStack, transformStackIndex, _ref22, _ref23) {
-    var _ref24 = _slicedToArray(_ref22, 6),
-        a = _ref24[0],
-        b = _ref24[1],
-        c = _ref24[2],
-        d = _ref24[3],
-        e = _ref24[4],
-        f = _ref24[5];
+  var translateOperation = function translateOperation(transformStack, transformStackIndex, _ref24, _ref25) {
+    var _ref26 = _slicedToArray(_ref24, 6),
+        a = _ref26[0],
+        b = _ref26[1],
+        c = _ref26[2],
+        d = _ref26[3],
+        e = _ref26[4],
+        f = _ref26[5];
 
-    var x = _ref23.x,
-        y = _ref23.y;
+    var x = _ref25.x,
+        y = _ref25.y;
 
     transformStack[transformStackIndex - 6] = a;
     transformStack[transformStackIndex - 5] = b;
@@ -944,17 +974,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     transformStack[transformStackIndex - 1] = f + b * x + d * y;
   };
 
-  var rotateOperation = function rotateOperation(transformStack, transformStackIndex, _ref25, _ref26) {
-    var _ref27 = _slicedToArray(_ref25, 6),
-        a = _ref27[0],
-        b = _ref27[1],
-        c = _ref27[2],
-        d = _ref27[3],
-        e = _ref27[4],
-        f = _ref27[5];
+  var rotateOperation = function rotateOperation(transformStack, transformStackIndex, _ref27, _ref28) {
+    var _ref29 = _slicedToArray(_ref27, 6),
+        a = _ref29[0],
+        b = _ref29[1],
+        c = _ref29[2],
+        d = _ref29[3],
+        e = _ref29[4],
+        f = _ref29[5];
 
-    var sin = _ref26.sin,
-        cos = _ref26.cos;
+    var sin = _ref28.sin,
+        cos = _ref28.cos;
 
     transformStack[transformStackIndex - 6] = a * cos + c * sin;
     transformStack[transformStackIndex - 5] = b * cos + d * sin;
@@ -964,16 +994,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     transformStack[transformStackIndex - 1] = f;
   };
 
-  var skewXOperation = function skewXOperation(transformStack, transformStackIndex, _ref28, _ref29) {
-    var _ref30 = _slicedToArray(_ref28, 6),
-        a = _ref30[0],
-        b = _ref30[1],
-        c = _ref30[2],
-        d = _ref30[3],
-        e = _ref30[4],
-        f = _ref30[5];
+  var skewXOperation = function skewXOperation(transformStack, transformStackIndex, _ref30, _ref31) {
+    var _ref32 = _slicedToArray(_ref30, 6),
+        a = _ref32[0],
+        b = _ref32[1],
+        c = _ref32[2],
+        d = _ref32[3],
+        e = _ref32[4],
+        f = _ref32[5];
 
-    var x = _ref29.x;
+    var x = _ref31.x;
 
     transformStack[transformStackIndex - 6] = a;
     transformStack[transformStackIndex - 5] = b;
@@ -983,16 +1013,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     transformStack[transformStackIndex - 1] = f;
   };
 
-  var skewYOperation = function skewYOperation(transformStack, transformStackIndex, _ref31, _ref32) {
-    var _ref33 = _slicedToArray(_ref31, 6),
-        a = _ref33[0],
-        b = _ref33[1],
-        c = _ref33[2],
-        d = _ref33[3],
-        e = _ref33[4],
-        f = _ref33[5];
+  var skewYOperation = function skewYOperation(transformStack, transformStackIndex, _ref33, _ref34) {
+    var _ref35 = _slicedToArray(_ref33, 6),
+        a = _ref35[0],
+        b = _ref35[1],
+        c = _ref35[2],
+        d = _ref35[3],
+        e = _ref35[4],
+        f = _ref35[5];
 
-    var y = _ref32.y;
+    var y = _ref34.y;
 
     transformStack[transformStackIndex - 6] = c * y + a;
     transformStack[transformStackIndex - 5] = d * y + b;
@@ -1051,6 +1081,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     setTransform: true
   };
 
+  var hasCurrentTransform = CanvasRenderingContext2D.prototype.hasOwnProperty('currentTransform');
+
   var render = function render() {
     for (var _len12 = arguments.length, args = Array(_len12), _key12 = 0; _key12 < _len12; _key12++) {
       args[_key12] = arguments[_key12];
@@ -1062,11 +1094,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         transformStack = new Float64Array(501 * 6),
         cache = void 0;
 
-    transformStack.set(identity);
-
     var ctx = args[args.length - 1];
 
     cycleMouseData(ctx);
+    if (hasCurrentTransform) {
+      var currentTransform = ctx.currentTransform;
+
+      transformStack.set([currentTransform.a, currentTransform.b, currentTransform.c, currentTransform.d, currentTransform.e, currentTransform.f]);
+    } else {
+      transformStack.set(identity);
+    }
 
     var matrix = new Float64Array(identity),
         regions = ctx.canvas[Symbol.for('regions')],
@@ -1233,27 +1270,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           continue;
 
         case 'clearRegions':
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iteratorNormalCompletion4 = true;
+          var _didIteratorError4 = false;
+          var _iteratorError4 = undefined;
 
           try {
-            for (var _iterator3 = Object.values(regions)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var region = _step3.value;
+            for (var _iterator4 = Object.values(regions)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              var region = _step4.value;
 
               regions[region.id] = null;
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
+              if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                _iterator4.return();
               }
             } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
+              if (_didIteratorError4) {
+                throw _iteratorError4;
               }
             }
           }
@@ -1268,7 +1305,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             regions[props.id] = {
               id: props.id,
               points: type === 'hitRegion' ? currentPath.slice() : props.points,
-              matrix: [transformStack[transformStackIndex - 6], transformStack[transformStackIndex - 5], transformStack[transformStackIndex - 4], transformStack[transformStackIndex - 3], transformStack[transformStackIndex - 2], transformStack[transformStackIndex - 1]],
+              matrix: type === 'hitRegion' ? identity : [transformStack[transformStackIndex - 6], transformStack[transformStackIndex - 5], transformStack[transformStackIndex - 4], transformStack[transformStackIndex - 3], transformStack[transformStackIndex - 2], transformStack[transformStackIndex - 1]],
               type: type, //Hit type goes here
               fillRule: props.fillRule,
               hover: false,
@@ -1276,18 +1313,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               clicked: false
             };
           }
-          continue;
-
-        case 'save':
-          ctx.save();
-          continue;
-
-        case 'clip':
-          ctx.clip();
-          continue;
-
-        case 'save-restore':
-          ctx.restore();
           continue;
 
         default:
@@ -1299,29 +1324,29 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     var newRegions = ctx.canvas[Symbol.for('regions')] = {};
-    var _iteratorNormalCompletion4 = true;
-    var _didIteratorError4 = false;
-    var _iteratorError4 = undefined;
+    var _iteratorNormalCompletion5 = true;
+    var _didIteratorError5 = false;
+    var _iteratorError5 = undefined;
 
     try {
-      for (var _iterator4 = Object.values(regions)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-        var _region = _step4.value;
+      for (var _iterator5 = Object.values(regions)[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+        var _region = _step5.value;
 
         if (_region) {
           newRegions[_region.id] = _region;
         }
       }
     } catch (err) {
-      _didIteratorError4 = true;
-      _iteratorError4 = err;
+      _didIteratorError5 = true;
+      _iteratorError5 = err;
     } finally {
       try {
-        if (!_iteratorNormalCompletion4 && _iterator4.return) {
-          _iterator4.return();
+        if (!_iteratorNormalCompletion5 && _iterator5.return) {
+          _iterator5.return();
         }
       } finally {
-        if (_didIteratorError4) {
-          throw _iteratorError4;
+        if (_didIteratorError5) {
+          throw _iteratorError5;
         }
       }
     }
@@ -1378,15 +1403,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var shadowOffsetYCall = stackable('shadowOffsetY');
 
-  var shadowStyle = function shadowStyle(_ref34) {
+  var shadowStyle = function shadowStyle(_ref36) {
     for (var _len17 = arguments.length, children = Array(_len17 > 1 ? _len17 - 1 : 0), _key17 = 1; _key17 < _len17; _key17++) {
       children[_key17 - 1] = arguments[_key17];
     }
 
-    var shadowBlur = _ref34.shadowBlur,
-        shadowColor = _ref34.shadowColor,
-        shadowOffsetX = _ref34.shadowOffsetX,
-        shadowOffsetY = _ref34.shadowOffsetY;
+    var shadowBlur = _ref36.shadowBlur,
+        shadowColor = _ref36.shadowColor,
+        shadowOffsetX = _ref36.shadowOffsetX,
+        shadowOffsetY = _ref36.shadowOffsetY;
 
     children = shadowBlur ? shadowBlurCall(children) : children;
     children = shadowColor ? shadowColorCall(children) : children;
@@ -1446,15 +1471,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var textBaselineCall = stackable('textBaseline');
 
-  var textStyle = function textStyle(_ref35) {
+  var textStyle = function textStyle(_ref37) {
     for (var _len20 = arguments.length, children = Array(_len20 > 1 ? _len20 - 1 : 0), _key20 = 1; _key20 < _len20; _key20++) {
       children[_key20 - 1] = arguments[_key20];
     }
 
-    var font = _ref35.font,
-        textAlign = _ref35.textAlign,
-        textBaseline = _ref35.textBaseline,
-        direction = _ref35.direction;
+    var font = _ref37.font,
+        textAlign = _ref37.textAlign,
+        textBaseline = _ref37.textBaseline,
+        direction = _ref37.direction;
 
     children = font ? fontCall(children) : children;
     children = textAlign ? textAlignCall(children) : children;
