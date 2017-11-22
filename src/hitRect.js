@@ -1,8 +1,7 @@
 import Instruction from './Instruction';
 
-const hitRect = (id, ...args) => {
-  let [x, y, width, height] = args;
-  if (args.length <= 3) {
+function hitRect(id, x, y, width, height) {
+  if (arguments.length <= 3) {
     width = x;
     height = y;
     x = 0;
@@ -12,6 +11,6 @@ const hitRect = (id, ...args) => {
     id,
     points: [[x, y], [x + width, y + height]],
   });
-};
+}
 
 export default hitRect;

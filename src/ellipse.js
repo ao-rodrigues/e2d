@@ -1,19 +1,19 @@
 import Instruction from './Instruction';
-import Pi2 from './Pi2';
+import Tau from './Tau';
 
-const ellipse = (...args) => {
-  const [x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise] = args;
-
+function ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise) {
   return new Instruction('call', {
     name: 'ellipse',
     args:
-      args.length > 5
-        ? args
-        : args.length > 4
-          ? [x, y, radiusX, radiusY, rotation, startAngle, false]
-          : args.length > 2 ? [x, y, radiusX, radiusY, 0, pi2, false] : [0, 0, x, y, 0, Pi2, false],
+      arguments.length >= 6
+        ? [x, y, radiusX, radiusY, rotation, startAngle, endAngle, !!anticlockwise]
+        : arguments.length === 5
+          ? [x, y, radiusX, radiusY, rotation, 0, Tau, false]
+          : arguments.length >= 3
+            ? [x, y, radiusX, radiusY, 0, 0, Tau, false]
+            : [0, 0, x, y, 0, Tau, false],
     count: 7,
   });
-};
+}
 
 export default ellipse;

@@ -1,15 +1,12 @@
-const transformOperation = (
-  transformStack,
-  transformStackIndex,
-  [currentA, currentB, currentC, currentD, currentE, currentF],
-  [a, b, c, d, e, f],
-) => {
-  transformStack[transformStackIndex - 6] = currentA * a + currentC * b;
-  transformStack[transformStackIndex - 5] = currentB * a + currentD * b;
-  transformStack[transformStackIndex - 4] = currentA * c + currentC * d;
-  transformStack[transformStackIndex - 3] = currentB * c + currentD * d;
-  transformStack[transformStackIndex - 2] = currentA * e + currentC * f + currentE;
-  transformStack[transformStackIndex - 1] = currentB * e + currentD * f + currentF;
-};
+function transformOperation(transformStack, transformStackIndex, current, matrix) {
+  transformStack[transformStackIndex - 6] = current[0] * matrix[0] + current[2] * matrix[1];
+  transformStack[transformStackIndex - 5] = current[1] * matrix[0] + current[3] * matrix[1];
+  transformStack[transformStackIndex - 4] = current[0] * matrix[2] + current[2] * matrix[3];
+  transformStack[transformStackIndex - 3] = current[1] * matrix[2] + current[3] * matrix[3];
+  transformStack[transformStackIndex - 2] =
+    current[0] * matrix[4] + current[2] * matrix[5] + current[4];
+  transformStack[transformStackIndex - 1] =
+    current[1] * matrix[4] + current[3] * matrix[5] + current[5];
+}
 
 export default transform;

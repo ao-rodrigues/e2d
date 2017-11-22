@@ -4,7 +4,7 @@
 	(global.e2d = factory());
 }(this, (function () { 'use strict';
 
-const transformPoints = (points, [a, b, c, d, e, f]) => {
+function transformPoints(points, [a, b, c, d, e, f]) {
   const result = [];
   let x, y;
 
@@ -12,28 +12,15 @@ const transformPoints = (points, [a, b, c, d, e, f]) => {
     [x, y] = point;
     result.push([a * x + c * y + e, b * x + d * y + f]);
   }
-  return result;
-};
 
-const t = CanvasRenderingContext2D.prototype.currentTransform
-  ? document.createElement('canvas').getContext('2d').currentTransform
-  : null;
+  return result;
+}
+
 let det = 0;
-const invertMatrix = t
-  ? ([a, b, c, d, e, f]) => {
-      t.a = a;
-      t.b = b;
-      t.c = c;
-      t.d = d;
-      t.e = e;
-      t.f = f;
-      ({ a, b, c, d, e, f } = t.inverse());
-      return [a, b, c, d, e, f];
-    }
-  : ([a, b, c, d, e, f]) => (
-      (det = 1 / (a * d - c * b)),
-      [d * det, -c * det, -b * det, a * det, (b * f - e * d) * det, (e * b - a * f) * det]
-    );
+const invertMatrix = ([a, b, c, d, e, f]) => (
+  (det = 1 / (a * d - c * b)),
+  [d * det, -c * det, -b * det, a * det, (b * f - e * d) * det, (e * b - a * f) * det]
+);
 
 const pointInRect = ([px, py], [[x, y], [width, height]]) =>
   px > x && py > y && px < width && py < height;
@@ -59,40 +46,79 @@ var pointInPolygon = function (point, vs) {
     return inside;
 };
 
-const call = (ctx, { props: { name, args, count } }) => {
-  switch (count) {
+function call(ctx, instruction) {
+  switch (instruction.props.count) {
     case 0:
-      ctx[name]();
-      break;
+      return ctx[instruction.props.name]();
     case 1:
-      ctx[name](args[0]);
-      break;
+      return ctx[instruction.props.name](instruction.props.args[0]);
     case 2:
-      ctx[name](args[0], args[1]);
-      break;
+      return ctx[instruction.props.name](instruction.props.args[0], instruction.props.args[1]);
     case 3:
-      ctx[name](args[0], args[1], args[2]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+      );
     case 4:
-      ctx[name](args[0], args[1], args[2], args[3]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+        instruction.props.args[3],
+      );
     case 5:
-      ctx[name](args[0], args[1], args[2], args[3], args[4]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+        instruction.props.args[3],
+        instruction.props.args[4],
+      );
     case 6:
-      ctx[name](args[0], args[1], args[2], args[3], args[4], args[5]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+        instruction.props.args[3],
+        instruction.props.args[4],
+        instruction.props.args[5],
+      );
     case 7:
-      ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+        instruction.props.args[3],
+        instruction.props.args[4],
+        instruction.props.args[5],
+        instruction.props.args[6],
+      );
     case 8:
-      ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+        instruction.props.args[3],
+        instruction.props.args[4],
+        instruction.props.args[5],
+        instruction.props.args[6],
+        instruction.props.args[7],
+      );
     case 9:
-      ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+        instruction.props.args[3],
+        instruction.props.args[4],
+        instruction.props.args[5],
+        instruction.props.args[6],
+        instruction.props.args[7],
+        instruction.props.args[8],
+      );
   }
-};
+}
 
 const empty = [];
 const concat = empty.concat;
@@ -117,7 +143,7 @@ var pointInPath = ([x, y], instructions) => {
 
 const alwaysFalse = () => false;
 
-const activeRegions = ctx => {
+function activeRegions(ctx) {
   const regions = ctx.canvas[Symbol.for('regions')],
     mousePoints = ctx.canvas[Symbol.for('mousePoints')],
     mouseData = ctx.canvas[Symbol.for('mouseData')],
@@ -154,7 +180,7 @@ const activeRegions = ctx => {
     }
   }
   return results;
-};
+}
 
 class Instruction {
   constructor(type, props) {
@@ -167,44 +193,53 @@ class Instruction {
 Object.seal(Instruction);
 Object.seal(Instruction.prototype);
 
-var Pi2 = Math.PI * 2;
+var Tau = Math.PI * 2;
 
-const arc = (...args) => {
-  if (args.length > 3) {
-    return new Instruction('call', { name: 'arc', args, count: 6 });
-  }
-  if (args.length > 1) {
+function arc(x, y, r, startAngle, endAngle, anticlockwise) {
+  if (arguments.length > 3) {
     return new Instruction('call', {
       name: 'arc',
-      args: [args[0], args[1], args[2], 0, Pi2, false],
+      args: [x, y, r, startAngle, endAngle, !!anticlockwise],
+      count: 6,
+    });
+  }
+  if (arguments.length > 1) {
+    return new Instruction('call', {
+      name: 'arc',
+      args: [x, y, r, 0, Tau, false],
       count: 6,
     });
   }
 
   return new Instruction('call', {
     name: 'arc',
-    args: [0, 0, args[0], 0, Pi2, false],
+    args: [0, 0, x, 0, Tau, false],
     count: 6,
   });
-};
+}
 
-const arcTo = (x1, y1, x2, y2, r) =>
-  new Instruction('call', {
+function arcTo(x1, y1, x2, y2, r) {
+  return new Instruction('call', {
     name: 'arcTo',
     args: [x1, y1, x2, y2, r],
     count: 5,
   });
+}
 
-const emptyCall = name => () => new Instruction('call', { name, args: [], count: 0 });
+const emptyCall = name =>
+  function() {
+    return new Instruction('call', { name, args: [], count: 0 });
+  };
 
 var beginPath = emptyCall('beginPath');
 
-const bezierCurveTo = (cp1x, cp1y, cp2x, cp2y, x, y) =>
-  new Instruction('call', {
+function bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
+  return new Instruction('call', {
     name: 'bezierCurveTo',
     args: [cp1x, cp1y, cp2x, cp2y, x, y],
     count: 5,
   });
+}
 
 const rectInstruction = name => (...args) =>
   new Instruction('call', {
@@ -217,24 +252,27 @@ var clearRect = rectInstruction('clearRect');
 
 const clipPath = emptyCall('clip');
 
-const begin = emptyCall('save');
-const end = emptyCall('restore');
+const begin = emptyCall('save')();
+const beginPathInstruction = beginPath();
+const clipPathInstruction = clipPath();
+const end = emptyCall('restore')();
 
-const clip = (path, ...children) => [begin(), beginPath(), path, clipPath(), children, end()];
+function clip(path, ...children) {
+  return [begin, beginPathInstruction, path, clipPathInstruction, children, end];
+}
 
 var closePath = emptyCall('closePath');
 
-const createRegularPolygon = (radius = 0, position = [0, 0], sides = 3) => {
+function createRegularPolygon(radius = 0, position = [0, 0], sides = 3) {
   const polygon = [];
-  const factor = Pi2 / sides;
+  const factor = Tau / sides;
+  let value = 0;
   for (let i = 0; i < sides; i++) {
-    polygon.push([
-      position[0] + radius * Math.cos(factor * i),
-      position[1] + radius * Math.sin(factor * i),
-    ]);
+    polygon.push([position[0] + radius * Math.cos(value), position[1] + radius * Math.sin(value)]);
+    value += factor;
   }
   return polygon;
-};
+}
 
 const stackable = stack => {
   const end = new Instruction('pop', { stack });
@@ -249,18 +287,16 @@ const stackable = stack => {
 
 var directionCall = stackable('direction');
 
-const drawImage = (...args) => {
-  if (args.length >= 9) {
+function drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
+  if (arguments.length >= 9) {
     return new Instruction('call', {
       name: 'drawImage',
-      args,
+      args: [img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight],
       count: 9,
     });
   }
 
-  const [img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight] = args;
-
-  if (args.length >= 5) {
+  if (arguments.length >= 5) {
     return new Instruction('call', {
       name: 'drawImage',
       args: [img, sx, sy, sWidth, sHeight],
@@ -270,63 +306,68 @@ const drawImage = (...args) => {
 
   return new Instruction('call', {
     name: 'drawImage',
-    args: args.length >= 3 ? [img, sx, sy] : [img, 0, 0],
+    args: arguments.length >= 3 ? [img, sx, sy] : [img, 0, 0],
     count: 3,
   });
-};
+}
 
-const ellipse = (...args) => {
-  const [x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise] = args;
-
+function ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise) {
   return new Instruction('call', {
     name: 'ellipse',
     args:
-      args.length > 5
-        ? args
-        : args.length > 4
-          ? [x, y, radiusX, radiusY, rotation, startAngle, false]
-          : args.length > 2 ? [x, y, radiusX, radiusY, 0, pi2, false] : [0, 0, x, y, 0, Pi2, false],
+      arguments.length >= 6
+        ? [x, y, radiusX, radiusY, rotation, startAngle, endAngle, !!anticlockwise]
+        : arguments.length === 5
+          ? [x, y, radiusX, radiusY, rotation, 0, Tau, false]
+          : arguments.length >= 3
+            ? [x, y, radiusX, radiusY, 0, 0, Tau, false]
+            : [0, 0, x, y, 0, Tau, false],
     count: 7,
   });
-};
+}
 
 var endClip = emptyCall('restore');
 
-const extend = (ctx, ...methods) => {
+function extend(ctx, ...methods) {
   const extensions = ctx[Symbol.for('extensions')] || (ctx[Symbol.for('extensions')] = {});
   Object.assign(extensions, ...methods);
-};
+}
 
 var fill = emptyCall('fill');
 
-const fillArc = (...args) => {
-  const props = [0, 0, args[0], 0, Pi2, false];
+function fillArc(x, y, r, startAngle, endAngle, anticlockwise) {
+  const props = [0, 0, x, 0, Tau, false];
 
-  if (args.length > 3) {
-    props[3] = args[3];
-    props[4] = args[4];
-    props[5] = !!args[5];
+  if (arguments.length > 3) {
+    props[3] = startAngle;
+    props[4] = endAngle;
+    props[5] = !!anticlockwise;
   }
 
-  if (args.length >= 2) {
-    props[0] = args[0];
-    props[1] = args[1];
-    props[2] = args[2];
+  if (arguments.length >= 2) {
+    props[0] = x;
+    props[1] = y;
+    props[2] = r;
   }
 
   return new Instruction('fillArc', props);
-};
+}
 
 var fillRect = rectInstruction('fillRect');
 
 var fillStyle = stackable('fillStyle');
 
-const textInstruction = name => (...args) =>
-  new Instruction('call', {
-    name,
-    args: args.length >= 3 ? args : [args[0], 0, 0],
-    count: args.length >= 4 ? 4 : 3,
-  });
+const textInstruction = name =>
+  function(text, x, y, maxWidth) {
+    return new Instruction('call', {
+      name,
+      args:
+        arguments.length > 3
+          ? [text, x, y, maxWidth]
+          : arguments.length >= 1 ? [text, x, y] : [text, 0, 0],
+      count: arguments.length > 3 ? 4 : 3,
+    });
+  };
 
 var fillText = textInstruction('fillText');
 
@@ -336,15 +377,15 @@ var globalAlpha = stackable('globalAlpha');
 
 var globalCompositeOperation = stackable('globalCompositeOperation');
 
-const hitCircle = (id, ...args) =>
-  new Instruction('hitCircle', {
+function hitCircle(id, x, y, r) {
+  return new Instruction('hitCircle', {
     id,
-    points: args.length === 1 ? [0, 0, args[0]] : [args[0], args[1], args[2]],
+    points: arguments.length === 1 ? [0, 0, x] : [x, y, r],
   });
+}
 
-const hitRect = (id, ...args) => {
-  let [x, y, width, height] = args;
-  if (args.length <= 3) {
+function hitRect(id, x, y, width, height) {
+  if (arguments.length <= 3) {
     width = x;
     height = y;
     x = 0;
@@ -354,11 +395,15 @@ const hitRect = (id, ...args) => {
     id,
     points: [[x, y], [x + width, y + height]],
   });
-};
+}
 
-const hitPolygon = (id, points) => new Instruction('hitPolygon', { id, points });
+function hitPolygon(id, points) {
+  return new Instruction('hitPolygon', { id, points });
+}
 
-const hitRegion = (id, fillRule = null) => new Instruction('hitRegion', { id, fillRule });
+function hitRegion(id, fillRule = null) {
+  return new Instruction('hitRegion', { id, fillRule });
+}
 
 var imageSmoothingEnabled = stackable('imageSmoothingEnabled');
 
@@ -621,17 +666,15 @@ var lineWidthCall = stackable('lineWidth');
 
 var miterLimitCall = stackable('miterLimit');
 
-const lineStyle = (
-  { lineCap, lineDash, lineDashOffset, lineJoin, lineWidth, miterLimit },
-  ...children
-) => {
-  children = lineCap ? lineCapCall(children) : children;
-  children = lineDash ? lineDashCall(children) : children;
-  children = lineDashOffset == null ? children : lineDashOffsetCall(children);
-  children = lineJoin ? lineJoinCall(children) : children;
-  children = lineWidth == null ? children : lineWidthCall(children);
-  return miterLimit == null ? children : miterLimitCall(children);
-};
+function lineStyle(props, ...children) {
+  children = props.lineCap ? lineCapCall(props.lineCap, children) : children;
+  children = props.lineDash ? lineDashCall(props.lineDash, children) : children;
+  children =
+    props.lineDashOffset == null ? children : lineDashOffsetCall(props.lineDashOffset, children);
+  children = props.lineJoin ? lineJoinCall(props.lineJoin, children) : children;
+  children = props.lineWidth == null ? children : lineWidthCall(props.lineWidth, children);
+  return props.miterLimit == null ? children : miterLimitCall(props.miterLimit, children);
+}
 
 const pointInstruction = name => (x, y) =>
   new Instruction('call', {
@@ -646,10 +689,13 @@ const mouseData = ctx => ctx.canvas[Symbol.for('mouseData')];
 
 var moveTo = pointInstruction('moveTo');
 
-const moveToLineTo = (point, index) =>
-  index === 0 ? moveTo(point[0], point[1]) : lineTo(point[0], point[1]);
+function moveToLineTo(point, index) {
+  return index === 0 ? moveTo(point[0], point[1]) : lineTo(point[0], point[1]);
+}
 
-const path = (...children) => [beginPath(), children, closePath()];
+function path(...children) {
+  return [beginPath(), children, closePath()];
+}
 
 const quadraticCurveTo = (cpx, cpy, x, y) =>
   new Instruction('call', {
@@ -671,7 +717,7 @@ var rect = rectInstruction('rect');
 
 const removeRegion = id => new Instruction('removeRegion', { id });
 
-const cycleMouseData = ctx => {
+function cycleMouseData(ctx) {
   const mouseData = ctx.canvas[Symbol.for('mouseData')];
   if (mouseData) {
     mouseData.dx = mouseData.x - mouseData.previousX;
@@ -682,83 +728,85 @@ const cycleMouseData = ctx => {
 
     mouseData.clicked = 0;
   }
+}
+
+const setTransformOperation = (transformStack, transformStackIndex, matrix) => {
+  transformStack[transformStackIndex - 6] = matrix[0];
+  transformStack[transformStackIndex - 5] = matrix[1];
+  transformStack[transformStackIndex - 4] = matrix[2];
+  transformStack[transformStackIndex - 3] = matrix[3];
+  transformStack[transformStackIndex - 2] = matrix[4];
+  transformStack[transformStackIndex - 1] = matrix[5];
 };
 
-const setTransformOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f]) => {
-  transformStack[transformStackIndex - 6] = a;
-  transformStack[transformStackIndex - 5] = b;
-  transformStack[transformStackIndex - 4] = c;
-  transformStack[transformStackIndex - 3] = d;
-  transformStack[transformStackIndex - 2] = e;
-  transformStack[transformStackIndex - 1] = f;
+const scaleOperation = (transformStack, transformStackIndex, matrix, props) => {
+  transformStack[transformStackIndex - 6] = matrix[0] * props.x;
+  transformStack[transformStackIndex - 5] = matrix[1] * props.x;
+  transformStack[transformStackIndex - 4] = matrix[2] * props.y;
+  transformStack[transformStackIndex - 3] = matrix[3] * props.y;
+  transformStack[transformStackIndex - 2] = matrix[4];
+  transformStack[transformStackIndex - 1] = matrix[5];
 };
 
-const scaleOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f], { x, y }) => {
-  transformStack[transformStackIndex - 6] = a * x;
-  transformStack[transformStackIndex - 5] = b * x;
-  transformStack[transformStackIndex - 4] = c * y;
-  transformStack[transformStackIndex - 3] = d * y;
-  transformStack[transformStackIndex - 2] = e;
-  transformStack[transformStackIndex - 1] = f;
+function translateOperation(transformStack, transformStackIndex, matrix, props) {
+  transformStack[transformStackIndex - 6] = matrix[0];
+  transformStack[transformStackIndex - 5] = matrix[1];
+  transformStack[transformStackIndex - 4] = matrix[2];
+  transformStack[transformStackIndex - 3] = matrix[3];
+  transformStack[transformStackIndex - 2] = matrix[4] + matrix[0] * props.x + matrix[2] * props.y;
+  transformStack[transformStackIndex - 1] = matrix[5] + matrix[1] * props.x + matrix[3] * props.y;
+}
+
+const rotateOperation = (transformStack, transformStackIndex, matrix, props) => {
+  transformStack[transformStackIndex - 6] = matrix[0] * props.cos + matrix[2] * props.sin;
+  transformStack[transformStackIndex - 5] = matrix[1] * props.cos + matrix[3] * props.sin;
+  transformStack[transformStackIndex - 4] = matrix[0] * -props.sin + matrix[2] * props.cos;
+  transformStack[transformStackIndex - 3] = matrix[1] * -props.sin + matrix[3] * props.cos;
+  transformStack[transformStackIndex - 2] = matrix[4];
+  transformStack[transformStackIndex - 1] = matrix[5];
 };
 
-const translateOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f], { x, y }) => {
-  transformStack[transformStackIndex - 6] = a;
-  transformStack[transformStackIndex - 5] = b;
-  transformStack[transformStackIndex - 4] = c;
-  transformStack[transformStackIndex - 3] = d;
-  transformStack[transformStackIndex - 2] = e + a * x + c * y;
-  transformStack[transformStackIndex - 1] = f + b * x + d * y;
+const skewXOperation = (transformStack, transformStackIndex, matrix, props) => {
+  transformStack[transformStackIndex - 6] = matrix[0];
+  transformStack[transformStackIndex - 5] = matrix[1];
+  transformStack[transformStackIndex - 4] = matrix[0] * props.x + matrix[2];
+  transformStack[transformStackIndex - 3] = matrix[1] * props.x + matrix[3];
+  transformStack[transformStackIndex - 2] = matrix[4];
+  transformStack[transformStackIndex - 1] = matrix[5];
 };
 
-const rotateOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f], { sin, cos }) => {
-  transformStack[transformStackIndex - 6] = a * cos + c * sin;
-  transformStack[transformStackIndex - 5] = b * cos + d * sin;
-  transformStack[transformStackIndex - 4] = a * -sin + c * cos;
-  transformStack[transformStackIndex - 3] = b * -sin + d * cos;
-  transformStack[transformStackIndex - 2] = e;
-  transformStack[transformStackIndex - 1] = f;
+const skewYOperation = (transformStack, transformStackIndex, matrix, props) => {
+  transformStack[transformStackIndex - 6] = matrix[2] * props.y + matrix[0];
+  transformStack[transformStackIndex - 5] = matrix[3] * props.y + matrix[1];
+  transformStack[transformStackIndex - 4] = matrix[2];
+  transformStack[transformStackIndex - 3] = matrix[3];
+  transformStack[transformStackIndex - 2] = matrix[4];
+  transformStack[transformStackIndex - 1] = matrix[5];
 };
 
-const skewXOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f], { x }) => {
-  transformStack[transformStackIndex - 6] = a;
-  transformStack[transformStackIndex - 5] = b;
-  transformStack[transformStackIndex - 4] = a * x + c;
-  transformStack[transformStackIndex - 3] = b * x + d;
-  transformStack[transformStackIndex - 2] = e;
-  transformStack[transformStackIndex - 1] = f;
-};
-
-const skewYOperation = (transformStack, transformStackIndex, [a, b, c, d, e, f], { y }) => {
-  transformStack[transformStackIndex - 6] = c * y + a;
-  transformStack[transformStackIndex - 5] = d * y + b;
-  transformStack[transformStackIndex - 4] = c;
-  transformStack[transformStackIndex - 3] = d;
-  transformStack[transformStackIndex - 2] = e;
-  transformStack[transformStackIndex - 1] = f;
-};
-
-const createVirtualStack = () => ({
-  fillStyle: [],
-  strokeStyle: [],
-  globalCompositeOperation: [],
-  imageSmoothingEnabled: [],
-  font: [],
-  textAlign: [],
-  textBaseline: [],
-  direction: [],
-  shadowBlur: [],
-  shadowColor: [],
-  shadowOffsetX: [],
-  shadowOffsetY: [],
-  lineCap: [],
-  lineDash: [],
-  lineDashOffset: [],
-  lineJoin: [],
-  miterLimit: [],
-  lineWidth: [],
-  globalAlpha: [],
-});
+function createVirtualStack() {
+  return {
+    fillStyle: [],
+    strokeStyle: [],
+    globalCompositeOperation: [],
+    imageSmoothingEnabled: [],
+    font: [],
+    textAlign: [],
+    textBaseline: [],
+    direction: [],
+    shadowBlur: [],
+    shadowColor: [],
+    shadowOffsetX: [],
+    shadowOffsetY: [],
+    lineCap: [],
+    lineDash: [],
+    lineDashOffset: [],
+    lineJoin: [],
+    miterLimit: [],
+    lineWidth: [],
+    globalAlpha: [],
+  };
+}
 
 //Transform points function
 //Initialize all the properties
@@ -791,7 +839,7 @@ const render = (...args) => {
   let children = args.slice(0, -1),
     isTransformDirty = true,
     transformStackIndex = 6,
-    transformStack = new Float64Array(501 * 6),
+    transformStack = new Float64Array(51 * 6),
     cache;
 
   const ctx = args[args.length - 1];
@@ -818,13 +866,6 @@ const render = (...args) => {
 
   const stack = createVirtualStack();
   let currentPath = [];
-
-  transformStack[0] = identity[0];
-  transformStack[1] = identity[1];
-  transformStack[2] = identity[2];
-  transformStack[3] = identity[3];
-  transformStack[4] = identity[4];
-  transformStack[5] = identity[5];
 
   let len = children.length;
 
@@ -971,17 +1012,11 @@ const render = (...args) => {
         continue;
 
       case 'strokeArc':
-        currentPath = [];
-        ctx.beginPath();
-        ctx.arc(props[0], props[1], props[2], props[3], props[4], props[5]);
-        ctx.stroke();
-        continue;
-
       case 'fillArc':
-        currentPath = [];
+        currentPath = currentPath.length > 0 ? [] : currentPath;
         ctx.beginPath();
         ctx.arc(props[0], props[1], props[2], props[3], props[4], props[5]);
-        ctx.fill();
+        type === 'strokeArc' ? ctx.stroke() : ctx.fill();
         continue;
 
       case 'removeRegion':
@@ -1099,10 +1134,8 @@ const skewY = (y, ...children) => [new Instruction('skewY', { y: Math.tan(y) }),
 
 var stroke = emptyCall('stroke');
 
-const pi2$1 = Math.PI * 2;
-
 const fillArc$2 = (...args) => {
-  const props = [0, 0, args[0], 0, pi2$1, false];
+  const props = [0, 0, args[0], 0, Tau, false];
 
   if (args.length > 3) {
     props[3] = args[3];
@@ -1129,16 +1162,16 @@ var textAlignCall = stackable('textAlign');
 
 var textBaselineCall = stackable('textBaseline');
 
-const textStyle = ({ font, textAlign, textBaseline, direction }, ...children) => {
-  children = font ? fontCall(children) : children;
-  children = textAlign ? textAlignCall(children) : children;
-  children = textBaseline ? textBaselineCall(children) : children;
-  return direction ? directionCall(children) : children;
-};
+function textStyle(props, ...children) {
+  children = props.font ? fontCall(props.font, children) : children;
+  children = props.textAlign ? textAlignCall(props.textAlign, children) : children;
+  children = props.textBaseline ? textBaselineCall(props.textBaseline, children) : children;
+  return props.direction ? directionCall(props.direction, children) : children;
+}
 
 const end$6 = new Instruction('restore');
 
-const transform$1 = (values, ...children) => {
+function transform$1(values, ...children) {
   return [
     new Instruction('transform', [
       values[0],
@@ -1151,11 +1184,13 @@ const transform$1 = (values, ...children) => {
     children,
     end$6,
   ];
-};
+}
 
 const end$7 = new Instruction('restore');
 
-const translate = (x, y, ...children) => [new Instruction('translate', { x, y }), children, end$7];
+function translate(x, y, ...children) {
+  return [new Instruction('translate', { x, y }), children, end$7];
+}
 
 var index = {
   activeRegions,

@@ -1,22 +1,22 @@
 import Instruction from './Instruction';
-import Pi2 from './Pi2';
+import Tau from './Tau';
 
-const fillArc = (...args) => {
-  const props = [0, 0, args[0], 0, Pi2, false];
+function fillArc(x, y, r, startAngle, endAngle, anticlockwise) {
+  const props = [0, 0, x, 0, Tau, false];
 
-  if (args.length > 3) {
-    props[3] = args[3];
-    props[4] = args[4];
-    props[5] = !!args[5];
+  if (arguments.length > 3) {
+    props[3] = startAngle;
+    props[4] = endAngle;
+    props[5] = !!anticlockwise;
   }
 
-  if (args.length >= 2) {
-    props[0] = args[0];
-    props[1] = args[1];
-    props[2] = args[2];
+  if (arguments.length >= 2) {
+    props[0] = x;
+    props[1] = y;
+    props[2] = r;
   }
 
   return new Instruction('fillArc', props);
-};
+}
 
 export default fillArc;

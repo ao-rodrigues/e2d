@@ -11,7 +11,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 })(undefined, function () {
   'use strict';
 
-  var transformPoints = function transformPoints(points, _ref) {
+  function transformPoints(points, _ref) {
     var _ref2 = _slicedToArray(_ref, 6),
         a = _ref2[0],
         b = _ref2[1],
@@ -55,11 +55,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     return result;
-  };
+  }
 
-  var t = CanvasRenderingContext2D.prototype.currentTransform ? document.createElement('canvas').getContext('2d').currentTransform : null;
   var det = 0;
-  var invertMatrix = t ? function (_ref3) {
+  var invertMatrix = function invertMatrix(_ref3) {
     var _ref4 = _slicedToArray(_ref3, 6),
         a = _ref4[0],
         b = _ref4[1],
@@ -68,60 +67,34 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         e = _ref4[4],
         f = _ref4[5];
 
-    t.a = a;
-    t.b = b;
-    t.c = c;
-    t.d = d;
-    t.e = e;
-    t.f = f;
-
-    var _t$inverse = t.inverse();
-
-    a = _t$inverse.a;
-    b = _t$inverse.b;
-    c = _t$inverse.c;
-    d = _t$inverse.d;
-    e = _t$inverse.e;
-    f = _t$inverse.f;
-
-    return [a, b, c, d, e, f];
-  } : function (_ref5) {
-    var _ref6 = _slicedToArray(_ref5, 6),
-        a = _ref6[0],
-        b = _ref6[1],
-        c = _ref6[2],
-        d = _ref6[3],
-        e = _ref6[4],
-        f = _ref6[5];
-
     return det = 1 / (a * d - c * b), [d * det, -c * det, -b * det, a * det, (b * f - e * d) * det, (e * b - a * f) * det];
   };
 
-  var pointInRect = function pointInRect(_ref7, _ref8) {
-    var _ref10 = _slicedToArray(_ref7, 2),
-        px = _ref10[0],
-        py = _ref10[1];
+  var pointInRect = function pointInRect(_ref5, _ref6) {
+    var _ref8 = _slicedToArray(_ref5, 2),
+        px = _ref8[0],
+        py = _ref8[1];
 
-    var _ref9 = _slicedToArray(_ref8, 2),
-        _ref9$ = _slicedToArray(_ref9[0], 2),
-        x = _ref9$[0],
-        y = _ref9$[1],
-        _ref9$2 = _slicedToArray(_ref9[1], 2),
-        width = _ref9$2[0],
-        height = _ref9$2[1];
+    var _ref7 = _slicedToArray(_ref6, 2),
+        _ref7$ = _slicedToArray(_ref7[0], 2),
+        x = _ref7$[0],
+        y = _ref7$[1],
+        _ref7$2 = _slicedToArray(_ref7[1], 2),
+        width = _ref7$2[0],
+        height = _ref7$2[1];
 
     return px > x && py > y && px < width && py < height;
   };
 
-  var pointInCircle = function pointInCircle(_ref11, _ref12) {
-    var _ref14 = _slicedToArray(_ref11, 2),
-        x = _ref14[0],
-        y = _ref14[1];
+  var pointInCircle = function pointInCircle(_ref9, _ref10) {
+    var _ref12 = _slicedToArray(_ref9, 2),
+        x = _ref12[0],
+        y = _ref12[1];
 
-    var _ref13 = _slicedToArray(_ref12, 3),
-        cx = _ref13[0],
-        cy = _ref13[1],
-        cr = _ref13[2];
+    var _ref11 = _slicedToArray(_ref10, 3),
+        cx = _ref11[0],
+        cy = _ref11[1],
+        cr = _ref11[2];
 
     return Math.pow(cx - x, 2) + Math.pow(cy - y, 2) < Math.pow(cr, 2);
   };
@@ -147,53 +120,38 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return inside;
   };
 
-  var call = function call(ctx, _ref15) {
-    var _ref15$props = _ref15.props,
-        name = _ref15$props.name,
-        args = _ref15$props.args,
-        count = _ref15$props.count;
-
-    switch (count) {
+  function call(ctx, instruction) {
+    switch (instruction.props.count) {
       case 0:
-        ctx[name]();
-        break;
+        return ctx[instruction.props.name]();
       case 1:
-        ctx[name](args[0]);
-        break;
+        return ctx[instruction.props.name](instruction.props.args[0]);
       case 2:
-        ctx[name](args[0], args[1]);
-        break;
+        return ctx[instruction.props.name](instruction.props.args[0], instruction.props.args[1]);
       case 3:
-        ctx[name](args[0], args[1], args[2]);
-        break;
+        return ctx[instruction.props.name](instruction.props.args[0], instruction.props.args[1], instruction.props.args[2]);
       case 4:
-        ctx[name](args[0], args[1], args[2], args[3]);
-        break;
+        return ctx[instruction.props.name](instruction.props.args[0], instruction.props.args[1], instruction.props.args[2], instruction.props.args[3]);
       case 5:
-        ctx[name](args[0], args[1], args[2], args[3], args[4]);
-        break;
+        return ctx[instruction.props.name](instruction.props.args[0], instruction.props.args[1], instruction.props.args[2], instruction.props.args[3], instruction.props.args[4]);
       case 6:
-        ctx[name](args[0], args[1], args[2], args[3], args[4], args[5]);
-        break;
+        return ctx[instruction.props.name](instruction.props.args[0], instruction.props.args[1], instruction.props.args[2], instruction.props.args[3], instruction.props.args[4], instruction.props.args[5]);
       case 7:
-        ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-        break;
+        return ctx[instruction.props.name](instruction.props.args[0], instruction.props.args[1], instruction.props.args[2], instruction.props.args[3], instruction.props.args[4], instruction.props.args[5], instruction.props.args[6]);
       case 8:
-        ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-        break;
+        return ctx[instruction.props.name](instruction.props.args[0], instruction.props.args[1], instruction.props.args[2], instruction.props.args[3], instruction.props.args[4], instruction.props.args[5], instruction.props.args[6], instruction.props.args[7]);
       case 9:
-        ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
-        break;
+        return ctx[instruction.props.name](instruction.props.args[0], instruction.props.args[1], instruction.props.args[2], instruction.props.args[3], instruction.props.args[4], instruction.props.args[5], instruction.props.args[6], instruction.props.args[7], instruction.props.args[8]);
     }
-  };
+  }
 
   var empty = [];
   var concat = empty.concat;
 
-  var pointInPath = function pointInPath(_ref16, instructions) {
-    var _ref17 = _slicedToArray(_ref16, 2),
-        x = _ref17[0],
-        y = _ref17[1];
+  var pointInPath = function pointInPath(_ref13, instructions) {
+    var _ref14 = _slicedToArray(_ref13, 2),
+        x = _ref14[0],
+        y = _ref14[1];
 
     var ctx = document.createElement('canvas').getContext('2d');
     ctx.canvas.width = 1;
@@ -216,7 +174,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return false;
   };
 
-  var activeRegions = function activeRegions(ctx) {
+  function activeRegions(ctx) {
     var regions = ctx.canvas[Symbol.for('regions')],
         mousePoints = ctx.canvas[Symbol.for('mousePoints')],
         mouseData = ctx.canvas[Symbol.for('mouseData')],
@@ -286,7 +244,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     return results;
-  };
+  }
 
   var Instruction = function Instruction(type, props) {
     _classCallCheck(this, Instruction);
@@ -299,38 +257,38 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   Object.seal(Instruction);
   Object.seal(Instruction.prototype);
 
-  var Pi2 = Math.PI * 2;
+  var Tau = Math.PI * 2;
 
-  var arc = function arc() {
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    if (args.length > 3) {
-      return new Instruction('call', { name: 'arc', args: args, count: 6 });
-    }
-    if (args.length > 1) {
+  function arc(x, y, r, startAngle, endAngle, anticlockwise) {
+    if (arguments.length > 3) {
       return new Instruction('call', {
         name: 'arc',
-        args: [args[0], args[1], args[2], 0, Pi2, false],
+        args: [x, y, r, startAngle, endAngle, !!anticlockwise],
+        count: 6
+      });
+    }
+    if (arguments.length > 1) {
+      return new Instruction('call', {
+        name: 'arc',
+        args: [x, y, r, 0, Tau, false],
         count: 6
       });
     }
 
     return new Instruction('call', {
       name: 'arc',
-      args: [0, 0, args[0], 0, Pi2, false],
+      args: [0, 0, x, 0, Tau, false],
       count: 6
     });
-  };
+  }
 
-  var arcTo = function arcTo(x1, y1, x2, y2, r) {
+  function arcTo(x1, y1, x2, y2, r) {
     return new Instruction('call', {
       name: 'arcTo',
       args: [x1, y1, x2, y2, r],
       count: 5
     });
-  };
+  }
 
   var emptyCall = function emptyCall(name) {
     return function () {
@@ -340,18 +298,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var beginPath = emptyCall('beginPath');
 
-  var bezierCurveTo = function bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
+  function bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
     return new Instruction('call', {
       name: 'bezierCurveTo',
       args: [cp1x, cp1y, cp2x, cp2y, x, y],
       count: 5
     });
-  };
+  }
 
   var rectInstruction = function rectInstruction(name) {
     return function () {
-      for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
       }
 
       return new Instruction('call', {
@@ -366,37 +324,41 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var clipPath = emptyCall('clip');
 
-  var begin = emptyCall('save');
-  var end = emptyCall('restore');
+  var begin = emptyCall('save')();
+  var beginPathInstruction = beginPath();
+  var clipPathInstruction = clipPath();
+  var end = emptyCall('restore')();
 
-  var clip = function clip(path) {
-    for (var _len3 = arguments.length, children = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-      children[_key3 - 1] = arguments[_key3];
+  function clip(path) {
+    for (var _len2 = arguments.length, children = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      children[_key2 - 1] = arguments[_key2];
     }
 
-    return [begin(), beginPath(), path, clipPath(), children, end()];
-  };
+    return [begin, beginPathInstruction, path, clipPathInstruction, children, end];
+  }
 
   var closePath = emptyCall('closePath');
 
-  var createRegularPolygon = function createRegularPolygon() {
+  function createRegularPolygon() {
     var radius = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
     var position = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [0, 0];
     var sides = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3;
 
     var polygon = [];
-    var factor = Pi2 / sides;
+    var factor = Tau / sides;
+    var value = 0;
     for (var i = 0; i < sides; i++) {
-      polygon.push([position[0] + radius * Math.cos(factor * i), position[1] + radius * Math.sin(factor * i)]);
+      polygon.push([position[0] + radius * Math.cos(value), position[1] + radius * Math.sin(value)]);
+      value += factor;
     }
     return polygon;
-  };
+  }
 
   var stackable = function stackable(stack) {
     var end = new Instruction('pop', { stack: stack });
     var stackableFunc = function stackableFunc(value) {
-      for (var _len4 = arguments.length, children = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
-        children[_key4 - 1] = arguments[_key4];
+      for (var _len3 = arguments.length, children = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+        children[_key3 - 1] = arguments[_key3];
       }
 
       return [new Instruction('push', { stack: stack, value: value })].concat(children, [end]);
@@ -407,31 +369,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var directionCall = stackable('direction');
 
-  var drawImage = function drawImage() {
-    for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-      args[_key5] = arguments[_key5];
-    }
-
-    if (args.length >= 9) {
+  function drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
+    if (arguments.length >= 9) {
       return new Instruction('call', {
         name: 'drawImage',
-        args: args,
+        args: [img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight],
         count: 9
       });
     }
 
-    var img = args[0],
-        sx = args[1],
-        sy = args[2],
-        sWidth = args[3],
-        sHeight = args[4],
-        dx = args[5],
-        dy = args[6],
-        dWidth = args[7],
-        dHeight = args[8];
-
-
-    if (args.length >= 5) {
+    if (arguments.length >= 5) {
       return new Instruction('call', {
         name: 'drawImage',
         args: [img, sx, sy, sWidth, sHeight],
@@ -441,78 +388,61 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     return new Instruction('call', {
       name: 'drawImage',
-      args: args.length >= 3 ? [img, sx, sy] : [img, 0, 0],
+      args: arguments.length >= 3 ? [img, sx, sy] : [img, 0, 0],
       count: 3
     });
-  };
+  }
 
-  var ellipse = function ellipse() {
-    for (var _len6 = arguments.length, args = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
-      args[_key6] = arguments[_key6];
-    }
-
-    var x = args[0],
-        y = args[1],
-        radiusX = args[2],
-        radiusY = args[3],
-        rotation = args[4],
-        startAngle = args[5],
-        endAngle = args[6],
-        anticlockwise = args[7];
-
-
+  function ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise) {
     return new Instruction('call', {
       name: 'ellipse',
-      args: args.length > 5 ? args : args.length > 4 ? [x, y, radiusX, radiusY, rotation, startAngle, false] : args.length > 2 ? [x, y, radiusX, radiusY, 0, pi2, false] : [0, 0, x, y, 0, Pi2, false],
+      args: arguments.length >= 6 ? [x, y, radiusX, radiusY, rotation, startAngle, endAngle, !!anticlockwise] : arguments.length === 5 ? [x, y, radiusX, radiusY, rotation, 0, Tau, false] : arguments.length >= 3 ? [x, y, radiusX, radiusY, 0, 0, Tau, false] : [0, 0, x, y, 0, Tau, false],
       count: 7
     });
-  };
+  }
 
   var endClip = emptyCall('restore');
 
-  var extend = function extend(ctx) {
-    for (var _len7 = arguments.length, methods = Array(_len7 > 1 ? _len7 - 1 : 0), _key7 = 1; _key7 < _len7; _key7++) {
-      methods[_key7 - 1] = arguments[_key7];
+  function extend(ctx) {
+    var extensions = ctx[Symbol.for('extensions')] || (ctx[Symbol.for('extensions')] = {});
+
+    for (var _len4 = arguments.length, methods = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+      methods[_key4 - 1] = arguments[_key4];
     }
 
-    var extensions = ctx[Symbol.for('extensions')] || (ctx[Symbol.for('extensions')] = {});
     Object.assign.apply(Object, [extensions].concat(methods));
-  };
+  }
 
   var fill = emptyCall('fill');
 
-  var fillArc = function fillArc() {
-    var props = [0, 0, arguments.length <= 0 ? undefined : arguments[0], 0, Pi2, false];
+  function fillArc(x, y, r, startAngle, endAngle, anticlockwise) {
+    var props = [0, 0, x, 0, Tau, false];
 
     if (arguments.length > 3) {
-      props[3] = arguments.length <= 3 ? undefined : arguments[3];
-      props[4] = arguments.length <= 4 ? undefined : arguments[4];
-      props[5] = !!(arguments.length <= 5 ? undefined : arguments[5]);
+      props[3] = startAngle;
+      props[4] = endAngle;
+      props[5] = !!anticlockwise;
     }
 
     if (arguments.length >= 2) {
-      props[0] = arguments.length <= 0 ? undefined : arguments[0];
-      props[1] = arguments.length <= 1 ? undefined : arguments[1];
-      props[2] = arguments.length <= 2 ? undefined : arguments[2];
+      props[0] = x;
+      props[1] = y;
+      props[2] = r;
     }
 
     return new Instruction('fillArc', props);
-  };
+  }
 
   var fillRect = rectInstruction('fillRect');
 
   var fillStyle = stackable('fillStyle');
 
   var textInstruction = function textInstruction(name) {
-    return function () {
-      for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
-        args[_key8] = arguments[_key8];
-      }
-
+    return function (text, x, y, maxWidth) {
       return new Instruction('call', {
         name: name,
-        args: args.length >= 3 ? args : [args[0], 0, 0],
-        count: args.length >= 4 ? 4 : 3
+        args: arguments.length > 3 ? [text, x, y, maxWidth] : arguments.length >= 1 ? [text, x, y] : [text, 0, 0],
+        count: arguments.length > 3 ? 4 : 3
       });
     };
   };
@@ -525,24 +455,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var globalCompositeOperation = stackable('globalCompositeOperation');
 
-  var hitCircle = function hitCircle(id) {
+  function hitCircle(id, x, y, r) {
     return new Instruction('hitCircle', {
       id: id,
-      points: (arguments.length <= 1 ? 0 : arguments.length - 1) === 1 ? [0, 0, arguments.length <= 1 ? undefined : arguments[1]] : [arguments.length <= 1 ? undefined : arguments[1], arguments.length <= 2 ? undefined : arguments[2], arguments.length <= 3 ? undefined : arguments[3]]
+      points: arguments.length === 1 ? [0, 0, x] : [x, y, r]
     });
-  };
+  }
 
-  var hitRect = function hitRect(id) {
-    for (var _len9 = arguments.length, args = Array(_len9 > 1 ? _len9 - 1 : 0), _key9 = 1; _key9 < _len9; _key9++) {
-      args[_key9 - 1] = arguments[_key9];
-    }
-
-    var x = args[0],
-        y = args[1],
-        width = args[2],
-        height = args[3];
-
-    if (args.length <= 3) {
+  function hitRect(id, x, y, width, height) {
+    if (arguments.length <= 3) {
       width = x;
       height = y;
       x = 0;
@@ -552,16 +473,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       id: id,
       points: [[x, y], [x + width, y + height]]
     });
-  };
+  }
 
-  var hitPolygon = function hitPolygon(id, points) {
+  function hitPolygon(id, points) {
     return new Instruction('hitPolygon', { id: id, points: points });
-  };
+  }
 
-  var hitRegion = function hitRegion(id) {
+  function hitRegion(id) {
     var fillRule = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
     return new Instruction('hitRegion', { id: id, fillRule: fillRule });
-  };
+  }
 
   var imageSmoothingEnabled = stackable('imageSmoothingEnabled');
 
@@ -831,25 +753,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var miterLimitCall = stackable('miterLimit');
 
-  var lineStyle = function lineStyle(_ref18) {
-    for (var _len10 = arguments.length, children = Array(_len10 > 1 ? _len10 - 1 : 0), _key10 = 1; _key10 < _len10; _key10++) {
-      children[_key10 - 1] = arguments[_key10];
+  function lineStyle(props) {
+    for (var _len5 = arguments.length, children = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+      children[_key5 - 1] = arguments[_key5];
     }
 
-    var lineCap = _ref18.lineCap,
-        lineDash = _ref18.lineDash,
-        lineDashOffset = _ref18.lineDashOffset,
-        lineJoin = _ref18.lineJoin,
-        lineWidth = _ref18.lineWidth,
-        miterLimit = _ref18.miterLimit;
-
-    children = lineCap ? lineCapCall(children) : children;
-    children = lineDash ? lineDashCall(children) : children;
-    children = lineDashOffset == null ? children : lineDashOffsetCall(children);
-    children = lineJoin ? lineJoinCall(children) : children;
-    children = lineWidth == null ? children : lineWidthCall(children);
-    return miterLimit == null ? children : miterLimitCall(children);
-  };
+    children = props.lineCap ? lineCapCall(props.lineCap, children) : children;
+    children = props.lineDash ? lineDashCall(props.lineDash, children) : children;
+    children = props.lineDashOffset == null ? children : lineDashOffsetCall(props.lineDashOffset, children);
+    children = props.lineJoin ? lineJoinCall(props.lineJoin, children) : children;
+    children = props.lineWidth == null ? children : lineWidthCall(props.lineWidth, children);
+    return props.miterLimit == null ? children : miterLimitCall(props.miterLimit, children);
+  }
 
   var pointInstruction = function pointInstruction(name) {
     return function (x, y) {
@@ -869,17 +784,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var moveTo = pointInstruction('moveTo');
 
-  var moveToLineTo = function moveToLineTo(point, index) {
+  function moveToLineTo(point, index) {
     return index === 0 ? moveTo(point[0], point[1]) : lineTo(point[0], point[1]);
-  };
+  }
 
-  var path = function path() {
-    for (var _len11 = arguments.length, children = Array(_len11), _key11 = 0; _key11 < _len11; _key11++) {
-      children[_key11] = arguments[_key11];
+  function path() {
+    for (var _len6 = arguments.length, children = Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+      children[_key6] = arguments[_key6];
     }
 
     return [beginPath(), children, closePath()];
-  };
+  }
 
   var quadraticCurveTo = function quadraticCurveTo(cpx, cpy, x, y) {
     return new Instruction('call', {
@@ -904,7 +819,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return new Instruction('removeRegion', { id: id });
   };
 
-  var cycleMouseData = function cycleMouseData(ctx) {
+  function cycleMouseData(ctx) {
     var mouseData = ctx.canvas[Symbol.for('mouseData')];
     if (mouseData) {
       mouseData.dx = mouseData.x - mouseData.previousX;
@@ -915,124 +830,63 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       mouseData.clicked = 0;
     }
+  }
+
+  var setTransformOperation = function setTransformOperation(transformStack, transformStackIndex, matrix) {
+    transformStack[transformStackIndex - 6] = matrix[0];
+    transformStack[transformStackIndex - 5] = matrix[1];
+    transformStack[transformStackIndex - 4] = matrix[2];
+    transformStack[transformStackIndex - 3] = matrix[3];
+    transformStack[transformStackIndex - 2] = matrix[4];
+    transformStack[transformStackIndex - 1] = matrix[5];
   };
 
-  var setTransformOperation = function setTransformOperation(transformStack, transformStackIndex, _ref19) {
-    var _ref20 = _slicedToArray(_ref19, 6),
-        a = _ref20[0],
-        b = _ref20[1],
-        c = _ref20[2],
-        d = _ref20[3],
-        e = _ref20[4],
-        f = _ref20[5];
-
-    transformStack[transformStackIndex - 6] = a;
-    transformStack[transformStackIndex - 5] = b;
-    transformStack[transformStackIndex - 4] = c;
-    transformStack[transformStackIndex - 3] = d;
-    transformStack[transformStackIndex - 2] = e;
-    transformStack[transformStackIndex - 1] = f;
+  var scaleOperation = function scaleOperation(transformStack, transformStackIndex, matrix, props) {
+    transformStack[transformStackIndex - 6] = matrix[0] * props.x;
+    transformStack[transformStackIndex - 5] = matrix[1] * props.x;
+    transformStack[transformStackIndex - 4] = matrix[2] * props.y;
+    transformStack[transformStackIndex - 3] = matrix[3] * props.y;
+    transformStack[transformStackIndex - 2] = matrix[4];
+    transformStack[transformStackIndex - 1] = matrix[5];
   };
 
-  var scaleOperation = function scaleOperation(transformStack, transformStackIndex, _ref21, _ref22) {
-    var _ref23 = _slicedToArray(_ref21, 6),
-        a = _ref23[0],
-        b = _ref23[1],
-        c = _ref23[2],
-        d = _ref23[3],
-        e = _ref23[4],
-        f = _ref23[5];
+  function translateOperation(transformStack, transformStackIndex, matrix, props) {
+    transformStack[transformStackIndex - 6] = matrix[0];
+    transformStack[transformStackIndex - 5] = matrix[1];
+    transformStack[transformStackIndex - 4] = matrix[2];
+    transformStack[transformStackIndex - 3] = matrix[3];
+    transformStack[transformStackIndex - 2] = matrix[4] + matrix[0] * props.x + matrix[2] * props.y;
+    transformStack[transformStackIndex - 1] = matrix[5] + matrix[1] * props.x + matrix[3] * props.y;
+  }
 
-    var x = _ref22.x,
-        y = _ref22.y;
-
-    transformStack[transformStackIndex - 6] = a * x;
-    transformStack[transformStackIndex - 5] = b * x;
-    transformStack[transformStackIndex - 4] = c * y;
-    transformStack[transformStackIndex - 3] = d * y;
-    transformStack[transformStackIndex - 2] = e;
-    transformStack[transformStackIndex - 1] = f;
+  var rotateOperation = function rotateOperation(transformStack, transformStackIndex, matrix, props) {
+    transformStack[transformStackIndex - 6] = matrix[0] * props.cos + matrix[2] * props.sin;
+    transformStack[transformStackIndex - 5] = matrix[1] * props.cos + matrix[3] * props.sin;
+    transformStack[transformStackIndex - 4] = matrix[0] * -props.sin + matrix[2] * props.cos;
+    transformStack[transformStackIndex - 3] = matrix[1] * -props.sin + matrix[3] * props.cos;
+    transformStack[transformStackIndex - 2] = matrix[4];
+    transformStack[transformStackIndex - 1] = matrix[5];
   };
 
-  var translateOperation = function translateOperation(transformStack, transformStackIndex, _ref24, _ref25) {
-    var _ref26 = _slicedToArray(_ref24, 6),
-        a = _ref26[0],
-        b = _ref26[1],
-        c = _ref26[2],
-        d = _ref26[3],
-        e = _ref26[4],
-        f = _ref26[5];
-
-    var x = _ref25.x,
-        y = _ref25.y;
-
-    transformStack[transformStackIndex - 6] = a;
-    transformStack[transformStackIndex - 5] = b;
-    transformStack[transformStackIndex - 4] = c;
-    transformStack[transformStackIndex - 3] = d;
-    transformStack[transformStackIndex - 2] = e + a * x + c * y;
-    transformStack[transformStackIndex - 1] = f + b * x + d * y;
+  var skewXOperation = function skewXOperation(transformStack, transformStackIndex, matrix, props) {
+    transformStack[transformStackIndex - 6] = matrix[0];
+    transformStack[transformStackIndex - 5] = matrix[1];
+    transformStack[transformStackIndex - 4] = matrix[0] * props.x + matrix[2];
+    transformStack[transformStackIndex - 3] = matrix[1] * props.x + matrix[3];
+    transformStack[transformStackIndex - 2] = matrix[4];
+    transformStack[transformStackIndex - 1] = matrix[5];
   };
 
-  var rotateOperation = function rotateOperation(transformStack, transformStackIndex, _ref27, _ref28) {
-    var _ref29 = _slicedToArray(_ref27, 6),
-        a = _ref29[0],
-        b = _ref29[1],
-        c = _ref29[2],
-        d = _ref29[3],
-        e = _ref29[4],
-        f = _ref29[5];
-
-    var sin = _ref28.sin,
-        cos = _ref28.cos;
-
-    transformStack[transformStackIndex - 6] = a * cos + c * sin;
-    transformStack[transformStackIndex - 5] = b * cos + d * sin;
-    transformStack[transformStackIndex - 4] = a * -sin + c * cos;
-    transformStack[transformStackIndex - 3] = b * -sin + d * cos;
-    transformStack[transformStackIndex - 2] = e;
-    transformStack[transformStackIndex - 1] = f;
+  var skewYOperation = function skewYOperation(transformStack, transformStackIndex, matrix, props) {
+    transformStack[transformStackIndex - 6] = matrix[2] * props.y + matrix[0];
+    transformStack[transformStackIndex - 5] = matrix[3] * props.y + matrix[1];
+    transformStack[transformStackIndex - 4] = matrix[2];
+    transformStack[transformStackIndex - 3] = matrix[3];
+    transformStack[transformStackIndex - 2] = matrix[4];
+    transformStack[transformStackIndex - 1] = matrix[5];
   };
 
-  var skewXOperation = function skewXOperation(transformStack, transformStackIndex, _ref30, _ref31) {
-    var _ref32 = _slicedToArray(_ref30, 6),
-        a = _ref32[0],
-        b = _ref32[1],
-        c = _ref32[2],
-        d = _ref32[3],
-        e = _ref32[4],
-        f = _ref32[5];
-
-    var x = _ref31.x;
-
-    transformStack[transformStackIndex - 6] = a;
-    transformStack[transformStackIndex - 5] = b;
-    transformStack[transformStackIndex - 4] = a * x + c;
-    transformStack[transformStackIndex - 3] = b * x + d;
-    transformStack[transformStackIndex - 2] = e;
-    transformStack[transformStackIndex - 1] = f;
-  };
-
-  var skewYOperation = function skewYOperation(transformStack, transformStackIndex, _ref33, _ref34) {
-    var _ref35 = _slicedToArray(_ref33, 6),
-        a = _ref35[0],
-        b = _ref35[1],
-        c = _ref35[2],
-        d = _ref35[3],
-        e = _ref35[4],
-        f = _ref35[5];
-
-    var y = _ref34.y;
-
-    transformStack[transformStackIndex - 6] = c * y + a;
-    transformStack[transformStackIndex - 5] = d * y + b;
-    transformStack[transformStackIndex - 4] = c;
-    transformStack[transformStackIndex - 3] = d;
-    transformStack[transformStackIndex - 2] = e;
-    transformStack[transformStackIndex - 1] = f;
-  };
-
-  var createVirtualStack = function createVirtualStack() {
+  function createVirtualStack() {
     return {
       fillStyle: [],
       strokeStyle: [],
@@ -1054,7 +908,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       lineWidth: [],
       globalAlpha: []
     };
-  };
+  }
 
   //Transform points function
   //Initialize all the properties
@@ -1084,14 +938,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var hasCurrentTransform = CanvasRenderingContext2D.prototype.hasOwnProperty('currentTransform');
 
   var render = function render() {
-    for (var _len12 = arguments.length, args = Array(_len12), _key12 = 0; _key12 < _len12; _key12++) {
-      args[_key12] = arguments[_key12];
+    for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+      args[_key7] = arguments[_key7];
     }
 
     var children = args.slice(0, -1),
         isTransformDirty = true,
         transformStackIndex = 6,
-        transformStack = new Float64Array(501 * 6),
+        transformStack = new Float64Array(51 * 6),
         cache = void 0;
 
     var ctx = args[args.length - 1];
@@ -1112,13 +966,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     var stack = createVirtualStack();
     var currentPath = [];
-
-    transformStack[0] = identity[0];
-    transformStack[1] = identity[1];
-    transformStack[2] = identity[2];
-    transformStack[3] = identity[3];
-    transformStack[4] = identity[4];
-    transformStack[5] = identity[5];
 
     var len = children.length;
 
@@ -1252,17 +1099,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           continue;
 
         case 'strokeArc':
-          currentPath = [];
-          ctx.beginPath();
-          ctx.arc(props[0], props[1], props[2], props[3], props[4], props[5]);
-          ctx.stroke();
-          continue;
-
         case 'fillArc':
-          currentPath = [];
+          currentPath = currentPath.length > 0 ? [] : currentPath;
           ctx.beginPath();
           ctx.arc(props[0], props[1], props[2], props[3], props[4], props[5]);
-          ctx.fill();
+          type === 'strokeArc' ? ctx.stroke() : ctx.fill();
           continue;
 
         case 'removeRegion':
@@ -1355,16 +1196,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var end$1 = new Instruction('restore');
 
   var setTransform = function setTransform(matrix) {
-    for (var _len13 = arguments.length, children = Array(_len13 > 1 ? _len13 - 1 : 0), _key13 = 1; _key13 < _len13; _key13++) {
-      children[_key13 - 1] = arguments[_key13];
+    for (var _len8 = arguments.length, children = Array(_len8 > 1 ? _len8 - 1 : 0), _key8 = 1; _key8 < _len8; _key8++) {
+      children[_key8 - 1] = arguments[_key8];
     }
 
     return [new Instruction('setTransform', [matrix[0], matrix[1], matrix[2], matrix[3], matrix[4], matrix[5]]), children, end$1];
   };
 
   var resetTransform = function resetTransform() {
-    for (var _len14 = arguments.length, children = Array(_len14), _key14 = 0; _key14 < _len14; _key14++) {
-      children[_key14] = arguments[_key14];
+    for (var _len9 = arguments.length, children = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
+      children[_key9] = arguments[_key9];
     }
 
     return setTransform([1, 0, 0, 1, 0, 0], children);
@@ -1373,8 +1214,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var end$2 = new Instruction('restore');
 
   var rotate = function rotate(r) {
-    for (var _len15 = arguments.length, children = Array(_len15 > 1 ? _len15 - 1 : 0), _key15 = 1; _key15 < _len15; _key15++) {
-      children[_key15 - 1] = arguments[_key15];
+    for (var _len10 = arguments.length, children = Array(_len10 > 1 ? _len10 - 1 : 0), _key10 = 1; _key10 < _len10; _key10++) {
+      children[_key10 - 1] = arguments[_key10];
     }
 
     return [new Instruction('rotate', { cos: Math.cos(r), sin: Math.sin(r) }), children, end$2];
@@ -1383,8 +1224,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var end$3 = new Instruction('restore');
 
   var scale = function scale(x, y) {
-    for (var _len16 = arguments.length, children = Array(_len16 > 2 ? _len16 - 2 : 0), _key16 = 2; _key16 < _len16; _key16++) {
-      children[_key16 - 2] = arguments[_key16];
+    for (var _len11 = arguments.length, children = Array(_len11 > 2 ? _len11 - 2 : 0), _key11 = 2; _key11 < _len11; _key11++) {
+      children[_key11 - 2] = arguments[_key11];
     }
 
     if (typeof y !== 'number') {
@@ -1403,15 +1244,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var shadowOffsetYCall = stackable('shadowOffsetY');
 
-  var shadowStyle = function shadowStyle(_ref36) {
-    for (var _len17 = arguments.length, children = Array(_len17 > 1 ? _len17 - 1 : 0), _key17 = 1; _key17 < _len17; _key17++) {
-      children[_key17 - 1] = arguments[_key17];
+  var shadowStyle = function shadowStyle(_ref15) {
+    for (var _len12 = arguments.length, children = Array(_len12 > 1 ? _len12 - 1 : 0), _key12 = 1; _key12 < _len12; _key12++) {
+      children[_key12 - 1] = arguments[_key12];
     }
 
-    var shadowBlur = _ref36.shadowBlur,
-        shadowColor = _ref36.shadowColor,
-        shadowOffsetX = _ref36.shadowOffsetX,
-        shadowOffsetY = _ref36.shadowOffsetY;
+    var shadowBlur = _ref15.shadowBlur,
+        shadowColor = _ref15.shadowColor,
+        shadowOffsetX = _ref15.shadowOffsetX,
+        shadowOffsetY = _ref15.shadowOffsetY;
 
     children = shadowBlur ? shadowBlurCall(children) : children;
     children = shadowColor ? shadowColorCall(children) : children;
@@ -1422,8 +1263,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var end$4 = new Instruction('restore');
 
   var skewX = function skewX(x) {
-    for (var _len18 = arguments.length, children = Array(_len18 > 1 ? _len18 - 1 : 0), _key18 = 1; _key18 < _len18; _key18++) {
-      children[_key18 - 1] = arguments[_key18];
+    for (var _len13 = arguments.length, children = Array(_len13 > 1 ? _len13 - 1 : 0), _key13 = 1; _key13 < _len13; _key13++) {
+      children[_key13 - 1] = arguments[_key13];
     }
 
     return [new Instruction('skewX', { x: Math.tan(x) }), children, end$4];
@@ -1432,8 +1273,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var end$5 = new Instruction('restore');
 
   var skewY = function skewY(y) {
-    for (var _len19 = arguments.length, children = Array(_len19 > 1 ? _len19 - 1 : 0), _key19 = 1; _key19 < _len19; _key19++) {
-      children[_key19 - 1] = arguments[_key19];
+    for (var _len14 = arguments.length, children = Array(_len14 > 1 ? _len14 - 1 : 0), _key14 = 1; _key14 < _len14; _key14++) {
+      children[_key14 - 1] = arguments[_key14];
     }
 
     return [new Instruction('skewY', { y: Math.tan(y) }), children, end$5];
@@ -1441,10 +1282,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var stroke = emptyCall('stroke');
 
-  var pi2$1 = Math.PI * 2;
-
   var fillArc$2 = function fillArc$2() {
-    var props = [0, 0, arguments.length <= 0 ? undefined : arguments[0], 0, pi2$1, false];
+    var props = [0, 0, arguments.length <= 0 ? undefined : arguments[0], 0, Tau, false];
 
     if (arguments.length > 3) {
       props[3] = arguments.length <= 3 ? undefined : arguments[3];
@@ -1471,41 +1310,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var textBaselineCall = stackable('textBaseline');
 
-  var textStyle = function textStyle(_ref37) {
-    for (var _len20 = arguments.length, children = Array(_len20 > 1 ? _len20 - 1 : 0), _key20 = 1; _key20 < _len20; _key20++) {
-      children[_key20 - 1] = arguments[_key20];
+  function textStyle(props) {
+    for (var _len15 = arguments.length, children = Array(_len15 > 1 ? _len15 - 1 : 0), _key15 = 1; _key15 < _len15; _key15++) {
+      children[_key15 - 1] = arguments[_key15];
     }
 
-    var font = _ref37.font,
-        textAlign = _ref37.textAlign,
-        textBaseline = _ref37.textBaseline,
-        direction = _ref37.direction;
-
-    children = font ? fontCall(children) : children;
-    children = textAlign ? textAlignCall(children) : children;
-    children = textBaseline ? textBaselineCall(children) : children;
-    return direction ? directionCall(children) : children;
-  };
+    children = props.font ? fontCall(props.font, children) : children;
+    children = props.textAlign ? textAlignCall(props.textAlign, children) : children;
+    children = props.textBaseline ? textBaselineCall(props.textBaseline, children) : children;
+    return props.direction ? directionCall(props.direction, children) : children;
+  }
 
   var end$6 = new Instruction('restore');
 
-  var transform$1 = function transform$1(values) {
-    for (var _len21 = arguments.length, children = Array(_len21 > 1 ? _len21 - 1 : 0), _key21 = 1; _key21 < _len21; _key21++) {
-      children[_key21 - 1] = arguments[_key21];
+  function transform$1(values) {
+    for (var _len16 = arguments.length, children = Array(_len16 > 1 ? _len16 - 1 : 0), _key16 = 1; _key16 < _len16; _key16++) {
+      children[_key16 - 1] = arguments[_key16];
     }
 
     return [new Instruction('transform', [values[0], values[1], values[2], values[3], values[4], values[5]]), children, end$6];
-  };
+  }
 
   var end$7 = new Instruction('restore');
 
-  var translate = function translate(x, y) {
-    for (var _len22 = arguments.length, children = Array(_len22 > 2 ? _len22 - 2 : 0), _key22 = 2; _key22 < _len22; _key22++) {
-      children[_key22 - 2] = arguments[_key22];
+  function translate(x, y) {
+    for (var _len17 = arguments.length, children = Array(_len17 > 2 ? _len17 - 2 : 0), _key17 = 2; _key17 < _len17; _key17++) {
+      children[_key17 - 2] = arguments[_key17];
     }
 
     return [new Instruction('translate', { x: x, y: y }), children, end$7];
-  };
+  }
 
   var index = {
     activeRegions: activeRegions,

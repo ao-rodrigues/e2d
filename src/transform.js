@@ -1,7 +1,7 @@
 import Instruction from './Instruction';
 const end = new Instruction('restore');
 
-const transform = (values, ...children) => {
+function transform(values, ...children) {
   return [
     new Instruction('transform', [
       values[0],
@@ -14,6 +14,6 @@ const transform = (values, ...children) => {
     children,
     end,
   ];
-};
+}
 
 export default transform;

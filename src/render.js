@@ -2,7 +2,7 @@
 import Instruction from './Instruction';
 import transformPoints from './transformPoints';
 import cycleMouseData from './cycleMouseData';
-import Pi2 from './Pi2';
+import Tau from './Tau';
 import transformOperation from './transformOperation';
 import setTransformOperation from './setTransformOperation';
 import scaleOperation from './scaleOperation';
@@ -43,7 +43,7 @@ const render = (...args) => {
   let children = args.slice(0, -1),
     isTransformDirty = true,
     transformStackIndex = 6,
-    transformStack = new Float64Array(501 * 6),
+    transformStack = new Float64Array(51 * 6),
     cache;
 
   const ctx = args[args.length - 1];
@@ -70,13 +70,6 @@ const render = (...args) => {
 
   const stack = createVirtualStack();
   let currentPath = [];
-
-  transformStack[0] = identity[0];
-  transformStack[1] = identity[1];
-  transformStack[2] = identity[2];
-  transformStack[3] = identity[3];
-  transformStack[4] = identity[4];
-  transformStack[5] = identity[5];
 
   let len = children.length;
 
@@ -223,17 +216,11 @@ const render = (...args) => {
         continue;
 
       case 'strokeArc':
-        currentPath = [];
-        ctx.beginPath();
-        ctx.arc(props[0], props[1], props[2], props[3], props[4], props[5]);
-        ctx.stroke();
-        continue;
-
       case 'fillArc':
-        currentPath = [];
+        currentPath = currentPath.length > 0 ? [] : currentPath;
         ctx.beginPath();
         ctx.arc(props[0], props[1], props[2], props[3], props[4], props[5]);
-        ctx.fill();
+        type === 'strokeArc' ? ctx.stroke() : ctx.fill();
         continue;
 
       case 'removeRegion':

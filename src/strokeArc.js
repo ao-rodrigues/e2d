@@ -1,8 +1,8 @@
 import Instruction from './Instruction';
-const pi2 = Math.PI * 2;
+import Tau from './Tau';
 
 const fillArc = (...args) => {
-  const props = [0, 0, args[0], 0, pi2, false];
+  const props = [0, 0, args[0], 0, Tau, false];
 
   if (args.length > 3) {
     props[3] = args[3];

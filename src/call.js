@@ -1,36 +1,75 @@
-const call = (ctx, { props: { name, args, count } }) => {
-  switch (count) {
+function call(ctx, instruction) {
+  switch (instruction.props.count) {
     case 0:
-      ctx[name]();
-      break;
+      return ctx[instruction.props.name]();
     case 1:
-      ctx[name](args[0]);
-      break;
+      return ctx[instruction.props.name](instruction.props.args[0]);
     case 2:
-      ctx[name](args[0], args[1]);
-      break;
+      return ctx[instruction.props.name](instruction.props.args[0], instruction.props.args[1]);
     case 3:
-      ctx[name](args[0], args[1], args[2]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+      );
     case 4:
-      ctx[name](args[0], args[1], args[2], args[3]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+        instruction.props.args[3],
+      );
     case 5:
-      ctx[name](args[0], args[1], args[2], args[3], args[4]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+        instruction.props.args[3],
+        instruction.props.args[4],
+      );
     case 6:
-      ctx[name](args[0], args[1], args[2], args[3], args[4], args[5]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+        instruction.props.args[3],
+        instruction.props.args[4],
+        instruction.props.args[5],
+      );
     case 7:
-      ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+        instruction.props.args[3],
+        instruction.props.args[4],
+        instruction.props.args[5],
+        instruction.props.args[6],
+      );
     case 8:
-      ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+        instruction.props.args[3],
+        instruction.props.args[4],
+        instruction.props.args[5],
+        instruction.props.args[6],
+        instruction.props.args[7],
+      );
     case 9:
-      ctx[name](args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
-      break;
+      return ctx[instruction.props.name](
+        instruction.props.args[0],
+        instruction.props.args[1],
+        instruction.props.args[2],
+        instruction.props.args[3],
+        instruction.props.args[4],
+        instruction.props.args[5],
+        instruction.props.args[6],
+        instruction.props.args[7],
+        instruction.props.args[8],
+      );
   }
-};
+}
 
 export default call;

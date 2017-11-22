@@ -1,4 +1,4 @@
-const cycleMouseData = ctx => {
+function cycleMouseData(ctx) {
   const mouseData = ctx.canvas[Symbol.for('mouseData')];
   if (mouseData) {
     mouseData.dx = mouseData.x - mouseData.previousX;
@@ -9,6 +9,6 @@ const cycleMouseData = ctx => {
 
     mouseData.clicked = 0;
   }
-};
+}
 
 export default cycleMouseData;

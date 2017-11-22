@@ -1,5 +1,8 @@
 import Instruction from './Instruction';
 
-const emptyCall = name => () => new Instruction('call', { name, args: [], count: 0 });
+const emptyCall = name =>
+  function() {
+    return new Instruction('call', { name, args: [], count: 0 });
+  };
 
 export default emptyCall;

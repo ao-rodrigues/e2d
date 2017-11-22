@@ -1,5 +1,7 @@
 import Instruction from './Instruction';
 
-const hitRegion = (id, fillRule = null) => new Instruction('hitRegion', { id, fillRule });
+function hitRegion(id, fillRule = null) {
+  return new Instruction('hitRegion', { id, fillRule });
+}
 
 export default hitRegion;

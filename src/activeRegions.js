@@ -8,7 +8,7 @@ import pointInPath from './pointInPath';
 const matrix = new Float64Array(6),
   alwaysFalse = () => false;
 
-const activeRegions = ctx => {
+function activeRegions(ctx) {
   const regions = ctx.canvas[Symbol.for('regions')],
     mousePoints = ctx.canvas[Symbol.for('mousePoints')],
     mouseData = ctx.canvas[Symbol.for('mouseData')],
@@ -45,6 +45,6 @@ const activeRegions = ctx => {
     }
   }
   return results;
-};
+}
 
 export default activeRegions;

@@ -1,23 +1,27 @@
 import Instruction from './Instruction';
-import Pi2 from './Pi2';
+import Tau from './Tau';
 
-const arc = (...args) => {
-  if (args.length > 3) {
-    return new Instruction('call', { name: 'arc', args, count: 6 });
-  }
-  if (args.length > 1) {
+function arc(x, y, r, startAngle, endAngle, anticlockwise) {
+  if (arguments.length > 3) {
     return new Instruction('call', {
       name: 'arc',
-      args: [args[0], args[1], args[2], 0, Pi2, false],
+      args: [x, y, r, startAngle, endAngle, !!anticlockwise],
+      count: 6,
+    });
+  }
+  if (arguments.length > 1) {
+    return new Instruction('call', {
+      name: 'arc',
+      args: [x, y, r, 0, Tau, false],
       count: 6,
     });
   }
 
   return new Instruction('call', {
     name: 'arc',
-    args: [0, 0, args[0], 0, Pi2, false],
+    args: [0, 0, x, 0, Tau, false],
     count: 6,
   });
-};
+}
 
 export default arc;

@@ -5,16 +5,14 @@ import lineJoinCall from './lineJoin';
 import lineWidthCall from './lineWidth';
 import miterLimitCall from './miterLimit';
 
-const lineStyle = (
-  { lineCap, lineDash, lineDashOffset, lineJoin, lineWidth, miterLimit },
-  ...children
-) => {
-  children = lineCap ? lineCapCall(children) : children;
-  children = lineDash ? lineDashCall(children) : children;
-  children = lineDashOffset == null ? children : lineDashOffsetCall(children);
-  children = lineJoin ? lineJoinCall(children) : children;
-  children = lineWidth == null ? children : lineWidthCall(children);
-  return miterLimit == null ? children : miterLimitCall(children);
-};
+function lineStyle(props, ...children) {
+  children = props.lineCap ? lineCapCall(props.lineCap, children) : children;
+  children = props.lineDash ? lineDashCall(props.lineDash, children) : children;
+  children =
+    props.lineDashOffset == null ? children : lineDashOffsetCall(props.lineDashOffset, children);
+  children = props.lineJoin ? lineJoinCall(props.lineJoin, children) : children;
+  children = props.lineWidth == null ? children : lineWidthCall(props.lineWidth, children);
+  return props.miterLimit == null ? children : miterLimitCall(props.miterLimit, children);
+}
 
 export default lineStyle;

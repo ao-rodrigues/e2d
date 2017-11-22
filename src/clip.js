@@ -4,9 +4,13 @@ import Instruction from './Instruction';
 import clipPath from './clipPath';
 import beginPath from './beginPath';
 
-const begin = emptyCall('save'),
-  end = emptyCall('restore');
+const begin = emptyCall('save')(),
+  beginPathInstruction = beginPath(),
+  clipPathInstruction = clipPath(),
+  end = emptyCall('restore')();
 
-const clip = (path, ...children) => [begin(), beginPath(), path, clipPath(), children, end()];
+function clip(path, ...children) {
+  return [begin, beginPathInstruction, path, clipPathInstruction, children, end];
+}
 
 export default clip;

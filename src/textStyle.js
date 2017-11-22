@@ -3,11 +3,11 @@ import textAlignCall from './textAlign';
 import textBaselineCall from './textBaseline';
 import directionCall from './direction';
 
-const textStyle = ({ font, textAlign, textBaseline, direction }, ...children) => {
-  children = font ? fontCall(children) : children;
-  children = textAlign ? textAlignCall(children) : children;
-  children = textBaseline ? textBaselineCall(children) : children;
-  return direction ? directionCall(children) : children;
-};
+function textStyle(props, ...children) {
+  children = props.font ? fontCall(props.font, children) : children;
+  children = props.textAlign ? textAlignCall(props.textAlign, children) : children;
+  children = props.textBaseline ? textBaselineCall(props.textBaseline, children) : children;
+  return props.direction ? directionCall(props.direction, children) : children;
+}
 
 export default textStyle;

@@ -1,4 +1,4 @@
-const transformPoints = (points, [a, b, c, d, e, f]) => {
+function transformPoints(points, [a, b, c, d, e, f]) {
   const result = [];
   let x, y;
 
@@ -6,7 +6,8 @@ const transformPoints = (points, [a, b, c, d, e, f]) => {
     [x, y] = point;
     result.push([a * x + c * y + e, b * x + d * y + f]);
   }
+
   return result;
-};
+}
 
 export default transformPoints;
